@@ -11,20 +11,20 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="28dp"
         android:text="Sign Up"
         android:textColor="@color/black"
         android:textSize="43sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.075"
+        app:layout_constraintHorizontal_bias="0.074"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/et_firstName"
-        android:layout_width="369dp"
+        android:layout_width="350dp"
         android:layout_height="43dp"
-        android:layout_marginTop="144dp"
+        android:layout_marginTop="120dp"
         android:background="@drawable/rounded"
         android:hint="First Name"
         android:paddingLeft="12sp"
@@ -34,7 +34,7 @@
 
     <EditText
         android:id="@+id/et_lastName"
-        android:layout_width="369dp"
+        android:layout_width="350dp"
         android:layout_height="43dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/rounded"
@@ -47,7 +47,7 @@
 
     <EditText
         android:id="@+id/et_contactNumber"
-        android:layout_width="369dp"
+        android:layout_width="350dp"
         android:layout_height="43dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/rounded"
@@ -61,7 +61,7 @@
 
     <EditText
         android:id="@+id/et_email"
-        android:layout_width="369dp"
+        android:layout_width="350dp"
         android:layout_height="43dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/rounded"
@@ -75,7 +75,7 @@
 
     <EditText
         android:id="@+id/et_password_signup"
-        android:layout_width="369dp"
+        android:layout_width="350dp"
         android:layout_height="43dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/rounded"
@@ -89,7 +89,7 @@
 
     <EditText
         android:id="@+id/et_confirmPassword"
-        android:layout_width="369dp"
+        android:layout_width="350dp"
         android:layout_height="43dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/rounded"
@@ -114,47 +114,43 @@
 
     <Button
         android:id="@+id/btn_signUp"
-        android:layout_width="369dp"
+        android:layout_width="350dp"
         android:layout_height="43dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/rounded"
         android:backgroundTint="#3592BA"
         android:text="Sign Up"
         app:backgroundTint="@color/light_blue"
+        app:layout_constraintBottom_toTopOf="@+id/tv_ForgotPassword3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox_terms" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/tv_signIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:text="Sign In"
         android:textColor="#BA354D"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_ForgotPassword3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.833"
+        app:layout_constraintHorizontal_bias="0.87"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_guest"
-        app:layout_constraintVertical_bias="0.36" />
+        app:layout_constraintTop_toTopOf="@+id/tv_ForgotPassword3" />
 
     <TextView
         android:id="@+id/tv_ForgotPassword3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="8dp"
         android:text="Already have an account?"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tv_signIn"
-        app:layout_constraintHorizontal_bias="0.841"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_signIn"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
