@@ -29,6 +29,8 @@
                 android:backgroundTint="@color/white"
                 android:drawableLeft="@drawable/search_icon"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/iv_cartButton"
+                app:layout_constraintHorizontal_bias="0.244"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,10 +38,11 @@
                 android:id="@+id/iv_cartButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:src="@drawable/cart"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_searchBar"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tv_searchBar"
                 app:layout_constraintTop_toTopOf="@+id/tv_searchBar" />
 
 
@@ -51,6 +54,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingBottom="60dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         app:layout_constraintBottom_toTopOf="@+id/cardViewBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.38"
@@ -68,13 +73,13 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/banner"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView2"
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="141dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/rounded"
@@ -243,16 +248,6 @@
                         android:background="@android:color/transparent"
                         android:src="@drawable/nearby_tech" />
 
-                    <ImageView
-                        android:id="@+id/iv_promo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:background="@android:color/transparent"
-
-                        android:src="@drawable/promo" />
-
 
                 </LinearLayout>
 
@@ -306,14 +301,13 @@
         android:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" >
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:backgroundTint="@color/white"
-            >
+            android:backgroundTint="@color/white">
 
             <ImageView
                 android:id="@+id/iv_messageBtn"

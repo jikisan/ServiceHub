@@ -132,7 +132,6 @@ public class homepage extends AppCompatActivity {
         iv_repair = findViewById(R.id.iv_repair);
         iv_marketplace = findViewById(R.id.iv_marketplace);
         iv_nearbyTech = findViewById(R.id.iv_nearbyTech);
-        iv_promo = findViewById(R.id.iv_promo);
         iv_messageBtn = findViewById(R.id.iv_messageBtn);
         iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
         iv_homeBtn = findViewById(R.id.iv_homeBtn);

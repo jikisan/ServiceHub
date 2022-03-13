@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".seller_dashboard">
 
     <TextView
@@ -17,7 +18,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:layout_height="141dp"
         android:background="@drawable/rounded"
         android:backgroundTint="#3592BA"
