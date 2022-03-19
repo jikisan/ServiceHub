@@ -7,8 +7,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class login_page extends AppCompatActivity {
 
@@ -18,21 +22,19 @@ public class login_page extends AppCompatActivity {
     TextView tv_forgotPassword, tv_signUp;
     Button btn_login, btn_guest;
 
+    private DatabaseReference userDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
 
-        setRef();
-        buttonsActivity();
-//
 
+        setRef();
+        ClickListener();
     }
 
-
-
-    private void buttonsActivity() {
+    private void ClickListener() {
 
         btn_guest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +53,19 @@ public class login_page extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intentSignUp = new Intent(login_page.this, sign_up_page.class);
                 startActivity(intentSignUp);
+
+            }
+        });
+
+        btn_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                userDatabase = FirebaseDatabase.getInstance().getReference(Users.class.getSimpleName());
+//
+//
+//                Toast.makeText(login_page.this, username, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(login_page.this, password, Toast.LENGTH_SHORT).show();
+
 
             }
         });

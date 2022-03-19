@@ -2,19 +2,22 @@ package com.example.servicehub;
 
 public class Users {
 
+
+    private String userId;
     private String firstName;
     private String lastName;
-    private int contactNum;
-    private String email;
+    private String contactNum;
+    private String username;
     private String password;
 
     public Users(){}
 
-    public Users(String firstName, String lastName, int contactNum, String email, String password) {
+    public Users(String userId, String firstName, String lastName, String contactNum, String username, String password) {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.contactNum = contactNum;
-        this.email = email;
+        this.username = username;
         this.password = password;
     }
 
@@ -34,20 +37,20 @@ public class Users {
         this.lastName = lastName;
     }
 
-    public int getContactNum() {
+    public String getContactNum() {
         return contactNum;
     }
 
-    public void setContactNum(int contactNum) {
+    public void setContactNum(String contactNum) {
         this.contactNum = contactNum;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setEmail(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -58,5 +61,12 @@ public class Users {
         this.password = password;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
 }
