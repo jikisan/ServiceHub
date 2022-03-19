@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "492356623878",
+    "project_id": "servicehub-7501c",
+    "storage_bucket": "servicehub-7501c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:492356623878:android:299c0c6ec5c79e7b27ad87",
+        "android_client_info": {
+          "package_name": "com.example.servicehub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "492356623878-e08k4cuibar7flh8q5ijjpsetfats3c1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS6bme8DhhVlLzfvAmF8Uh--zumSdS-fU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "492356623878-e08k4cuibar7flh8q5ijjpsetfats3c1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
