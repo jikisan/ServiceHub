@@ -33,8 +33,8 @@
         <activity android:name=".search_page" />
         <activity android:name=".homepage" />
         <activity android:name=".sign_up_page" />
-        <activity android:name=".intro_logo" >
 
+        <activity android:name=".intro_logo" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,5 +1,6 @@
 package com.example.servicehub;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -11,6 +12,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -20,6 +25,8 @@ public class sign_up_page extends AppCompatActivity {
             et_confirmPassword;
     TextView tv_signIn;
     Button btn_signUp;
+    FirebaseAuth fAuth;
+
 
     private DatabaseReference userDatabase;
 
@@ -63,6 +70,7 @@ public class sign_up_page extends AppCompatActivity {
         String contactNum = et_contactNumber.getText().toString();
 
 
+
         if (TextUtils.isEmpty(firstName)) {
             Toast.makeText(this, "First name is required", Toast.LENGTH_SHORT).show();
         } else if (TextUtils.isEmpty(lastName)) {
@@ -89,9 +97,17 @@ public class sign_up_page extends AppCompatActivity {
             Users users = new Users(id, firstName, lastName, contactNum, username, password);
             userDatabase.child(id).setValue(users);
 
-            Intent intent = new Intent(sign_up_page.this, login_page.class);
-            startActivity(intent);
-            Toast.makeText(this, "Account Created", Toast.LENGTH_LONG).show();
+            fAuth.createUserWithEmailAndPassword(username, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if(task.isSuccessful()){
+                        Toast.makeText(sign_up_page.this, "User Created", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(), homepage.class));
+                    }else {
+                        Toast.makeText(sign_up_page.this, "Creation Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 
@@ -105,6 +121,8 @@ public class sign_up_page extends AppCompatActivity {
         et_password_signup = findViewById(R.id.et_password_signup);
         et_confirmPassword = findViewById(R.id.et_confirmPassword);
         btn_signUp = findViewById(R.id.btn_signUp);
+        fAuth = FirebaseAuth.getInstance();
+
 
     }
 }

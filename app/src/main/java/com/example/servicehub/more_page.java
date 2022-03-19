@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class more_page extends AppCompatActivity {
 
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
@@ -55,8 +57,9 @@ public class more_page extends AppCompatActivity {
         tv_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentLogout = new Intent(more_page.this, intro_logo.class);
-                startActivity(intentLogout);
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(), login_page.class));
+                finish();
             }
         }); // end of about us button
 
