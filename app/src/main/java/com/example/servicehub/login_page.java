@@ -40,8 +40,10 @@ public class login_page extends AppCompatActivity {
 
         setRef();
 
-        rememberLoginChecker();
-
+        if (fAuth.getCurrentUser() != null) {
+            startActivity(new Intent(getApplicationContext(), homepage.class));
+            finish();
+        }
         ClickListener();
     }
 
@@ -95,10 +97,12 @@ public class login_page extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            rememberLoginChecker();
+
                             Toast.makeText(login_page.this, "Login Successfully", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), homepage.class));
                         } else {
-                            Toast.makeText(login_page.this, "Login Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(login_page.this, "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -109,10 +113,7 @@ public class login_page extends AppCompatActivity {
 
     private void rememberLoginChecker() {
         if (checkBox_rememberMe.isChecked()) {
-            if (fAuth.getCurrentUser() != null) {
-                startActivity(new Intent(getApplicationContext(), homepage.class));
-                finish();
-            }
+
         }
     }
 
