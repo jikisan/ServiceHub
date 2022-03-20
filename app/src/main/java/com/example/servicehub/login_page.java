@@ -1,5 +1,6 @@
 package com.example.servicehub;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -11,9 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,8 +32,6 @@ public class login_page extends AppCompatActivity {
     TextView tv_forgotPassword, tv_signUp;
     Button btn_login, btn_guest;
     FirebaseAuth fAuth;
-
-
     private DatabaseReference userDatabase;
 
     @Override
@@ -46,8 +48,6 @@ public class login_page extends AppCompatActivity {
         }
         ClickListener();
     }
-
-
 
     private void ClickListener() {
 
@@ -109,6 +109,49 @@ public class login_page extends AppCompatActivity {
 
             }
         });
+
+        tv_forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText resetMail = new EditText(view.getContext());
+
+                AlertDialog.Builder pwResetDialog = new AlertDialog.Builder(view.getContext());
+                pwResetDialog.setTitle("Reset Password?");
+                pwResetDialog.setMessage("Please enter your email to reset password.");
+                pwResetDialog.setView(resetMail);
+
+                pwResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        String email = resetMail.getText().toString();
+                        fAuth.sendPasswordResetEmail(email).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+
+                                Toast.makeText(login_page.this, "Please check your email to reset your password.", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(login_page.this, "Error!" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+
+                pwResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
+                pwResetDialog.create().show();
+            }
+        });
+
     }
 
     private void rememberLoginChecker() {
