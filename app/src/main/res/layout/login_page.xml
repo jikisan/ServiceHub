@@ -31,6 +31,7 @@
         android:drawablePadding="5dp"
         android:hint="Username"
         android:paddingLeft="5sp"
+        android:paddingRight="5sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -45,7 +46,7 @@
         android:drawablePadding="5dp"
         android:hint="Password"
         android:inputType="textPassword"
-
+        android:paddingRight="5sp"
         android:paddingLeft="5sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
