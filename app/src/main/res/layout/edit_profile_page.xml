@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="36dp"
         android:text="First Name"
         android:textColor="@color/black"
         android:textSize="16sp"
@@ -202,15 +202,22 @@
 
     <Button
         android:id="@+id/btn_save"
-        android:layout_width="350dp"
+        android:layout_width="wrap_content"
         android:layout_height="43dp"
-        android:layout_marginBottom="52dp"
+        android:layout_marginTop="52dp"
         android:background="@drawable/rounded"
-        android:text="save"
+        android:drawableLeft="@drawable/edit_black"
+        android:drawableTint="@color/white"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:text="Edit profile"
+        android:textSize="18sp"
+        android:elevation="10dp"
         app:backgroundTint="@color/light_blue"
-        app:layout_constraintBottom_toTopOf="@+id/cardViewBottom"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view5" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewBottom"

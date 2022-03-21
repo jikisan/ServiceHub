@@ -1,5 +1,6 @@
 package com.example.servicehub;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -7,12 +8,26 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class seller_dashboard extends AppCompatActivity {
 
+    private FirebaseUser user;
+    private DatabaseReference userDatabase;
+    private String userID;
+
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_editListing;
-
+    TextView tv_bannerName;
     Button btn_addListing;
 
     @Override
@@ -20,9 +35,35 @@ public class seller_dashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.seller_dashboard);
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userDatabase = FirebaseDatabase.getInstance().getReference("Users");
+        userID = user.getUid();
+
         setRef();
         buttonNav();
+        getSellerInfo();
         bottomNavTaskbar();
+    }
+
+    private void getSellerInfo() {
+        userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users userProfile = snapshot.getValue(Users.class);
+
+                if(userProfile != null){
+                    String sp_fName = userProfile.firstName;
+                    String sp_lName = userProfile.lastName;
+
+                    tv_bannerName.setText(sp_fName + " " + sp_lName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(seller_dashboard.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void buttonNav() {
@@ -99,5 +140,6 @@ public class seller_dashboard extends AppCompatActivity {
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
         iv_editListing = findViewById(R.id.iv_editListing);
         btn_addListing = findViewById(R.id.btn_addListing);
+        tv_bannerName = findViewById(R.id.tv_bannerName);
     }
 }

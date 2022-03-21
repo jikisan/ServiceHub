@@ -137,6 +137,5 @@ public class sign_up_page extends AppCompatActivity {
         btn_signUp = findViewById(R.id.btn_signUp);
         fAuth = FirebaseAuth.getInstance();
 
-
     }
 }

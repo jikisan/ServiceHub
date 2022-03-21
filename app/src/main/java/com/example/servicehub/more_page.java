@@ -58,7 +58,7 @@ public class more_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getApplicationContext(), login_page.class));
+                startActivity(new Intent(getApplicationContext(), intro_logo.class));
                 finish();
             }
         }); // end of about us button

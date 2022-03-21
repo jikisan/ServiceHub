@@ -52,14 +52,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_margin="20dp"
             android:orientation="vertical"
-            android:paddingBottom="10dp">
+            android:paddingBottom="35dp">
 
             <ImageView
                 android:id="@+id/iv_techProfilePic"
                 android:layout_width="367dp"
                 android:layout_height="155dp"
-                android:layout_marginTop="16dp"
                 android:src="@drawable/image2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -106,7 +106,7 @@
 
             <EditText
                 android:id="@+id/et_projectName"
-                android:layout_width="369dp"
+                android:layout_width="match_parent"
                 android:layout_height="37dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/rounded_blue"
@@ -206,7 +206,7 @@
 
             <TextView
                 android:id="@+id/textView39"
-                android:layout_width="372dp"
+                android:layout_width="match_parent"
                 android:layout_height="159dp"
                 android:background="@drawable/rounded_blue"
                 android:backgroundTint="@color/lighter_light_blue"
@@ -337,7 +337,7 @@
 
             <TextView
                 android:id="@+id/textView42"
-                android:layout_width="367dp"
+                android:layout_width="match_parent"
                 android:layout_height="38dp"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/rounded_blue"
@@ -411,7 +411,7 @@
 
             <EditText
                 android:id="@+id/et_specialInstruction"
-                android:layout_width="362dp"
+                android:layout_width="match_parent"
                 android:layout_height="152dp"
                 android:layout_marginTop="4dp"
                 android:gravity="top"
@@ -431,9 +431,11 @@
 
             <Button
                 android:id="@+id/btn_save"
-                android:layout_width="111dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
                 android:background="@drawable/rounded"
                 android:text="Save"
                 app:backgroundTint="@color/light_blue"
