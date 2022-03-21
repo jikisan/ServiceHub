@@ -52,12 +52,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_margin="20dp"
             android:orientation="vertical"
-            android:paddingBottom="10dp">
+            android:paddingBottom="35dp">
 
             <TextView
                 android:id="@+id/iv_techProfilePic"
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="155dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/rounded_blue"
@@ -115,7 +116,7 @@
 
             <EditText
                 android:id="@+id/et_projectName"
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="37dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/rounded_blue"
@@ -211,16 +212,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView35" />
 
+
             <TextView
                 android:id="@+id/textView39"
-                android:layout_width="350dp"
-                android:layout_height="159dp"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
                 android:background="@drawable/rounded_blue"
                 android:backgroundTint="@color/lighter_light_blue"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView37" />
+                app:layout_constraintTop_toBottomOf="@+id/textView37">
 
+
+            </TextView>
 
             <TextView
                 android:id="@+id/textView38"
@@ -331,18 +336,6 @@
                 app:layout_constraintStart_toEndOf="@+id/et_slotCount"
                 app:layout_constraintTop_toTopOf="@+id/et_slotCount" />
 
-            <Button
-                android:id="@+id/btn_slotAdd"
-                android:layout_width="111dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/rounded"
-                android:text="Add"
-                app:backgroundTint="@color/light_blue"
-                app:layout_constraintEnd_toEndOf="@+id/textView39"
-                app:layout_constraintStart_toStartOf="@+id/textView39"
-                app:layout_constraintTop_toBottomOf="@+id/et_slotCount" />
-
 
             <TextView
                 android:id="@+id/textView45"
@@ -360,7 +353,7 @@
 
             <EditText
                 android:id="@+id/et_specialInstruction"
-                android:layout_width="350dp"
+                android:layout_width="match_parent"
                 android:layout_height="152dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/rounded_blue"
@@ -379,9 +372,12 @@
 
             <Button
                 android:id="@+id/btn_save"
-                android:layout_width="111dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:elevation="10dp"
                 android:background="@drawable/rounded"
                 android:text="Save"
                 app:backgroundTint="@color/light_blue"
