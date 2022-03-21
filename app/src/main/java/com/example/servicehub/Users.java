@@ -3,12 +3,12 @@ package com.example.servicehub;
 public class Users {
 
 
-    private String userId;
-    private String firstName;
-    private String lastName;
-    private String contactNum;
-    private String username;
-    private String password;
+     String userId;
+     String firstName;
+     String lastName;
+     String contactNum;
+     String username;
+     String password;
 
     public Users(){}
 

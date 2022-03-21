@@ -43,10 +43,10 @@ public class login_page extends AppCompatActivity {
 
         setRef();
 
-        if (fAuth.getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(), homepage.class));
-            finish();
-        }
+//        if (fAuth.getCurrentUser() != null) {
+//            startActivity(new Intent(getApplicationContext(), homepage.class));
+//            finish();
+//        }
         ClickListener();
     }
 

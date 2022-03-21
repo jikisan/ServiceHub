@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -26,8 +27,7 @@ public class sign_up_page extends AppCompatActivity {
     TextView tv_signIn;
     Button btn_signUp;
     FirebaseAuth fAuth;
-
-
+    private FirebaseUser user;
     private DatabaseReference userDatabase;
 
     @Override
@@ -35,6 +35,7 @@ public class sign_up_page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up_page);
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
         userDatabase = FirebaseDatabase.getInstance().getReference(Users.class.getSimpleName());
         setRef();
         ClickListener();
@@ -61,14 +62,12 @@ public class sign_up_page extends AppCompatActivity {
     }
 
     private void signUpUser() {
-        String id = userDatabase.push().getKey();
         String firstName = et_firstName.getText().toString();
         String lastName = et_lastName.getText().toString();
         String username = et_username.getText().toString();
         String password = et_password_signup.getText().toString();
         String confirmPass = et_confirmPassword.getText().toString();
         String contactNum = et_contactNumber.getText().toString();
-
 
 
         if (TextUtils.isEmpty(firstName)) {
@@ -94,16 +93,31 @@ public class sign_up_page extends AppCompatActivity {
         } else if (!password.equals(confirmPass)) {
             Toast.makeText(this, "Password did not match", Toast.LENGTH_SHORT).show();
         } else {
-            Users users = new Users(id, firstName, lastName, contactNum, username, password);
-            userDatabase.child(id).setValue(users);
 
             fAuth.createUserWithEmailAndPassword(username, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
-                    if(task.isSuccessful()){
-                        Toast.makeText(sign_up_page.this, "User Created", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), homepage.class));
-                    }else {
+
+                    if (task.isSuccessful()) {
+                        String id = user.getUid();
+
+                        Users users = new Users(id, firstName, lastName, contactNum, username, password);
+
+                        userDatabase.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .setValue(users).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(sign_up_page.this, "User Created", Toast.LENGTH_LONG).show();
+                                    startActivity(new Intent(getApplicationContext(), login_page.class));
+                                } else {
+                                    Toast.makeText(sign_up_page.this, "Creation Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+
+                    } else {
                         Toast.makeText(sign_up_page.this, "Creation Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
