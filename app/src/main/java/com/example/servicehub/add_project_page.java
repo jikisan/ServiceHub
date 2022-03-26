@@ -70,8 +70,19 @@ public class add_project_page extends AppCompatActivity {
 
         Projects projects = new Projects(projName, projAddress, price, projTimeSlot, projTimeSlotCount, projInstruction, userID);
 
-        projectDatabase.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .setValue(projects).addOnCompleteListener(new OnCompleteListener<Void>() {
+//        projectDatabase.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                .setValue(projects).addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task) {
+//                if (task.isSuccessful()) {
+//                    Toast.makeText(add_project_page.this, "Project Added", Toast.LENGTH_LONG).show();
+//                } else {
+//                    Toast.makeText(add_project_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+
+        projectDatabase.push().setValue(projects).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {

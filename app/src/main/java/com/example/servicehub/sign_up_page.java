@@ -93,28 +93,35 @@ public class sign_up_page extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
 
-                    if (task.isSuccessful()) {
-                        if(user != null){
-                            String id = user.getUid();
-                            Users users = new Users(id, firstName, lastName, contactNum, username, password);
+                    fAuth.signInWithEmailAndPassword(username, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                String id = user.getUid();
+                                Users users = new Users(id, firstName, lastName, contactNum, username, password);
 
-                            userDatabase.child(user.getUid())
-                                    .setValue(users).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(sign_up_page.this, "User Created", Toast.LENGTH_LONG).show();
-                                        startActivity(new Intent(getApplicationContext(), login_page.class));
-                                    } else {
-                                        Toast.makeText(sign_up_page.this, "Creation Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                userDatabase.child(user.getUid())
+                                        .setValue(users).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(sign_up_page.this, "User Created", Toast.LENGTH_LONG).show();
+                                            fAuth.signOut();
+                                            startActivity(new Intent(getApplicationContext(), login_page.class));
+                                        } else {
+                                            Toast.makeText(sign_up_page.this, "Creation Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
                                     }
-                                }
-                            });
-                        }
+                                });
 
-                    } else {
-                        Toast.makeText(sign_up_page.this, "Creation Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+
+                            } else {
+                                Toast.makeText(sign_up_page.this, "Creation Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+
                 }
             });
         }
