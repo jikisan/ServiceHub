@@ -148,7 +148,7 @@ public class login_page extends AppCompatActivity {
                     }
                 });
 
-                pwResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                pwResetDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
