@@ -56,23 +56,16 @@
             android:orientation="vertical"
             android:paddingBottom="35dp">
 
-            <TextView
-                android:id="@+id/iv_techProfilePic"
+            <ImageView
+                android:id="@+id/iv_projectImage"
                 android:layout_width="match_parent"
-                android:layout_height="155dp"
+                android:layout_height="150dp"
                 android:background="@drawable/rounded_blue"
+                android:padding="5dp"
+                android:src="@drawable/upload_photo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/upload_photo"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_techProfilePic"
-                app:layout_constraintEnd_toEndOf="@+id/iv_techProfilePic"
-                app:layout_constraintStart_toStartOf="@+id/iv_techProfilePic"
-                app:layout_constraintTop_toTopOf="@+id/iv_techProfilePic" />
 
             <TextView
                 android:id="@+id/tv_uploadPhoto"
@@ -88,7 +81,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_techProfilePic" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_projectImage" />
 
             <EditText
                 android:id="@+id/et_projectName"
@@ -227,38 +220,40 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView37" />
 
 
-            <EditText
-                android:id="@+id/et_timeSlot"
+            <TextView
+                android:id="@+id/tv_timeSlot"
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
                 android:layout_marginTop="7dp"
                 android:gravity="center"
                 android:hint="00:00"
+                android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="@+id/textView38"
                 app:layout_constraintStart_toEndOf="@+id/textView38"
                 app:layout_constraintTop_toTopOf="@+id/textView38"
-                app:layout_constraintVertical_bias="0.68" />
+                app:layout_constraintVertical_bias="1.0" />
 
             <Button
                 android:id="@+id/btn_pickTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="36dp"
-                android:layout_marginLeft="36dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="48dp"
                 android:backgroundTint="@color/light_blue"
                 android:text="Pick time"
-                app:layout_constraintBottom_toBottomOf="@+id/et_timeSlot"
-                app:layout_constraintStart_toEndOf="@+id/et_timeSlot"
-                app:layout_constraintTop_toTopOf="@+id/et_timeSlot"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintBottom_toBottomOf="@+id/tv_timeSlot"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tv_timeSlot"
+                app:layout_constraintTop_toTopOf="@+id/tv_timeSlot"
+                app:layout_constraintVertical_bias="0.53" />
 
             <TextView
                 android:id="@+id/textView41"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="28dp"
                 android:text="Slot"
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -280,9 +275,9 @@
 
             <TextView
                 android:id="@+id/tv_slotCount"
-                android:layout_width="36dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="16dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="50dp"
                 android:layout_marginLeft="16dp"
                 android:background="@drawable/rounded_blue"
                 android:gravity="center"
@@ -296,7 +291,7 @@
                 android:id="@+id/iv_increaseSlot"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="50dp"
                 android:layout_marginLeft="16dp"
                 android:elevation="10dp"
                 android:src="@drawable/add"
