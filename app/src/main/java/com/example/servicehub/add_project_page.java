@@ -24,8 +24,14 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.Autocomplete;
+import com.google.android.libraries.places.widget.AutocompleteActivity;
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -34,18 +40,20 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public class add_project_page extends AppCompatActivity {
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_decreaseSlot, iv_increaseSlot, iv_projectImage;
-    EditText et_projectName, et_address, et_price, et_specialInstruction;
+    EditText et_projectName,  et_price, et_specialInstruction;
     Button btn_pickTime, btn_save;
-    TextView tv_uploadPhoto, tv_slotCount, tv_timeSlot;
+    TextView tv_uploadPhoto, tv_slotCount, tv_timeSlot, tv_address;
 
     int hour, minute;
     int slotCount = 1;
-    String slotCountText;
+    String slotCountText, latLng;;
 
     FirebaseAuth fAuth;
     private FirebaseUser project;
@@ -61,9 +69,19 @@ public class add_project_page extends AppCompatActivity {
         projectDatabase = FirebaseDatabase.getInstance().getReference(Projects.class.getSimpleName());
 
         setRef();
-        adjustSlot();
+        //adjustSlot();
         ClickListener();
         bottomNavTaskbar();
+        initPlaces();
+    }
+
+    private void initPlaces() {
+
+        //Initialize places
+        Places.initialize(getApplicationContext(),"AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8");
+
+        //Set edittext no focusable
+        tv_address.setFocusable(false);
     }
 
     private void ClickListener() {
@@ -92,7 +110,7 @@ public class add_project_page extends AppCompatActivity {
 
                 int style = TimePickerDialog.THEME_HOLO_DARK;
 
-                TimePickerDialog timePickerDialog = new TimePickerDialog(add_project_page.this, style, onTimeSetListener, hour, minute, true);
+                TimePickerDialog timePickerDialog = new TimePickerDialog(add_project_page.this, style, onTimeSetListener, hour, minute, false);
                 timePickerDialog.setTitle("Select Time");
                 timePickerDialog.show();
             }
@@ -115,6 +133,22 @@ public class add_project_page extends AppCompatActivity {
                     }else
                         PickImage();
                 }
+            }
+        });
+
+        tv_address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //Initialize place field list
+                List<Place.Field> fieldList = Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ADDRESS,
+                        com.google.android.libraries.places.api.model.Place.Field.LAT_LNG, com.google.android.libraries.places.api.model.Place.Field.NAME);
+
+                //Create intent
+                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(add_project_page.this);
+
+                //Start Activity result
+                startActivityForResult(intent, 100);
             }
         });
     }
@@ -154,21 +188,40 @@ public class add_project_page extends AppCompatActivity {
                 Uri resultUri = result.getUri();
 
                 try{
+
                     InputStream stream = getContentResolver().openInputStream(resultUri);
                     Bitmap bitmap = BitmapFactory.decodeStream(stream);
                     iv_projectImage.setImageBitmap(bitmap);
+
                 }catch (Exception e){
                     e.printStackTrace();
                 }
+
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 Exception error = result.getError();
             }
+        }
+
+        else if(requestCode == 100 && resultCode == RESULT_OK){
+
+
+            com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
+            tv_address.setText(place.getAddress());
+            latLng = place.getLatLng().toString();
+
+            System.out.println("Log JK: Success" + latLng);
+            Toast.makeText(this, "Log JK: Success " + latLng, Toast.LENGTH_SHORT).show();
+
+        }else if(resultCode == AutocompleteActivity.RESULT_ERROR){
+            Status status = Autocomplete.getStatusFromIntent(data);
+            System.out.println("Log JK : " + status.getStatusMessage());
+            Toast.makeText(this, status.getStatusMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void addProj() {
         String projName = et_projectName.getText().toString();
-        String projAddress = et_address.getText().toString();
+        String projAddress = tv_address.getText().toString();
         String price = et_price.getText().toString();
         String projTimeSlot = tv_timeSlot.getText().toString();
         String projTimeSlotCount = tv_slotCount.getText().toString();
@@ -189,42 +242,42 @@ public class add_project_page extends AppCompatActivity {
             }
         });
     }
-    private void adjustSlot() {
-
-        slotCountText = String.valueOf(slotCount);
-        tv_slotCount.setText(slotCountText);
-
-        iv_decreaseSlot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String slotCountText;
-
-
-                if (slotCount == 1){
-                    slotCount = 1;
-                    Toast.makeText(add_project_page.this, "Slot cannot be empty", Toast.LENGTH_SHORT).show();
-                    slotCountText = String.valueOf(slotCount);
-                    tv_slotCount.setText(slotCountText);
-                }else
-                {
-                    slotCount = slotCount - 1;
-                    slotCountText = String.valueOf(slotCount);
-                    tv_slotCount.setText(slotCountText);
-                }
-            }
-        });
-
-        iv_increaseSlot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                    slotCount = slotCount + 1;
-                    slotCountText = String.valueOf(slotCount);
-                    tv_slotCount.setText(slotCountText);
-
-            }
-        });
-    }
+//    private void adjustSlot() {
+//
+//        slotCountText = String.valueOf(slotCount);
+//        tv_slotCount.setText(slotCountText);
+//
+//        iv_decreaseSlot.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String slotCountText;
+//
+//
+//                if (slotCount == 1){
+//                    slotCount = 1;
+//                    Toast.makeText(add_project_page.this, "Slot cannot be empty", Toast.LENGTH_SHORT).show();
+//                    slotCountText = String.valueOf(slotCount);
+//                    tv_slotCount.setText(slotCountText);
+//                }else
+//                {
+//                    slotCount = slotCount - 1;
+//                    slotCountText = String.valueOf(slotCount);
+//                    tv_slotCount.setText(slotCountText);
+//                }
+//            }
+//        });
+//
+//        iv_increaseSlot.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                    slotCount = slotCount + 1;
+//                    slotCountText = String.valueOf(slotCount);
+//                    tv_slotCount.setText(slotCountText);
+//
+//            }
+//        });
+//    }
     private void bottomNavTaskbar() {
 
         iv_messageBtn.setOnClickListener(new View.OnClickListener() {
@@ -274,13 +327,13 @@ public class add_project_page extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        iv_decreaseSlot = findViewById(R.id.iv_decreaseSlot);
-        iv_increaseSlot = findViewById(R.id.iv_increaseSlot);
+//        iv_decreaseSlot = findViewById(R.id.iv_decreaseSlot);
+//        iv_increaseSlot = findViewById(R.id.iv_increaseSlot);
         iv_projectImage = findViewById(R.id.iv_projectImage);
         et_projectName = findViewById(R.id.et_projectName);
         et_price = findViewById(R.id.et_price);
         tv_timeSlot = findViewById(R.id.tv_timeSlot);
-        et_address = findViewById(R.id.et_address);
+        tv_address = findViewById(R.id.tv_address);
         et_specialInstruction = findViewById(R.id.et_specialInstruction);
         btn_save = findViewById(R.id.btn_save);
         btn_pickTime = findViewById(R.id.btn_pickTime);

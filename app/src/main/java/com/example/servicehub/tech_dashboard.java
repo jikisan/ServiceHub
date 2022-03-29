@@ -88,8 +88,6 @@ public class tech_dashboard extends AppCompatActivity {
             }
         }); // end of add project button
 
-
-
     }
 
     private void bottomNavTaskbar() {
