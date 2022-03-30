@@ -45,15 +45,19 @@ import java.util.List;
 import java.util.Locale;
 
 public class add_project_page extends AppCompatActivity {
+
+    public static final String API_KEY = "AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8";
+
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_decreaseSlot, iv_increaseSlot, iv_projectImage;
     EditText et_projectName,  et_price, et_specialInstruction;
     Button btn_pickTime, btn_save;
     TextView tv_uploadPhoto, tv_slotCount, tv_timeSlot, tv_address;
+    Uri imageUri;
 
     int hour, minute;
     int slotCount = 1;
-    String slotCountText, latLng;;
+    String slotCountText, latLng;
 
     FirebaseAuth fAuth;
     private FirebaseUser project;
@@ -70,15 +74,15 @@ public class add_project_page extends AppCompatActivity {
 
         setRef();
         //adjustSlot();
+        initPlaces();
         ClickListener();
         bottomNavTaskbar();
-        initPlaces();
     }
 
     private void initPlaces() {
 
         //Initialize places
-        Places.initialize(getApplicationContext(),"AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8");
+        Places.initialize(getApplicationContext(), API_KEY);
 
         //Set edittext no focusable
         tv_address.setFocusable(false);
@@ -185,11 +189,11 @@ public class add_project_page extends AppCompatActivity {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                Uri resultUri = result.getUri();
+                 imageUri = result.getUri();
 
                 try{
 
-                    InputStream stream = getContentResolver().openInputStream(resultUri);
+                    InputStream stream = getContentResolver().openInputStream(imageUri);
                     Bitmap bitmap = BitmapFactory.decodeStream(stream);
                     iv_projectImage.setImageBitmap(bitmap);
 
@@ -203,19 +207,14 @@ public class add_project_page extends AppCompatActivity {
         }
 
         else if(requestCode == 100 && resultCode == RESULT_OK){
-
-
             com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
             tv_address.setText(place.getAddress());
             latLng = place.getLatLng().toString();
 
-            System.out.println("Log JK: Success" + latLng);
-            Toast.makeText(this, "Log JK: Success " + latLng, Toast.LENGTH_SHORT).show();
+        }
 
-        }else if(resultCode == AutocompleteActivity.RESULT_ERROR){
+        else if(resultCode == AutocompleteActivity.RESULT_ERROR){
             Status status = Autocomplete.getStatusFromIntent(data);
-            System.out.println("Log JK : " + status.getStatusMessage());
-            Toast.makeText(this, status.getStatusMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -224,18 +223,21 @@ public class add_project_page extends AppCompatActivity {
         String projAddress = tv_address.getText().toString();
         String price = et_price.getText().toString();
         String projTimeSlot = tv_timeSlot.getText().toString();
-        String projTimeSlotCount = tv_slotCount.getText().toString();
-        String projInstruction = et_specialInstruction.getText().toString();;
+        String projInstruction = et_specialInstruction.getText().toString();
+        String imageUriText = imageUri.toString();
+
 
         String userID = project.getUid();
 
-        Projects projects = new Projects(projName, projAddress, price, projTimeSlot, projTimeSlotCount, projInstruction, userID);
+        Projects projects = new Projects(imageUriText, projName, projAddress, price, projTimeSlot, projInstruction, userID, latLng);
 
         projectDatabase.push().setValue(projects).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(add_project_page.this, "Project Added", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(add_project_page.this, tech_dashboard.class);
+                    startActivity(intent);
                 } else {
                     Toast.makeText(add_project_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -338,7 +340,6 @@ public class add_project_page extends AppCompatActivity {
         btn_save = findViewById(R.id.btn_save);
         btn_pickTime = findViewById(R.id.btn_pickTime);
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
-        tv_slotCount = findViewById(R.id.tv_slotCount);
 
     }
 }

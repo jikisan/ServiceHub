@@ -1,25 +1,39 @@
 package com.example.servicehub;
 
+import android.net.Uri;
+
 public class Projects {
 
+    String imageUri;
     String projName;
     String projAddress;
     String price;
     String projTimeSlot;
-    String projTimeSlotCount;
     String projInstruction;
     String userID;
+    String latLng;
 
-    public Projects(){}
+    public Projects(){
 
-    public Projects(String projName, String projAddress, String price, String projTimeSlot, String projTimeSlotCount, String projInstruction, String userID) {
+    }
+
+    public Projects(String imageUri, String projName, String projAddress, String price, String projTimeSlot, String projInstruction, String userID, String latLng) {
+        this.imageUri = imageUri;
         this.projName = projName;
         this.projAddress = projAddress;
         this.price = price;
         this.projTimeSlot = projTimeSlot;
-        this.projTimeSlotCount = projTimeSlotCount;
         this.projInstruction = projInstruction;
         this.userID = userID;
+        this.latLng = latLng;
+    }
+
+    public String getResultUriText() {
+        return imageUri;
+    }
+
+    public void setResultUriText(String imageUri) {
+        this.imageUri = imageUri;
     }
 
     public String getProjName() {
@@ -54,13 +68,6 @@ public class Projects {
         this.projTimeSlot = projTimeSlot;
     }
 
-    public String getProjTimeSlotCount() {
-        return projTimeSlotCount;
-    }
-
-    public void setProjTimeSlotCount(String projTimeSlotCount) {
-        this.projTimeSlotCount = projTimeSlotCount;
-    }
 
     public String getProjInstruction() {
         return projInstruction;
@@ -69,6 +76,7 @@ public class Projects {
     public void setProjInstruction(String projInstruction) {
         this.projInstruction = projInstruction;
     }
+
     public String getUserID() {
         return userID;
     }
@@ -76,5 +84,14 @@ public class Projects {
     public void setUserID(String userID) {
         this.userID = userID;
     }
+
+    public String getLatLng() {
+        return latLng;
+    }
+
+    public void setLatLng(String latLng) {
+        this.latLng = latLng;
+    }
+
 
 }
