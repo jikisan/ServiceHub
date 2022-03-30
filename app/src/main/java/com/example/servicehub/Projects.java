@@ -1,7 +1,5 @@
 package com.example.servicehub;
 
-import android.net.Uri;
-
 public class Projects {
 
     String imageUri;
@@ -10,29 +8,28 @@ public class Projects {
     String price;
     String projTimeSlot;
     String projInstruction;
-    String userID;
     String latLng;
 
-    public Projects(){
+    private Projects(){
 
     }
 
-    public Projects(String imageUri, String projName, String projAddress, String price, String projTimeSlot, String projInstruction, String userID, String latLng) {
+    public Projects(String imageUri, String projName, String projAddress, String price, String projTimeSlot, String projInstruction, String latLng) {
         this.imageUri = imageUri;
         this.projName = projName;
         this.projAddress = projAddress;
         this.price = price;
         this.projTimeSlot = projTimeSlot;
         this.projInstruction = projInstruction;
-        this.userID = userID;
         this.latLng = latLng;
     }
 
-    public String getResultUriText() {
+
+    public String getImageUri() {
         return imageUri;
     }
 
-    public void setResultUriText(String imageUri) {
+    public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
     }
 
@@ -68,7 +65,6 @@ public class Projects {
         this.projTimeSlot = projTimeSlot;
     }
 
-
     public String getProjInstruction() {
         return projInstruction;
     }
@@ -77,13 +73,6 @@ public class Projects {
         this.projInstruction = projInstruction;
     }
 
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
 
     public String getLatLng() {
         return latLng;

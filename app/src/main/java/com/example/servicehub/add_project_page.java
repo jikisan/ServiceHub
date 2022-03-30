@@ -60,8 +60,9 @@ public class add_project_page extends AppCompatActivity {
     String slotCountText, latLng;
 
     FirebaseAuth fAuth;
-    private FirebaseUser project;
+    private FirebaseUser user;
     private DatabaseReference projectDatabase;
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +70,9 @@ public class add_project_page extends AppCompatActivity {
         setContentView(R.layout.add_project_page);
 
 
-        project = FirebaseAuth.getInstance().getCurrentUser();
-        projectDatabase = FirebaseDatabase.getInstance().getReference(Projects.class.getSimpleName());
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userID = user.getUid();
+        projectDatabase = FirebaseDatabase.getInstance().getReference("Projects").child(userID);
 
         setRef();
         //adjustSlot();
@@ -189,7 +191,7 @@ public class add_project_page extends AppCompatActivity {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                 imageUri = result.getUri();
+                imageUri = result.getUri();
 
                 try{
 
@@ -227,9 +229,7 @@ public class add_project_page extends AppCompatActivity {
         String imageUriText = imageUri.toString();
 
 
-        String userID = project.getUid();
-
-        Projects projects = new Projects(imageUriText, projName, projAddress, price, projTimeSlot, projInstruction, userID, latLng);
+        Projects projects = new Projects(imageUriText, projName, projAddress, price, projTimeSlot, projInstruction, latLng);
 
         projectDatabase.push().setValue(projects).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

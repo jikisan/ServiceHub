@@ -23,7 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/back_arrow"
-                android:text="Edit Listing"
+                android:text="Add Listing"
                 android:textColor="@color/black"
                 android:textSize="25sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -34,7 +34,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
-
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -56,44 +55,37 @@
             android:orientation="vertical"
             android:paddingBottom="35dp">
 
+
             <ImageView
-                android:id="@+id/iv_techProfilePic"
+                android:id="@+id/iv_listingImage"
                 android:layout_width="match_parent"
-                android:layout_height="155dp"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/listing_pic"
+                android:layout_height="150dp"
+                android:background="@drawable/rounded_blue"
+                android:padding="5dp"
+                android:src="@drawable/upload_photo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView32"
+                android:id="@+id/tv_uploadPhoto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:drawableRight="@drawable/add"
                 android:drawableTint="@color/light_blue"
-                android:text="Change Photo"
+                android:text="Upload Photo"
                 android:textColor="@color/light_blue"
                 android:textSize="15sp"
+                android:elevation="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_techProfilePic" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView32" />
-
+                app:layout_constraintTop_toBottomOf="@+id/iv_listingImage" />
 
             <TextView
                 android:id="@+id/textView33"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Listing Name"
@@ -103,44 +95,65 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.034"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView32" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_uploadPhoto" />
+
 
             <EditText
-                android:id="@+id/et_projectName"
+                android:id="@+id/et_listingName"
                 android:layout_width="match_parent"
-                android:layout_height="37dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/rounded_blue"
-                android:hint="Air-condition Square Diffuser 4 Way"
-                android:paddingLeft="10dp"
-                android:textColorHint="@color/black"
+                android:hint="Input Listing Name"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView33" />
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_projectName" />
 
             <TextView
                 android:id="@+id/textView34"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
+                android:text="Address"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_listingName" />
+
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:background="@drawable/rounded_blue"
+                android:drawableLeft="@drawable/ic_baseline_location"
+                android:drawableTint="@color/black"
+                android:hint="Search Address"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@+id/et_listingName"
+                tools:layout_editor_absoluteX="0dp" />
+
+            <TextView
+                android:id="@+id/textView34"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Price"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.027"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_projectName" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_address" />
 
             <TextView
                 android:id="@+id/textView35"
@@ -156,51 +169,19 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView34" />
 
+
             <EditText
                 android:id="@+id/et_price"
                 android:layout_width="126dp"
                 android:layout_height="37dp"
                 android:background="@drawable/rounded_blue"
                 android:gravity="center"
-                android:hint="2,400.00"
+                android:inputType="number"
                 android:textColorHint="@color/black"
                 app:layout_constraintBottom_toBottomOf="@+id/textView35"
                 app:layout_constraintStart_toEndOf="@+id/textView35"
-                app:layout_constraintTop_toTopOf="@+id/textView35" />
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_price" />
-
-            <TextView
-                android:id="@+id/textView37"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Stocks"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.03"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView35" />
-
-
-            <TextView
-                android:id="@+id/textView39"
-                android:layout_width="match_parent"
-                android:layout_height="61dp"
-                android:background="@drawable/rounded_blue"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView37" />
+                app:layout_constraintTop_toTopOf="@+id/textView35"
+                app:layout_constraintVertical_bias="1.0" />
 
             <TextView
                 android:id="@+id/textView41"
@@ -208,107 +189,80 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="28dp"
                 android:text="Quantity"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/textView39"
-                app:layout_constraintTop_toTopOf="@+id/textView39" />
+                app:layout_constraintTop_toBottomOf="@+id/textView35" />
 
             <ImageView
-                android:id="@+id/imageView16"
+                android:id="@+id/iv_decreaseBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="72dp"
-                android:layout_marginLeft="72dp"
+                android:layout_marginStart="40dp"
+                android:layout_marginLeft="40dp"
                 android:src="@drawable/minus"
                 app:layout_constraintBottom_toBottomOf="@+id/textView41"
                 app:layout_constraintStart_toEndOf="@+id/textView41"
                 app:layout_constraintTop_toTopOf="@+id/textView41"
                 app:layout_constraintVertical_bias="1.0" />
 
-            <EditText
-                android:id="@+id/et_slotCount"
+            <TextView
+                android:id="@+id/tv_quantity"
                 android:layout_width="36dp"
                 android:layout_height="32dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
                 android:background="@drawable/rounded_blue"
                 android:gravity="center"
-                android:hint="0"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView16"
-                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                app:layout_constraintTop_toTopOf="@+id/imageView16"
+                android:text="1"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_decreaseBtn"
+                app:layout_constraintStart_toEndOf="@+id/iv_decreaseBtn"
+                app:layout_constraintTop_toTopOf="@+id/iv_decreaseBtn"
                 app:layout_constraintVertical_bias="0.375" />
 
             <ImageView
-                android:id="@+id/imageView17"
+                android:id="@+id/iv_increaseBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
                 android:src="@drawable/add"
-                app:layout_constraintBottom_toBottomOf="@+id/et_slotCount"
-                app:layout_constraintStart_toEndOf="@+id/et_slotCount"
-                app:layout_constraintTop_toTopOf="@+id/et_slotCount" />
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView39" />
-
+                app:layout_constraintBottom_toBottomOf="@+id/tv_quantity"
+                app:layout_constraintStart_toEndOf="@+id/tv_quantity"
+                app:layout_constraintTop_toTopOf="@+id/tv_quantity"
+                app:layout_constraintVertical_bias="0.375" />
 
             <TextView
                 android:id="@+id/textView45"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="16dp"
                 android:text="Description"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.044"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView39" />
+                app:layout_constraintTop_toBottomOf="@+id/textView41" />
 
             <EditText
-                android:id="@+id/et_specialInstruction"
+                android:id="@+id/et_listDesc"
                 android:layout_width="match_parent"
-                android:layout_height="152dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/rounded_blue"
-                android:hint="Specifications of Air-condition Square Diffuser 4 Way\n
-
-Brand: No Brand\n
-SKU650296849_PH-1843512023\n\n
-
-Model\n
-4WAYS 300x300\n
-
-Warranty Type\n
-Local Manufacturer Warranty\n\n
-
-Warranty Period\n
-14 Days\n"
+                android:hint="Special Instruction"
+                android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView45" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_specialInstruction" />
 
             <Button
                 android:id="@+id/btn_save"
@@ -317,13 +271,14 @@ Warranty Period\n
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
+                android:elevation="10dp"
+
                 android:background="@drawable/rounded"
                 android:text="Save"
-                android:elevation="10dp"
                 app:backgroundTint="@color/light_blue"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_specialInstruction" />
+                app:layout_constraintTop_toBottomOf="@+id/et_listDesc" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
@@ -388,4 +343,5 @@ Warranty Period\n
 
 
     </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

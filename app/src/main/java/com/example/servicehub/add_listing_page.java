@@ -53,16 +53,18 @@ public class add_listing_page extends AppCompatActivity {
     String quantityText, latLng;
 
     FirebaseAuth fAuth;
-    private FirebaseUser listing;
+    private FirebaseUser user;
     private DatabaseReference listingDatabase;
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_listing_page);
 
-        listing = FirebaseAuth.getInstance().getCurrentUser();
-        listingDatabase = FirebaseDatabase.getInstance().getReference(Listings.class.getSimpleName());
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userID = user.getUid();
+        listingDatabase = FirebaseDatabase.getInstance().getReference("Listings").child(userID);
 
         setRef();
         initPlaces();
@@ -228,15 +230,13 @@ public class add_listing_page extends AppCompatActivity {
 
     private void addListing() {
         String listName = et_listingName.getText().toString();
-        String listAddress = tv_address.getText().toString();
         String listPrice = et_price.getText().toString();
         String listQuantity = tv_quantity.getText().toString();
         String listDesc = et_listDesc.getText().toString();
         String imageUriText = imageUri.toString();
 
-        String userID = listing.getUid();
 
-        Listings listings = new Listings(imageUriText, listName, latLng, listPrice, listQuantity, listDesc, userID);
+        Listings listings = new Listings(imageUriText, listName, latLng, listPrice, listQuantity, listDesc);
 
         listingDatabase.push().setValue(listings).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
