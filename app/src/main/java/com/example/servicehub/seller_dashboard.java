@@ -2,6 +2,8 @@ package com.example.servicehub;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +27,9 @@ public class seller_dashboard extends AppCompatActivity {
     private FirebaseUser user;
     private DatabaseReference userDatabase;
     private String userID;
+    private TabLayout tabLayout;
+    private ViewPager2 vp_viewPager2;
+    private fragmentAdapter adapter;
 
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_editListing;
@@ -40,10 +46,46 @@ public class seller_dashboard extends AppCompatActivity {
         userID = user.getUid();
 
         setRef();
+        generateTabLayout();
         buttonNav();
         getSellerInfo();
         bottomNavTaskbar();
     }
+
+    private void generateTabLayout() {
+
+        tabLayout.addTab(tabLayout.newTab().setText("Listings"));
+        tabLayout.addTab(tabLayout.newTab().setText("Orders"));
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        adapter = new fragmentAdapter(fragmentManager, getLifecycle());
+        vp_viewPager2.setAdapter(adapter);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                vp_viewPager2.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        vp_viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                tabLayout.selectTab(tabLayout.getTabAt(position));
+            }
+        });
+    }
+
 
     private void getSellerInfo() {
         userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -68,13 +110,13 @@ public class seller_dashboard extends AppCompatActivity {
 
     private void buttonNav() {
 
-        iv_editListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentEditListing = new Intent(seller_dashboard.this, edit_listing_page.class);
-                startActivity(intentEditListing);
-            }
-        }); // end of edit listing button
+//        iv_editListing.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intentEditListing = new Intent(seller_dashboard.this, edit_listing_page.class);
+//                startActivity(intentEditListing);
+//            }
+//        }); // end of edit listing button
 
 
         btn_addListing.setOnClickListener(new View.OnClickListener() {
@@ -138,8 +180,10 @@ public class seller_dashboard extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        iv_editListing = findViewById(R.id.iv_editListing);
+       // iv_editListing = findViewById(R.id.iv_editListing);
         btn_addListing = findViewById(R.id.btn_addListing);
         tv_bannerName = findViewById(R.id.tv_bannerName);
+        tabLayout = findViewById(R.id.tab_layout);
+        vp_viewPager2 = findViewById(R.id.vp_viewPager2);
     }
 }

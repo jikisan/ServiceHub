@@ -290,8 +290,6 @@ public class edit_project_page extends AppCompatActivity {
         hashMap.put("projTimeSlot", projTimeSlot);
         hashMap.put("userID", userID);
 
-
-
         projectDatabase.child(projectID).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
