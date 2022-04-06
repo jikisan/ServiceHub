@@ -8,16 +8,49 @@
     android:background="@color/bg_color">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:backgroundTint="@color/lighter_light_blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/back_arrow"
+                android:text="Tech Dashboard"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="16dp"
         android:background="@drawable/rounded"
         android:backgroundTint="@color/light_blue"
         app:cardCornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/cardView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -37,8 +70,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:textStyle="bold"
                 android:textSize="21sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_userPic"
                 app:layout_constraintStart_toEndOf="@+id/iv_userPic"
                 app:layout_constraintTop_toTopOf="@+id/iv_userPic" />
@@ -51,9 +84,9 @@
                 android:drawableLeft="@drawable/star"
                 android:drawableTint="#FFEB3B"
                 android:gravity="center"
-                android:textSize="20sp"
-                android:textColor="@color/black"
                 android:text="5.0"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_bannerName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_bannerName"
@@ -72,7 +105,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_margin="8dp"
-        android:backgroundTint="@color/bg_color"
+        android:background="@color/bg_color"
         app:tabMode="fixed"
         app:tabGravity="fill"
         app:tabIndicatorGravity="stretch"
@@ -90,7 +123,7 @@
         android:id="@+id/vp_viewPager2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="190dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

@@ -9,12 +9,13 @@ public class Projects {
     String projTimeSlot;
     String projInstruction;
     String latLng;
+    String ratings;
 
     private Projects(){
 
     }
 
-    public Projects(String imageUri, String projName, String projAddress, String price, String projTimeSlot, String projInstruction, String latLng) {
+    public Projects(String imageUri, String projName, String projAddress, String price, String projTimeSlot, String projInstruction, String latLng, String ratings) {
         this.imageUri = imageUri;
         this.projName = projName;
         this.projAddress = projAddress;
@@ -22,6 +23,7 @@ public class Projects {
         this.projTimeSlot = projTimeSlot;
         this.projInstruction = projInstruction;
         this.latLng = latLng;
+        this.ratings = ratings;
     }
 
 
@@ -80,6 +82,14 @@ public class Projects {
 
     public void setLatLng(String latLng) {
         this.latLng = latLng;
+    }
+
+    public String getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(String ratings) {
+        this.ratings = ratings;
     }
 
 

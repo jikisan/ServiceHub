@@ -22,6 +22,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import Adapter_and_fragments.fragmentAdapter;
+
 public class seller_dashboard extends AppCompatActivity {
 
     private FirebaseUser user;

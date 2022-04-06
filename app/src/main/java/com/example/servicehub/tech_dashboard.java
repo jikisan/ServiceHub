@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import Adapter_and_fragments.fragmentAdapter;
+
 public class tech_dashboard extends AppCompatActivity {
 
     private FirebaseUser user;
@@ -34,8 +37,9 @@ public class tech_dashboard extends AppCompatActivity {
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_editProject;
     TextView tv_bannerName;
-
     Button btn_addProject;
+    String imageUriText;
+    Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +60,8 @@ public class tech_dashboard extends AppCompatActivity {
 
     private void generateTabLayout() {
 
-        tabLayout.addTab(tabLayout.newTab().setText("Projects"));
-        tabLayout.addTab(tabLayout.newTab().setText("Bookings"));
+        tabLayout.addTab(tabLayout.newTab().setText("My Projects"));
+        tabLayout.addTab(tabLayout.newTab().setText("My Bookings"));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         adapter = new fragmentAdapter(fragmentManager, getLifecycle());

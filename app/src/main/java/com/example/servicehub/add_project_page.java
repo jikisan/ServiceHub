@@ -227,9 +227,10 @@ public class add_project_page extends AppCompatActivity {
         String projTimeSlot = tv_timeSlot.getText().toString();
         String projInstruction = et_specialInstruction.getText().toString();
         String imageUriText = imageUri.toString();
+        int ratings = 0;
+        String ratingsText = String.valueOf(ratings);
 
-
-        Projects projects = new Projects(imageUriText, projName, projAddress, price, projTimeSlot, projInstruction, latLng);
+        Projects projects = new Projects(imageUriText, projName, projAddress, price, projTimeSlot, projInstruction, latLng, ratingsText);
 
         projectDatabase.push().setValue(projects).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
