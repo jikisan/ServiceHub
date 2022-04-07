@@ -234,9 +234,12 @@ public class add_listing_page extends AppCompatActivity {
         String listQuantity = tv_quantity.getText().toString();
         String listDesc = et_listDesc.getText().toString();
         String imageUriText = imageUri.toString();
+        int ratings = 0;
+        String ratingsText;
 
+        ratingsText = String.valueOf(ratings);
 
-        Listings listings = new Listings(imageUriText, listName, latLng, listPrice, listQuantity, listDesc);
+        Listings listings = new Listings(imageUriText, listName, latLng, listPrice, listQuantity, listDesc, ratingsText);
 
         listingDatabase.push().setValue(listings).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

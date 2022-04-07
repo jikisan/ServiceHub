@@ -22,7 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import Adapter_and_fragments.fragmentAdapter;
+import Adapter_and_fragments.fragmentAdapterListings;
 
 public class seller_dashboard extends AppCompatActivity {
 
@@ -31,7 +31,7 @@ public class seller_dashboard extends AppCompatActivity {
     private String userID;
     private TabLayout tabLayout;
     private ViewPager2 vp_viewPager2;
-    private fragmentAdapter adapter;
+    private fragmentAdapterListings adapter;
 
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_editListing;
@@ -56,11 +56,11 @@ public class seller_dashboard extends AppCompatActivity {
 
     private void generateTabLayout() {
 
-        tabLayout.addTab(tabLayout.newTab().setText("Listings"));
-        tabLayout.addTab(tabLayout.newTab().setText("Orders"));
+        tabLayout.addTab(tabLayout.newTab().setText("Active Listings"));
+        tabLayout.addTab(tabLayout.newTab().setText("Active Orders"));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        adapter = new fragmentAdapter(fragmentManager, getLifecycle());
+        adapter = new fragmentAdapterListings(fragmentManager, getLifecycle());
         vp_viewPager2.setAdapter(adapter);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

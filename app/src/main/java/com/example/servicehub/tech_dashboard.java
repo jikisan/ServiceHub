@@ -60,8 +60,8 @@ public class tech_dashboard extends AppCompatActivity {
 
     private void generateTabLayout() {
 
-        tabLayout.addTab(tabLayout.newTab().setText("My Projects"));
-        tabLayout.addTab(tabLayout.newTab().setText("My Bookings"));
+        tabLayout.addTab(tabLayout.newTab().setText("Active Projects"));
+        tabLayout.addTab(tabLayout.newTab().setText("Active Bookings"));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         adapter = new fragmentAdapter(fragmentManager, getLifecycle());
