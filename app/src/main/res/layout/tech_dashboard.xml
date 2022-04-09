@@ -11,7 +11,7 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="58dp"
-        android:backgroundTint="@color/lighter_light_blue"
+        android:backgroundTint="@color/bg_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -42,11 +42,7 @@
         android:id="@+id/cardView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/rounded"
-        android:backgroundTint="@color/light_blue"
-        app:cardCornerRadius="12dp"
+        android:layout_margin="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView">
@@ -71,6 +67,7 @@
                 android:layout_marginStart="8dp"
                 android:textSize="21sp"
                 android:textStyle="bold"
+                android:textAllCaps="true"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_userPic"
                 app:layout_constraintStart_toEndOf="@+id/iv_userPic"
                 app:layout_constraintTop_toTopOf="@+id/iv_userPic" />
@@ -86,6 +83,7 @@
                 android:text="5.0"
                 android:textColor="@color/black"
                 android:textSize="20sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_bannerName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_bannerName"
@@ -102,17 +100,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@color/bg_color"
+        android:backgroundTint="@color/bg_color"
+        app:tabTextColor="@color/lighter_light_blue"
+        app:tabSelectedTextColor="@color/light_blue"
+        app:tabIndicatorColor="@color/light_blue"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2"
-        app:tabGravity="fill"
-        app:tabIndicator="@drawable/tab_indicator"
-        app:tabIndicatorAnimationMode="elastic"
-        app:tabIndicatorColor="@color/lighter_light_blue"
-        app:tabIndicatorGravity="stretch"
-        app:tabMode="fixed"
-        app:tabSelectedTextColor="@color/black" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView2"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp_viewPager2"

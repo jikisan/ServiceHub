@@ -35,6 +35,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -47,8 +48,6 @@ import java.util.Locale;
 public class edit_project_page extends AppCompatActivity {
 
     public static final String API_KEY = "AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8";
-    String projectID = "-MzQqfbaaTu-W-2KdFgu";
-
 
     private FirebaseUser user;
     private DatabaseReference projectDatabase;
@@ -62,6 +61,7 @@ public class edit_project_page extends AppCompatActivity {
     String imageUriText;
     Uri imageUri;
 
+    String projectIdFromIntent;
     int hour, minute;
     int slotCount = 1;
     String slotCountText, latLng;
@@ -227,7 +227,9 @@ public class edit_project_page extends AppCompatActivity {
     private void generateDataValue() {
 
 
-        projectDatabase.child(projectID).addListenerForSingleValueEvent(new ValueEventListener() {
+
+        projectIdFromIntent = getIntent().getStringExtra("Project ID");
+        projectDatabase.child(projectIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Projects projectData = snapshot.getValue(Projects.class);
@@ -290,7 +292,8 @@ public class edit_project_page extends AppCompatActivity {
         hashMap.put("projTimeSlot", projTimeSlot);
         hashMap.put("userID", userID);
 
-        projectDatabase.child(projectID).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
+        projectIdFromIntent = getIntent().getStringExtra("Project ID");
+        projectDatabase.child(projectIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
                 Toast.makeText(edit_project_page.this, "Project is updated", Toast.LENGTH_SHORT).show();
