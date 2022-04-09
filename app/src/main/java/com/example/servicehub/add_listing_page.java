@@ -40,7 +40,6 @@ import java.util.List;
 
 public class add_listing_page extends AppCompatActivity {
 
-    public final String API_KEY = "AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8";
 
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_listingImage, iv_decreaseBtn, iv_increaseBtn;
@@ -77,7 +76,7 @@ public class add_listing_page extends AppCompatActivity {
     private void initPlaces() {
 
         //Initialize places
-        Places.initialize(getApplicationContext(), API_KEY);
+        Places.initialize(getApplicationContext(), getString(R.string.API_KEY));
 
         //Set edittext no focusable
         tv_address.setFocusable(false);
