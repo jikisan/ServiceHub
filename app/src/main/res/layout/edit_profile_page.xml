@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="36dp"
         android:text="First Name"
         android:textColor="@color/black"
         android:textSize="16sp"
@@ -78,13 +78,12 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:gravity="end"
-        android:text="Tony"
         android:textAlignment="viewEnd"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/fname_editBtn"
-        app:layout_constraintEnd_toStartOf="@+id/fname_editBtn"
-        app:layout_constraintTop_toTopOf="@+id/fname_editBtn"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintBottom_toBottomOf="@+id/textView22"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView22" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -92,18 +91,6 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView22" />
-
-    <ImageView
-        android:id="@+id/fname_editBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/edit_black"
-        app:layout_constraintBottom_toBottomOf="@+id/textView22"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView22"
-        app:tint="@color/light_blue" />
 
 
     <TextView
@@ -118,6 +105,7 @@
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView22" />
+
     <TextView
         android:id="@+id/tv_lname"
         android:layout_width="209dp"
@@ -125,11 +113,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:gravity="end"
-        android:text="Stark"
         android:textAlignment="viewEnd"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView23"
-        app:layout_constraintEnd_toStartOf="@+id/lname_editBtn"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/textView23"
         app:layout_constraintVertical_bias="0.0" />
 
@@ -141,19 +128,6 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView23" />
-
-    <ImageView
-        android:id="@+id/lname_editBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/edit_black"
-        app:layout_constraintBottom_toBottomOf="@+id/textView23"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView23"
-        app:layout_constraintVertical_bias="1.0"
-        app:tint="@color/light_blue" />
 
     <TextView
         android:id="@+id/textView24"
@@ -172,40 +146,23 @@
         android:id="@+id/tv_contactNum"
         android:layout_width="164dp"
         android:layout_height="23dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginLeft="20dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:gravity="end"
-        android:text="(+63) ******8897"
         android:textAlignment="viewEnd"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/contactNum_editBtn"
-        app:layout_constraintEnd_toStartOf="@+id/contactNum_editBtn"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/textView24"
-        app:layout_constraintTop_toTopOf="@+id/contactNum_editBtn"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintBottom_toBottomOf="@+id/textView24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView24" />
 
     <View
+        android:id="@+id/view8"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
         android:background="@android:color/darker_gray"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView24" />
-
-    <ImageView
-        android:id="@+id/contactNum_editBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/edit_black"
-        app:layout_constraintBottom_toBottomOf="@+id/textView24"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView24"
-        app:tint="@color/light_blue" />
 
     <TextView
         android:id="@+id/textView25"
@@ -227,13 +184,11 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:gravity="end"
-        android:text="To*****77@gmail.com"
         android:textAlignment="viewEnd"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/email_editBtn"
-        app:layout_constraintEnd_toStartOf="@+id/email_editBtn"
-        app:layout_constraintTop_toTopOf="@+id/email_editBtn"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintBottom_toBottomOf="@+id/textView25"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textView25" />
 
     <View
         android:id="@+id/view5"
@@ -244,82 +199,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView25" />
 
-    <ImageView
-        android:id="@+id/email_editBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/edit_black"
-        app:layout_constraintBottom_toBottomOf="@+id/textView25"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView25"
-        app:tint="@color/light_blue" />
-
-
-    <TextView
-        android:id="@+id/textView26"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Username"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView25" />
-
-    <TextView
-        android:id="@+id/tv_username"
-        android:layout_width="139dp"
-        android:layout_height="22dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginLeft="60dp"
-        android:gravity="end"
-        android:text="IamIronTony"
-        android:textAlignment="viewEnd"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/username_editBtn"
-        app:layout_constraintEnd_toStartOf="@+id/username_editBtn"
-        app:layout_constraintHorizontal_bias="0.529"
-        app:layout_constraintStart_toEndOf="@+id/textView26"
-        app:layout_constraintTop_toTopOf="@+id/username_editBtn"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <View
-        android:id="@+id/view6"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="8dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView26" />
-
-    <ImageView
-        android:id="@+id/username_editBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:src="@drawable/edit_black"
-        app:layout_constraintBottom_toBottomOf="@+id/textView26"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView26"
-        app:tint="@color/light_blue" />
-
 
     <Button
         android:id="@+id/btn_save"
-        android:layout_width="350dp"
+        android:layout_width="wrap_content"
         android:layout_height="43dp"
-        android:layout_marginBottom="52dp"
+        android:layout_marginTop="52dp"
         android:background="@drawable/rounded"
-        android:text="save"
+        android:drawableLeft="@drawable/edit_black"
+        android:drawableTint="@color/white"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:text="Edit profile"
+        android:textSize="18sp"
+        android:elevation="10dp"
         app:backgroundTint="@color/light_blue"
-        app:layout_constraintBottom_toTopOf="@+id/cardViewBottom"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view5" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewBottom"

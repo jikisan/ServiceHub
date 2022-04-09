@@ -35,7 +35,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
@@ -52,78 +51,96 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_margin="20dp"
             android:orientation="vertical"
-            android:paddingBottom="10dp">
+            android:paddingBottom="35dp">
 
             <ImageView
-                android:id="@+id/iv_techProfilePic"
-                android:layout_width="367dp"
-                android:layout_height="155dp"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/image2"
+                android:id="@+id/iv_projectImage"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:background="@drawable/rounded_blue"
+                android:padding="5dp"
+                android:src="@drawable/upload_photo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView32"
+                android:id="@+id/tv_uploadPhoto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:drawableRight="@drawable/add"
                 android:drawableTint="@color/light_blue"
-                android:text="Change Photo"
+                android:elevation="10dp"
+                android:text="Upload Photo"
                 android:textColor="@color/light_blue"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_techProfilePic" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_projectImage" />
 
-            <View
+            <EditText
+                android:id="@+id/et_projectName"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/darker_gray"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Input Project Name"
+                android:paddingLeft="15dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:background="@drawable/rounded_blue"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView32" />
+                app:layout_constraintTop_toBottomOf="@+id/textView33"
+                tools:ignore="TouchTargetSizeCheck" />
 
 
             <TextView
                 android:id="@+id/textView33"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:text="Project Name"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.034"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView32" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_uploadPhoto" />
 
-            <EditText
-                android:id="@+id/et_projectName"
-                android:layout_width="369dp"
-                android:layout_height="37dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_blue"
-                android:hint="Kala Aircon Repair and Installation"
-                android:paddingLeft="10dp"
-                android:textColorHint="@color/black"
+            <TextView
+                android:id="@+id/textView34"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Address"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView33" />
+                app:layout_constraintTop_toBottomOf="@+id/et_projectName" />
 
-
-            <View
+            <TextView
+                android:id="@+id/tv_address"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/darker_gray"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="48dp"
+                android:background="@drawable/rounded_blue"
+                android:hint="Search Address"
+                android:padding="10dp"
+                android:drawableLeft="@drawable/ic_baseline_location"
+                android:drawableTint="@color/black"
+                android:textColor="@color/black"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_projectName" />
 
@@ -137,17 +154,17 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.027"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_projectName" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_address" />
 
             <TextView
                 android:id="@+id/textView35"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="36dp"
-                android:layout_marginLeft="36dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="12dp"
                 android:text="₱ "
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -158,11 +175,11 @@
             <EditText
                 android:id="@+id/et_price"
                 android:layout_width="126dp"
-                android:layout_height="37dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/rounded_blue"
                 android:gravity="center"
-                android:hint="600.00"
-                android:textColorHint="@color/black"
+                android:inputType="number"
+                android:padding="5dp"
                 app:layout_constraintBottom_toBottomOf="@+id/textView35"
                 app:layout_constraintStart_toEndOf="@+id/textView35"
                 app:layout_constraintTop_toTopOf="@+id/textView35" />
@@ -181,15 +198,6 @@
                 app:layout_constraintStart_toEndOf="@+id/et_price"
                 app:layout_constraintTop_toTopOf="@+id/et_price" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_price" />
-
             <TextView
                 android:id="@+id/textView37"
                 android:layout_width="wrap_content"
@@ -205,235 +213,86 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView35" />
 
             <TextView
-                android:id="@+id/textView39"
-                android:layout_width="372dp"
-                android:layout_height="159dp"
-                android:background="@drawable/rounded_blue"
-                android:backgroundTint="@color/lighter_light_blue"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/textView38"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="36dp"
+                android:layout_marginLeft="36dp"
+                android:layout_marginTop="12dp"
+                android:text="Time: "
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/textView37"
                 app:layout_constraintTop_toBottomOf="@+id/textView37" />
 
 
             <TextView
-                android:id="@+id/textView38"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_timeSlot"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="8dp"
-                android:text="Schedule:    Start "
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/textView39"
-                app:layout_constraintTop_toTopOf="@+id/textView39" />
-
-
-            <EditText
-                android:id="@+id/et_startTime"
-                android:layout_width="56dp"
-                android:layout_height="28dp"
-                android:background="@drawable/rounded_blue"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginTop="7dp"
                 android:gravity="center"
                 android:hint="00:00"
+                android:textSize="20sp"
+                android:padding="5dp"
+                android:background="@drawable/rounded_blue"
                 app:layout_constraintBottom_toBottomOf="@+id/textView38"
                 app:layout_constraintStart_toEndOf="@+id/textView38"
-                app:layout_constraintTop_toTopOf="@+id/textView39"
+                app:layout_constraintTop_toTopOf="@+id/textView38"
                 app:layout_constraintVertical_bias="1.0" />
-
-            <TextView
-                android:id="@+id/textView40"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:text="- End:"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/et_startTime"
-                app:layout_constraintStart_toEndOf="@+id/et_startTime"
-                app:layout_constraintTop_toTopOf="@+id/et_startTime"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <EditText
-                android:id="@+id/et_endTime"
-                android:layout_width="56dp"
-                android:layout_height="28dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/rounded_blue"
-                android:gravity="center"
-                android:hint="00:00"
-                app:layout_constraintBottom_toBottomOf="@+id/textView40"
-                app:layout_constraintStart_toEndOf="@+id/textView40"
-                app:layout_constraintTop_toTopOf="@+id/textView40"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <TextView
-                android:id="@+id/textView41"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="12dp"
-                android:text="Slot"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/textView39"
-                app:layout_constraintTop_toBottomOf="@+id/textView38" />
-
-            <ImageView
-                android:id="@+id/imageView16"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="72dp"
-                android:layout_marginLeft="72dp"
-                android:src="@drawable/minus"
-                app:layout_constraintBottom_toBottomOf="@+id/textView41"
-                app:layout_constraintStart_toEndOf="@+id/textView41"
-                app:layout_constraintTop_toTopOf="@+id/textView41"
-                app:layout_constraintVertical_bias="1.0" />
-
-            <EditText
-                android:id="@+id/et_slotCount"
-                android:layout_width="36dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:background="@drawable/rounded_blue"
-                android:gravity="center"
-                android:hint="0"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView16"
-                app:layout_constraintStart_toEndOf="@+id/imageView16"
-                app:layout_constraintTop_toTopOf="@+id/imageView16"
-                app:layout_constraintVertical_bias="0.375" />
-
-            <ImageView
-                android:id="@+id/imageView17"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/add"
-                app:layout_constraintBottom_toBottomOf="@+id/et_slotCount"
-                app:layout_constraintStart_toEndOf="@+id/et_slotCount"
-                app:layout_constraintTop_toTopOf="@+id/et_slotCount" />
 
             <Button
-                android:id="@+id/btn_slotAdd"
-                android:layout_width="111dp"
+                android:id="@+id/btn_pickTime"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/rounded"
-                android:text="Add"
-                app:backgroundTint="@color/light_blue"
-                app:layout_constraintEnd_toEndOf="@+id/textView39"
-                app:layout_constraintStart_toStartOf="@+id/textView39"
-                app:layout_constraintTop_toBottomOf="@+id/et_slotCount" />
-
-
-            <TextView
-                android:id="@+id/textView42"
-                android:layout_width="367dp"
-                android:layout_height="38dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/rounded_blue"
+                android:layout_marginStart="15dp"
+                android:layout_marginLeft="48dp"
+                android:backgroundTint="@color/light_blue"
+                android:text="Pick time"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_timeSlot"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.477"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView39" />
+                app:layout_constraintStart_toEndOf="@+id/tv_timeSlot"
+                app:layout_constraintTop_toTopOf="@+id/tv_timeSlot"
+                app:layout_constraintVertical_bias="0.53" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView42" />
 
-            <TextView
-                android:id="@+id/textView43"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="15dp"
-                android:text="09:00 - 13:00"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/textView42"
-                app:layout_constraintStart_toStartOf="@+id/textView42"
-                app:layout_constraintTop_toTopOf="@+id/textView42" />
-
-            <TextView
-                android:id="@+id/textView44"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="44dp"
-                android:layout_marginLeft="44dp"
-                android:text="2 Slots"
-                android:textColor="@color/light_blue"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/textView43"
-                app:layout_constraintStart_toEndOf="@+id/textView43"
-                app:layout_constraintTop_toTopOf="@+id/textView43"
-                app:layout_constraintVertical_bias="1.0" />
-
-            <ImageView
-                android:id="@+id/iv_deleteBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:layout_marginRight="12dp"
-                android:src="@drawable/delete"
-                app:layout_constraintBottom_toBottomOf="@+id/textView42"
-                app:layout_constraintEnd_toEndOf="@+id/textView42"
-                app:layout_constraintTop_toTopOf="@+id/textView42"
-                app:layout_constraintVertical_bias="0.444" />
 
             <TextView
                 android:id="@+id/textView45"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="16dp"
                 android:text="Special Instructions "
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.044"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView42" />
+                app:layout_constraintTop_toBottomOf="@+id/textView38" />
 
             <EditText
                 android:id="@+id/et_specialInstruction"
-                android:layout_width="362dp"
-                android:layout_height="152dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:gravity="top"
+                android:padding="10dp"
+                android:hint="Special Instruction"
                 android:background="@drawable/rounded_blue"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView45" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/darker_gray"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_specialInstruction" />
-
             <Button
                 android:id="@+id/btn_save"
-                android:layout_width="111dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:elevation="10dp"
                 android:background="@drawable/rounded"
                 android:text="Save"
                 app:backgroundTint="@color/light_blue"
@@ -504,4 +363,6 @@
 
 
     </androidx.cardview.widget.CardView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

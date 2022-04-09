@@ -25,12 +25,13 @@
         android:id="@+id/et_username"
         android:layout_width="match_parent"
         android:layout_height="43dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="44dp"
         android:background="@drawable/rounded"
         android:drawableLeft="@drawable/username_icon"
         android:drawablePadding="5dp"
         android:hint="Username"
         android:paddingLeft="5sp"
+        android:paddingRight="5sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -45,7 +46,7 @@
         android:drawablePadding="5dp"
         android:hint="Password"
         android:inputType="textPassword"
-
+        android:paddingRight="5sp"
         android:paddingLeft="5sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

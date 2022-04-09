@@ -1,18 +1,41 @@
 package com.example.servicehub;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import Adapter_and_fragments.fragmentAdapterListings;
 
 public class seller_dashboard extends AppCompatActivity {
 
+    private FirebaseUser user;
+    private DatabaseReference userDatabase;
+    private String userID;
+    private TabLayout tabLayout;
+    private ViewPager2 vp_viewPager2;
+    private fragmentAdapterListings adapter;
+
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_editListing;
-
+    TextView tv_bannerName;
     Button btn_addListing;
 
     @Override
@@ -20,20 +43,82 @@ public class seller_dashboard extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.seller_dashboard);
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userDatabase = FirebaseDatabase.getInstance().getReference("Users");
+        userID = user.getUid();
+
         setRef();
+        generateTabLayout();
         buttonNav();
+        getSellerInfo();
         bottomNavTaskbar();
+    }
+
+    private void generateTabLayout() {
+
+        tabLayout.addTab(tabLayout.newTab().setText("My Listings"));
+        tabLayout.addTab(tabLayout.newTab().setText("Active Orders"));
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        adapter = new fragmentAdapterListings(fragmentManager, getLifecycle());
+        vp_viewPager2.setAdapter(adapter);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                vp_viewPager2.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        vp_viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                tabLayout.selectTab(tabLayout.getTabAt(position));
+            }
+        });
+    }
+
+
+    private void getSellerInfo() {
+        userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users userProfile = snapshot.getValue(Users.class);
+
+                if(userProfile != null){
+                    String sp_fName = userProfile.firstName;
+                    String sp_lName = userProfile.lastName;
+
+                    tv_bannerName.setText(sp_fName + " " + sp_lName);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(seller_dashboard.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void buttonNav() {
 
-        iv_editListing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentEditListing = new Intent(seller_dashboard.this, edit_listing_page.class);
-                startActivity(intentEditListing);
-            }
-        }); // end of edit listing button
+//        iv_editListing.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intentEditListing = new Intent(seller_dashboard.this, edit_listing_page.class);
+//                startActivity(intentEditListing);
+//            }
+//        }); // end of edit listing button
 
 
         btn_addListing.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +182,10 @@ public class seller_dashboard extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        iv_editListing = findViewById(R.id.iv_editListing);
+       // iv_editListing = findViewById(R.id.iv_editListing);
         btn_addListing = findViewById(R.id.btn_addListing);
+        tv_bannerName = findViewById(R.id.tv_bannerName);
+        tabLayout = findViewById(R.id.tab_layout);
+        vp_viewPager2 = findViewById(R.id.vp_viewPager2);
     }
 }
