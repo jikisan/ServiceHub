@@ -46,7 +46,7 @@ import java.util.Locale;
 
 public class add_project_page extends AppCompatActivity {
 
-    public static final String API_KEY = "AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8";
+    public final String API_KEY = getResources().getString(R.string.API_KEY);
 
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_decreaseSlot, iv_increaseSlot, iv_projectImage;
