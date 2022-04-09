@@ -40,7 +40,7 @@ import java.util.List;
 
 public class add_listing_page extends AppCompatActivity {
 
-    public final String API_KEY = getResources().getString(R.string.API_KEY);
+    public final String API_KEY = "AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8";
 
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_listingImage, iv_decreaseBtn, iv_increaseBtn;

@@ -47,7 +47,7 @@ import java.util.Locale;
 
 public class edit_project_page extends AppCompatActivity {
 
-    public static final String API_KEY = "AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8";
+    public final String API_KEY = "AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8";
 
     private FirebaseUser user;
     private DatabaseReference projectDatabase;
@@ -58,10 +58,8 @@ public class edit_project_page extends AppCompatActivity {
     EditText et_projectName,  et_price, et_specialInstruction;
     Button btn_pickTime, btn_save;
     TextView tv_uploadPhoto, tv_slotCount, tv_timeSlot, tv_address;
-    String imageUriText;
+    String imageUriText, projectIdFromIntent;
     Uri imageUri;
-
-    String projectIdFromIntent;
     int hour, minute;
     int slotCount = 1;
     String slotCountText, latLng;
