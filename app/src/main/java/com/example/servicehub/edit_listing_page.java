@@ -43,9 +43,6 @@ import java.util.List;
 
 public class edit_listing_page extends AppCompatActivity {
 
-    public static final String API_KEY = "AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8";
-    String listingID = "-MzRLBYjIXsFgiKAvV6R";
-
 
     private FirebaseUser user;
     private DatabaseReference listingDatabase;
@@ -56,11 +53,9 @@ public class edit_listing_page extends AppCompatActivity {
     TextView tv_uploadPhoto, tv_address, tv_quantity;
     EditText et_listingName, et_price, et_listDesc;
     Button btn_save;
-
     Uri imageUri;
-
     int quantity = 1;
-    String quantityText, latLng;
+    String quantityText, latLng, listingIdFromIntent;
     FirebaseAuth fAuth;
 
 
@@ -85,7 +80,7 @@ public class edit_listing_page extends AppCompatActivity {
     private void initPlaces() {
 
         //Initialize places
-        Places.initialize(getApplicationContext(), API_KEY);
+        Places.initialize(getApplicationContext(), getString(R.string.API_KEY));
 
         //Set edittext no focusable
         tv_address.setFocusable(false);
@@ -252,7 +247,8 @@ public class edit_listing_page extends AppCompatActivity {
         hashMap.put("listDesc", listDesc);
         hashMap.put("imageUri", imageUriText);
 
-        listingDatabase.child(listingID).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
+        listingIdFromIntent = getIntent().getStringExtra("Listing ID");
+        listingDatabase.child(listingIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
                 Toast.makeText(edit_listing_page.this, "Listing is updated", Toast.LENGTH_SHORT).show();
@@ -295,8 +291,9 @@ public class edit_listing_page extends AppCompatActivity {
 
     private void generateDataValue() {
 
+        listingIdFromIntent = getIntent().getStringExtra("Listing ID");
 
-        listingDatabase.child(listingID).addListenerForSingleValueEvent(new ValueEventListener() {
+        listingDatabase.child(listingIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Listings listingData = snapshot.getValue(Listings.class);
