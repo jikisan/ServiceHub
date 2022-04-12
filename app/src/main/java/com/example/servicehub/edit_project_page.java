@@ -55,7 +55,7 @@ public class edit_project_page extends AppCompatActivity {
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_projectImage;
     EditText et_projectName,  et_price, et_specialInstruction;
-    Button btn_pickTime, btn_save;
+    Button btn_pickTime, btn_save, btn_delete;
     TextView tv_uploadPhoto, tv_slotCount, tv_timeSlot, tv_address;
     String imageUriText, projectIdFromIntent;
     Uri imageUri;
@@ -156,9 +156,32 @@ public class edit_project_page extends AppCompatActivity {
                 startActivityForResult(intent, 100);
             }
         });
+
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                projectIdFromIntent = getIntent().getStringExtra("Project ID");
+                projectDatabase.child(projectIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Toast.makeText(edit_project_page.this, "Project Deleted", Toast.LENGTH_SHORT).show();
+                            dataSnapshot.getRef().removeValue();
+                            Intent intent = new Intent(edit_project_page.this, tech_dashboard.class);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
     }
-
-
 
     private void PickImage() {
         CropImage.activity().start(this);
@@ -357,10 +380,12 @@ public class edit_project_page extends AppCompatActivity {
         et_price = findViewById(R.id.et_price);
         tv_timeSlot = findViewById(R.id.tv_timeSlot);
         tv_address = findViewById(R.id.tv_address);
+        tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
         et_specialInstruction = findViewById(R.id.et_specialInstruction);
         btn_save = findViewById(R.id.btn_save);
         btn_pickTime = findViewById(R.id.btn_pickTime);
-        tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
+        btn_delete = findViewById(R.id.btn_delete);
+
 
     }
 }

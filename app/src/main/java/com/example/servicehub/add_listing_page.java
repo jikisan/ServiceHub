@@ -245,7 +245,7 @@ public class add_listing_page extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
                     Toast.makeText(add_listing_page.this, "Listing Added", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(add_listing_page.this, tech_dashboard.class);
+                    Intent intent = new Intent(add_listing_page.this, seller_dashboard.class);
                     startActivity(intent);
                 } else {
                     Toast.makeText(add_listing_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();

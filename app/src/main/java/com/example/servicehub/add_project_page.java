@@ -244,42 +244,7 @@ public class add_project_page extends AppCompatActivity {
             }
         });
     }
-//    private void adjustSlot() {
-//
-//        slotCountText = String.valueOf(slotCount);
-//        tv_slotCount.setText(slotCountText);
-//
-//        iv_decreaseSlot.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String slotCountText;
-//
-//
-//                if (slotCount == 1){
-//                    slotCount = 1;
-//                    Toast.makeText(add_project_page.this, "Slot cannot be empty", Toast.LENGTH_SHORT).show();
-//                    slotCountText = String.valueOf(slotCount);
-//                    tv_slotCount.setText(slotCountText);
-//                }else
-//                {
-//                    slotCount = slotCount - 1;
-//                    slotCountText = String.valueOf(slotCount);
-//                    tv_slotCount.setText(slotCountText);
-//                }
-//            }
-//        });
-//
-//        iv_increaseSlot.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                    slotCount = slotCount + 1;
-//                    slotCountText = String.valueOf(slotCount);
-//                    tv_slotCount.setText(slotCountText);
-//
-//            }
-//        });
-//    }
+
     private void bottomNavTaskbar() {
 
         iv_messageBtn.setOnClickListener(new View.OnClickListener() {

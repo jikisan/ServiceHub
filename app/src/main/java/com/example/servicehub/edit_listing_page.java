@@ -33,6 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -52,7 +53,7 @@ public class edit_listing_page extends AppCompatActivity {
             iv_moreBtn, iv_listingImage, iv_decreaseBtn, iv_increaseBtn;
     TextView tv_uploadPhoto, tv_address, tv_quantity;
     EditText et_listingName, et_price, et_listDesc;
-    Button btn_save;
+    Button btn_save, btn_delete;
     Uri imageUri;
     int quantity = 1;
     String quantityText, latLng, listingIdFromIntent;
@@ -128,6 +129,31 @@ public class edit_listing_page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 updateListing();
+            }
+        });
+
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                listingIdFromIntent = getIntent().getStringExtra("Listing ID");
+                listingDatabase.child(listingIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Toast.makeText(edit_listing_page.this, "Listing Deleted", Toast.LENGTH_SHORT).show();
+                            dataSnapshot.getRef().removeValue();
+                            Intent intent = new Intent(edit_listing_page.this, seller_dashboard.class);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 
@@ -402,5 +428,7 @@ public class edit_listing_page extends AppCompatActivity {
         et_price = findViewById(R.id.et_price);
         et_listDesc = findViewById(R.id.et_listDesc);
         btn_save = findViewById(R.id.btn_save);
+        btn_delete = findViewById(R.id.btn_delete);
+
     }
 }
