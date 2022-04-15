@@ -37,9 +37,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -49,13 +53,15 @@ public class edit_project_page extends AppCompatActivity {
 
 
     private FirebaseUser user;
+    private FirebaseStorage mStorage;
+    private StorageReference projectStorage;
     private DatabaseReference projectDatabase;
     private String userID;
 
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, iv_projectImage;
+            iv_moreBtn, iv_projectImage, btn_delete ;
     EditText et_projectName,  et_price, et_specialInstruction;
-    Button btn_pickTime, btn_save, btn_delete;
+    Button btn_pickTime, btn_save;
     TextView tv_uploadPhoto, tv_slotCount, tv_timeSlot, tv_address;
     String imageUriText, projectIdFromIntent;
     Uri imageUri;
@@ -71,6 +77,7 @@ public class edit_project_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
+        projectStorage = FirebaseStorage.getInstance().getReference("Projects").child(userID);
         projectDatabase = FirebaseDatabase.getInstance().getReference("Projects").child(userID);
 
         setRef();
@@ -90,6 +97,38 @@ public class edit_project_page extends AppCompatActivity {
     }
 
     private void ClickListener() {
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                projectIdFromIntent = getIntent().getStringExtra("Project ID");
+                projectDatabase.child(projectIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Projects projectData = snapshot.getValue(Projects.class);
+
+                        String imageName = projectData.getImageName();
+
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            StorageReference imageRef = projectStorage.child(imageName);
+                            imageRef.delete();
+
+                            dataSnapshot.getRef().removeValue();
+
+                            Toast.makeText(edit_project_page.this, "Project Deleted", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(edit_project_page.this, tech_dashboard.class);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
+
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,30 +196,6 @@ public class edit_project_page extends AppCompatActivity {
             }
         });
 
-        btn_delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                projectIdFromIntent = getIntent().getStringExtra("Project ID");
-                projectDatabase.child(projectIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            Toast.makeText(edit_project_page.this, "Project Deleted", Toast.LENGTH_SHORT).show();
-                            dataSnapshot.getRef().removeValue();
-                            Intent intent = new Intent(edit_project_page.this, tech_dashboard.class);
-                            startActivity(intent);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
     }
 
     private void PickImage() {
@@ -256,7 +271,7 @@ public class edit_project_page extends AppCompatActivity {
 
                 if(projectData != null){
                     try{
-                        imageUriText = projectData.imageUri;
+                        imageUriText = projectData.getImageUrl();
                         String sp_projName = projectData.getProjName();
                         String sp_projAddress = projectData.getProjAddress();
                         String sp_projPrice = projectData.getPrice();
@@ -265,25 +280,32 @@ public class edit_project_page extends AppCompatActivity {
 
                         imageUri = Uri.parse(imageUriText);
 
-                        InputStream stream = getContentResolver().openInputStream(imageUri);
-                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
+//                        InputStream stream = getContentResolver().openInputStream(imageUri);
+//                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
+//
+//                        iv_projectImage.setImageURI(imageUri);
 
-                        iv_projectImage.setImageBitmap(bitmap);
+                        Picasso.get().load(imageUriText)
+                                .into(iv_projectImage);
+
                         et_projectName.setText(sp_projName);
                         tv_address.setText(sp_projAddress);
                         et_price.setText(sp_projPrice);
                         tv_timeSlot.setText(sp_projTimeSlot);
                         et_specialInstruction.setText(sp_projSpecialInstruction);
+                        System.out.println("generateDataValue(): Not Empty");
+
 
                     }catch (Exception e){
                         e.printStackTrace();
-                        System.out.println("PROJECT LOG JK:" + e.getMessage());
+                        System.out.println("Empty 1: " + e.getMessage());
+
                     }
                 }
                 else
                 {
                     Toast.makeText(edit_project_page.this, "Empty", Toast.LENGTH_SHORT).show();
-                    System.out.println("PROJECT LOG JK: Empty");
+                    System.out.println("Empty");
                 }
             }
 

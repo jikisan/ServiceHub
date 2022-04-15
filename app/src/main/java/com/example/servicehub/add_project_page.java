@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.TimePickerDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -17,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,8 +26,11 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -36,6 +41,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -53,6 +63,7 @@ public class add_project_page extends AppCompatActivity {
     Button btn_pickTime, btn_save;
     TextView tv_uploadPhoto, tv_slotCount, tv_timeSlot, tv_address;
     Uri imageUri;
+    Bitmap bitmap;
 
     int hour, minute;
     int slotCount = 1;
@@ -61,6 +72,8 @@ public class add_project_page extends AppCompatActivity {
     FirebaseAuth fAuth;
     private FirebaseUser user;
     private DatabaseReference projectDatabase;
+    private StorageReference projectStorage;
+    private StorageTask addTask;
     private String userID;
 
     @Override
@@ -71,6 +84,7 @@ public class add_project_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
+        projectStorage = FirebaseStorage.getInstance().getReference("Projects").child(userID);
         projectDatabase = FirebaseDatabase.getInstance().getReference("Projects").child(userID);
 
         setRef();
@@ -93,7 +107,11 @@ public class add_project_page extends AppCompatActivity {
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addProj();
+                if(addTask != null && addTask.isInProgress()){
+                    Toast.makeText(add_project_page.this, "In progress", Toast.LENGTH_SHORT).show();
+                } else {
+                    addProj();
+                }
             }
         });
 
@@ -162,28 +180,6 @@ public class add_project_page extends AppCompatActivity {
         CropImage.activity().start(this);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestStoragePermission() {
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestCameraPermission() {
-        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-    }
-
-    private boolean checkStoragePermission() {
-        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
-        return res2;
-    }
-
-    private boolean checkCameraPermission() {
-        boolean res1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
-        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
-        return res1 && res2;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -193,10 +189,12 @@ public class add_project_page extends AppCompatActivity {
                 imageUri = result.getUri();
 
                 try{
+//                    InputStream stream = getContentResolver().openInputStream(imageUri);
+//                    bitmap = BitmapFactory.decodeStream(stream);
+//                    iv_projectImage.setImageBitmap(bitmap);
 
-                    InputStream stream = getContentResolver().openInputStream(imageUri);
-                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                    iv_projectImage.setImageBitmap(bitmap);
+                    Picasso.get().load(imageUri)
+                            .into(iv_projectImage);
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -220,29 +218,51 @@ public class add_project_page extends AppCompatActivity {
     }
 
     private void addProj() {
+        StorageReference fileReference = projectStorage.child(imageUri.getLastPathSegment());
+
         String projName = et_projectName.getText().toString();
         String projAddress = tv_address.getText().toString();
         String price = et_price.getText().toString();
         String projTimeSlot = tv_timeSlot.getText().toString();
         String projInstruction = et_specialInstruction.getText().toString();
-        String imageUriText = imageUri.toString();
+        String imageName = imageUri.getLastPathSegment();
         int ratings = 0;
         String ratingsText = String.valueOf(ratings);
 
-        Projects projects = new Projects(imageUriText, projName, projAddress, price, projTimeSlot, projInstruction, latLng, ratingsText);
 
-        projectDatabase.push().setValue(projects).addOnCompleteListener(new OnCompleteListener<Void>() {
+        addTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(add_project_page.this, "Project Added", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(add_project_page.this, tech_dashboard.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(add_project_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        final String downloadUrl = uri.toString();
+
+                        Projects projects = new Projects(downloadUrl, imageName, projName, projAddress, price, projTimeSlot, projInstruction, latLng, ratingsText);
+
+                        projectDatabase.push().setValue(projects).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(add_project_page.this, "Project Added", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(add_project_page.this, tech_dashboard.class);
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(add_project_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                });
             }
-        });
+            })
+            .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(add_project_page.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+
     }
 
     private void bottomNavTaskbar() {
@@ -287,6 +307,7 @@ public class add_project_page extends AppCompatActivity {
             }
         }); // end of more button
     }
+
     private void setRef() {
 
         iv_messageBtn = findViewById(R.id.iv_messageBtn);
@@ -306,5 +327,29 @@ public class add_project_page extends AppCompatActivity {
         btn_pickTime = findViewById(R.id.btn_pickTime);
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
 
+    }
+
+
+    //validate permissions
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestStoragePermission() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestCameraPermission() {
+        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+    }
+
+    private boolean checkStoragePermission() {
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+        return res2;
+    }
+
+    private boolean checkCameraPermission() {
+        boolean res1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+        return res1 && res2;
     }
 }

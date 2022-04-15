@@ -35,6 +35,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.InputStream;
@@ -47,13 +50,14 @@ public class edit_listing_page extends AppCompatActivity {
 
     private FirebaseUser user;
     private DatabaseReference listingDatabase;
+    private StorageReference listingStorage;
     private String userID, imageUriText;
 
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, iv_listingImage, iv_decreaseBtn, iv_increaseBtn;
+            iv_moreBtn, iv_listingImage, iv_decreaseBtn, iv_increaseBtn, btn_delete;
     TextView tv_uploadPhoto, tv_address, tv_quantity;
     EditText et_listingName, et_price, et_listDesc;
-    Button btn_save, btn_delete;
+    Button btn_save;
     Uri imageUri;
     int quantity = 1;
     String quantityText, latLng, listingIdFromIntent;
@@ -67,6 +71,7 @@ public class edit_listing_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
+        listingStorage = FirebaseStorage.getInstance().getReference("Listings").child(userID);
         listingDatabase = FirebaseDatabase.getInstance().getReference("Listings").child(userID);
 
 
@@ -88,6 +93,38 @@ public class edit_listing_page extends AppCompatActivity {
     }
 
     private void clickListener() {
+
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                listingIdFromIntent = getIntent().getStringExtra("Listing ID");
+                listingDatabase.child(listingIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Listings listingsData = snapshot.getValue(Listings.class);
+
+                        String imageName = listingsData.getImageName();
+
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            StorageReference imageRef = listingStorage.child(imageName);
+
+                            imageRef.delete();
+                            dataSnapshot.getRef().removeValue();
+
+                            Toast.makeText(edit_listing_page.this, "Listing Deleted", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(edit_listing_page.this, seller_dashboard.class);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
 
         tv_uploadPhoto.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
@@ -132,30 +169,6 @@ public class edit_listing_page extends AppCompatActivity {
             }
         });
 
-        btn_delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                listingIdFromIntent = getIntent().getStringExtra("Listing ID");
-                listingDatabase.child(listingIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            Toast.makeText(edit_listing_page.this, "Listing Deleted", Toast.LENGTH_SHORT).show();
-                            dataSnapshot.getRef().removeValue();
-                            Intent intent = new Intent(edit_listing_page.this, seller_dashboard.class);
-                            startActivity(intent);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-            }
-        });
 
     }
 
@@ -326,7 +339,7 @@ public class edit_listing_page extends AppCompatActivity {
 
                 if (listingData != null){
                     try {
-                        imageUriText = listingData.imageUri;
+                        imageUriText = listingData.getImageUrl();
                         String sp_listName = listingData.getListName();
                         String sp_listAddress = listingData.getListAddress();
                         String sp_listPrice = listingData.getListPrice();
@@ -335,10 +348,10 @@ public class edit_listing_page extends AppCompatActivity {
 
                         imageUri = Uri.parse(imageUriText);
 
-                        InputStream stream = getContentResolver().openInputStream(imageUri);
-                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                        Picasso.get()
+                                .load(imageUriText)
+                                .into(iv_listingImage);
 
-                        iv_listingImage.setImageBitmap(bitmap);
                         et_listingName.setText(sp_listName);
                         tv_address.setText(sp_listAddress);
                         et_price.setText(sp_listPrice);
@@ -347,14 +360,12 @@ public class edit_listing_page extends AppCompatActivity {
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        System.out.println("LISTINGS LOG JK:" + e.getMessage());
 
                     }
                 }
                 else
                 {
                     Toast.makeText(edit_listing_page.this, "Empty", Toast.LENGTH_SHORT).show();
-                    System.out.println("LISTINGS LOG JK: Empty");
 
                 }
             }
@@ -362,7 +373,6 @@ public class edit_listing_page extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(edit_listing_page.this, "Empty", Toast.LENGTH_SHORT).show();
-                System.out.println("LISTINGS LOG JK: Empty");
 
             }
         });

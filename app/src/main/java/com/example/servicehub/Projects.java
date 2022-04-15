@@ -2,7 +2,8 @@ package com.example.servicehub;
 
 public class Projects {
 
-    String imageUri;
+    String imageUrl;
+    String imageName;
     String projName;
     String projAddress;
     String price;
@@ -15,8 +16,9 @@ public class Projects {
 
     }
 
-    public Projects(String imageUri, String projName, String projAddress, String price, String projTimeSlot, String projInstruction, String latLng, String ratings) {
-        this.imageUri = imageUri;
+    public Projects(String imageUrl, String imageName, String projName, String projAddress, String price, String projTimeSlot, String projInstruction, String latLng, String ratings) {
+        this.imageUrl = imageUrl;
+        this.imageName = imageName;
         this.projName = projName;
         this.projAddress = projAddress;
         this.price = price;
@@ -27,13 +29,22 @@ public class Projects {
     }
 
 
-    public String getImageUri() {
-        return imageUri;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setImageUri(String imageUri) {
-        this.imageUri = imageUri;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
 
     public String getProjName() {
         return projName;

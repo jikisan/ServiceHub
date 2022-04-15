@@ -11,7 +11,7 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="58dp"
-        android:backgroundTint="@color/lighter_light_blue"
+        android:backgroundTint="@color/bg_color"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="131dp">
 
@@ -24,13 +24,27 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/back_arrow"
                 android:text="Edit Project"
-                android:textColor="@color/black"
-                android:textSize="25sp"
+                android:textSize="16sp"
+                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/btn_delete"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:elevation="10dp"
+                android:src="@drawable/delete_btn"
+                android:text="Delete"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/red_delete_btn" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
@@ -104,8 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Project Name"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -118,8 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="Address"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -136,7 +148,6 @@
                 android:drawableTint="@color/black"
                 android:hint="Search Address"
                 android:padding="10dp"
-                android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -149,8 +160,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="Price"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -165,8 +175,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="12dp"
                 android:text="₱ "
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView34" />
@@ -190,8 +199,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:text="/ Job"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/et_price"
                 app:layout_constraintStart_toEndOf="@+id/et_price"
@@ -203,8 +211,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="Time Slot"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.03"
@@ -219,8 +226,7 @@
                 android:layout_marginLeft="36dp"
                 android:layout_marginTop="12dp"
                 android:text="Time: "
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@+id/textView37"
                 app:layout_constraintTop_toBottomOf="@+id/textView37" />
 
@@ -233,10 +239,11 @@
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="7dp"
                 android:background="@drawable/rounded_blue"
+                android:textColor="@color/black"
                 android:gravity="center"
                 android:hint="00:00"
                 android:padding="5dp"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@+id/textView38"
                 app:layout_constraintStart_toEndOf="@+id/textView38"
                 app:layout_constraintTop_toTopOf="@+id/textView38"
@@ -263,8 +270,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Special Instructions "
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -285,11 +291,13 @@
 
             <Button
                 android:id="@+id/btn_save"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
+                android:drawableLeft="@drawable/save_1"
+                android:drawableTint="@color/white"
                 android:background="@drawable/rounded"
                 android:elevation="10dp"
                 android:text="Save"
@@ -297,21 +305,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_specialInstruction" />
-
-            <Button
-                android:id="@+id/btn_delete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/rounded"
-                android:elevation="10dp"
-                android:text="Delete"
-                app:backgroundTint="@color/red_delete_btn"
-                app:layout_constraintEnd_toEndOf="@+id/btn_save"
-                app:layout_constraintStart_toStartOf="@+id/btn_save"
-                app:layout_constraintTop_toBottomOf="@+id/btn_save" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
