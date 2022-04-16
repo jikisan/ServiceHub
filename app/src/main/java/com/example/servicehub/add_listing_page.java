@@ -247,6 +247,7 @@ public class add_listing_page extends AppCompatActivity {
         StorageReference fileReference = listingStorage.child(imageUri.getLastPathSegment());
 
         String listName = et_listingName.getText().toString();
+        String listAddress = tv_address.getText().toString();
         String listPrice = et_price.getText().toString();
         String listQuantity = tv_quantity.getText().toString();
         String listDesc = et_listDesc.getText().toString();
@@ -263,7 +264,7 @@ public class add_listing_page extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         final String downloadUrl = uri.toString();
 
-                        Listings listings = new Listings(downloadUrl, imageName, listName, latLng, listPrice, listQuantity, listDesc, ratingsText);
+                        Listings listings = new Listings(downloadUrl, imageName, listName, latLng, listAddress, listPrice, listQuantity, listDesc, ratingsText);
 
                         listingDatabase.push().setValue(listings).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override

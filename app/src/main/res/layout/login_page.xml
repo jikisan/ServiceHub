@@ -21,36 +21,53 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/et_username"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_usernameLayout"
         android:layout_width="match_parent"
-        android:layout_height="43dp"
-        android:layout_marginTop="44dp"
-        android:background="@drawable/rounded"
-        android:drawableLeft="@drawable/username_icon"
-        android:drawablePadding="5dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:hint="Username"
-        android:paddingLeft="5sp"
-        android:paddingRight="5sp"
+        app:endIconMode="clear_text"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:startIconDrawable="@drawable/username_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/textView">
 
-    <EditText
-        android:id="@+id/et_password"
+        <com.google.android.material.textfield.TextInputEditText
+
+            android:id="@+id/et_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_passwordLayout"
         android:layout_width="match_parent"
-        android:layout_height="43dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/rounded"
-        android:drawableLeft="@drawable/password_icon"
-        android:drawablePadding="5dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:hint="Password"
         android:inputType="textPassword"
-        android:paddingRight="5sp"
-        android:paddingLeft="5sp"
+        app:startIconDrawable="@drawable/password_icon"
+        app:endIconMode="password_toggle"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_username" />
+        app:layout_constraintTop_toBottomOf="@+id/et_usernameLayout" >
+
+        <com.google.android.material.textfield.TextInputEditText
+
+            android:id="@+id/et_password"
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <CheckBox
         android:id="@+id/cb_rememberMe"
@@ -58,8 +75,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="Remember me"
-        app:layout_constraintStart_toStartOf="@+id/et_password"
-        app:layout_constraintTop_toBottomOf="@+id/et_password" />
+        app:layout_constraintStart_toStartOf="@+id/et_passwordLayout"
+        app:layout_constraintTop_toBottomOf="@+id/et_passwordLayout" />
 
     <TextView
         android:id="@+id/tv_ForgotPassword"
@@ -70,17 +87,20 @@
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/cb_rememberMe"
-        app:layout_constraintEnd_toEndOf="@+id/et_password"
+        app:layout_constraintEnd_toEndOf="@+id/et_passwordLayout"
         app:layout_constraintTop_toTopOf="@+id/cb_rememberMe"
         app:layout_constraintVertical_bias="0.571" />
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
-        android:layout_height="43dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
         android:layout_marginTop="44dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
         android:background="@drawable/rounded"
-        android:backgroundTint="#3592BA"
         android:text="Log In"
         app:backgroundTint="@color/light_blue"
         app:layout_constraintEnd_toEndOf="parent"
@@ -90,8 +110,12 @@
     <Button
         android:id="@+id/btn_guest"
         android:layout_width="match_parent"
-        android:layout_height="43dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
         android:layout_marginTop="17dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
         android:background="@drawable/rounded"
         android:backgroundTint="#3592BA"
         android:text="Continue as guest"

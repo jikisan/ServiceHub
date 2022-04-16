@@ -5,26 +5,26 @@ public class Projects {
     String imageUrl;
     String imageName;
     String projName;
+    String projLatLng;
     String projAddress;
     String price;
     String projTimeSlot;
     String projInstruction;
-    String latLng;
     String ratings;
 
-    private Projects(){
+    Projects(){
 
     }
 
-    public Projects(String imageUrl, String imageName, String projName, String projAddress, String price, String projTimeSlot, String projInstruction, String latLng, String ratings) {
+    public Projects(String imageUrl, String imageName, String projName, String projLatLng, String projAddress, String price, String projTimeSlot, String projInstruction, String ratings) {
         this.imageUrl = imageUrl;
         this.imageName = imageName;
         this.projName = projName;
+        this.projLatLng = projLatLng;
         this.projAddress = projAddress;
         this.price = price;
         this.projTimeSlot = projTimeSlot;
         this.projInstruction = projInstruction;
-        this.latLng = latLng;
         this.ratings = ratings;
     }
 
@@ -53,6 +53,16 @@ public class Projects {
     public void setProjName(String projName) {
         this.projName = projName;
     }
+
+
+    public String getProjLatLng() {
+        return projLatLng;
+    }
+
+    public void setProjLatLng(String projLatLng) {
+        this.projLatLng = projLatLng;
+    }
+
 
     public String getProjAddress() {
         return projAddress;
@@ -84,15 +94,6 @@ public class Projects {
 
     public void setProjInstruction(String projInstruction) {
         this.projInstruction = projInstruction;
-    }
-
-
-    public String getLatLng() {
-        return latLng;
-    }
-
-    public void setLatLng(String latLng) {
-        this.latLng = latLng;
     }
 
     public String getRatings() {

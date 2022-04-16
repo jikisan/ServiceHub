@@ -238,7 +238,7 @@ public class add_project_page extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         final String downloadUrl = uri.toString();
 
-                        Projects projects = new Projects(downloadUrl, imageName, projName, projAddress, price, projTimeSlot, projInstruction, latLng, ratingsText);
+                        Projects projects = new Projects(downloadUrl, imageName, projName, latLng, projAddress, price, projTimeSlot, projInstruction, ratingsText);
 
                         projectDatabase.push().setValue(projects).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
