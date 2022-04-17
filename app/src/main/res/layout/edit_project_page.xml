@@ -68,16 +68,34 @@
             android:orientation="vertical"
             android:paddingBottom="35dp">
 
-            <ImageView
-                android:id="@+id/iv_projectImage"
+            <androidx.cardview.widget.CardView
+                android:id="@id/cardView"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:background="@drawable/rounded_blue"
-                android:padding="5dp"
-                android:src="@drawable/upload_photo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:background="@drawable/rounded_blue"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/iv_projectImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:src="@drawable/upload_photo" />
+
+                </LinearLayout>
+
+
+
+            </androidx.cardview.widget.CardView>
+
+
 
             <TextView
                 android:id="@+id/tv_uploadPhoto"
@@ -93,24 +111,32 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_projectImage" />
+                app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
-            <EditText
-                android:id="@+id/et_projectName"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textView53"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_blue"
-                android:hint="Input Project Name"
-                android:paddingLeft="15dp"
-                android:paddingTop="5dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="5dp"
+                android:text="Category"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView33"
-                tools:ignore="TouchTargetSizeCheck" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_uploadPhoto" />
 
+            <Spinner
+                android:id="@+id/spinner_projCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView53" />
 
             <TextView
                 android:id="@+id/textView33"
@@ -118,73 +144,238 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Project Name"
-                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_uploadPhoto" />
+                app:layout_constraintTop_toBottomOf="@+id/spinner_projCategory" />
+
+
+            <EditText
+                android:id="@+id/et_projectName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Project Name"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView33"
+                tools:ignore="TouchTargetSizeCheck" />
+
+
+
 
             <TextView
                 android:id="@+id/textView34"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="16dp"
                 android:text="Address"
-                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_projectName" />
-
-            <TextView
-                android:id="@+id/tv_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:background="@drawable/rounded_blue"
-                android:drawableLeft="@drawable/ic_baseline_location"
-                android:drawableTint="@color/black"
-                android:hint="Search Address"
-                android:padding="10dp"
-                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_projectName" />
 
-            <TextView
-                android:id="@+id/textView34"
-                android:layout_width="wrap_content"
+            <EditText
+                android:id="@+id/tv_address"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Price"
+                android:layout_marginTop="8dp"
+                android:drawableLeft="@drawable/ic_baseline_location"
+                android:drawableTint="@color/black"
+                android:hint="Search Address"
+                android:padding="10dp"
+                android:paddingBottom="16dp"
+                android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_address" />
+                app:layout_constraintTop_toBottomOf="@+id/textView34" />
 
             <TextView
                 android:id="@+id/textView35"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="12dp"
-                android:text="₱ "
-                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                android:text="Availability"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView34" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_address" />
 
-            <EditText
-                android:id="@+id/et_price"
-                android:layout_width="126dp"
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView35">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Mon"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mon"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Tue"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tue"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Wed"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wed"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Thu"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thu"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Fri"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fri"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Sat"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sat"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Sun"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sun"/>
+
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <TextView
+                android:id="@+id/textView38"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="16dp"
+                android:text="Time Start: "
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
+
+            <TextView
+                android:id="@+id/tv_startTime"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_blue"
                 android:gravity="center"
-                android:inputType="number"
+                android:hint="00:00"
                 android:padding="5dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView35"
-                app:layout_constraintStart_toEndOf="@+id/textView35"
-                app:layout_constraintTop_toTopOf="@+id/textView35" />
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView38"
+                app:layout_constraintStart_toEndOf="@+id/textView38"
+                app:layout_constraintTop_toTopOf="@+id/textView38" />
+
+            <Button
+                android:id="@+id/btn_pickStartTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:backgroundTint="@color/light_blue"
+                android:text="Pick time"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_startTime"
+                app:layout_constraintStart_toEndOf="@+id/tv_startTime"
+                app:layout_constraintTop_toTopOf="@+id/tv_startTime" />
+
+            <TextView
+                android:id="@+id/textView39"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Time End: "
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/textView38"
+                app:layout_constraintTop_toBottomOf="@+id/textView38" />
+
+            <TextView
+                android:id="@+id/tv_endTime"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/rounded_blue"
+                android:gravity="center"
+                android:hint="00:00"
+                android:padding="5dp"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView39"
+                app:layout_constraintStart_toEndOf="@+id/textView39"
+                app:layout_constraintTop_toTopOf="@+id/textView39" />
+
+            <Button
+                android:id="@+id/btn_pickStartTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="34dp"
+                android:layout_marginLeft="34dp"
+                android:backgroundTint="@color/light_blue"
+                android:text="Pick time"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_endTime"
+                app:layout_constraintStart_toEndOf="@+id/tv_endTime"
+                app:layout_constraintTop_toBottomOf="@+id/tv_startTime" />
+
+            <TextView
+                android:id="@+id/textView40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Price"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView39" />
+
+            <EditText
+                android:id="@+id/et_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:drawableStart="@drawable/peso_two"
+                android:gravity="center"
+                android:hint="Price"
+                android:inputType="number"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="@+id/textView40"
+                app:layout_constraintTop_toBottomOf="@+id/textView40" />
 
             <TextView
                 android:id="@+id/textView36"
@@ -193,102 +384,48 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:text="/ Job"
-                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/et_price"
                 app:layout_constraintStart_toEndOf="@+id/et_price"
                 app:layout_constraintTop_toTopOf="@+id/et_price" />
 
-            <TextView
-                android:id="@+id/textView37"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Time Slot"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView35" />
 
             <TextView
-                android:id="@+id/textView38"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="36dp"
-                android:layout_marginLeft="36dp"
-                android:layout_marginTop="12dp"
-                android:text="Time: "
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="@+id/textView37"
-                app:layout_constraintTop_toBottomOf="@+id/textView37" />
-
-
-            <TextView
-                android:id="@+id/tv_timeSlot"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="7dp"
-                android:background="@drawable/rounded_blue"
-                android:textColor="@color/black"
-                android:gravity="center"
-                android:hint="00:00"
-                android:padding="5dp"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="@+id/textView38"
-                app:layout_constraintStart_toEndOf="@+id/textView38"
-                app:layout_constraintTop_toTopOf="@+id/textView38"
-                app:layout_constraintVertical_bias="1.0" />
-
-            <Button
-                android:id="@+id/btn_pickTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginLeft="48dp"
-                android:backgroundTint="@color/light_blue"
-                android:text="Pick time"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_timeSlot"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tv_timeSlot"
-                app:layout_constraintTop_toTopOf="@+id/tv_timeSlot"
-                app:layout_constraintVertical_bias="0.53" />
-
-
-            <TextView
-                android:id="@+id/textView45"
+                android:id="@+id/textView41"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Special Instructions "
-                android:textSize="16sp"
+                android:text="Special Instruction"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView38" />
+                app:layout_constraintTop_toBottomOf="@+id/et_price" />
 
             <EditText
                 android:id="@+id/et_specialInstruction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/rounded_blue"
                 android:hint="Special Instruction"
                 android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView45" />
+                app:layout_constraintTop_toBottomOf="@+id/textView41" />
 
             <Button
                 android:id="@+id/btn_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginRight="20dp"
+                android:background="@drawable/rounded"
                 android:drawableLeft="@drawable/save_1"
                 android:drawableTint="@color/white"
-                android:background="@drawable/rounded"
                 android:elevation="10dp"
                 android:text="Save"
                 app:backgroundTint="@color/light_blue"
@@ -297,6 +434,10 @@
                 app:layout_constraintTop_toBottomOf="@+id/et_specialInstruction" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
     </ScrollView>
 
     <androidx.cardview.widget.CardView

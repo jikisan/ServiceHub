@@ -42,7 +42,8 @@
         <activity android:name=".homepage" />
         <activity android:name=".sign_up_page" />
 
-        <activity android:name=".intro_logo" >
+        <activity android:name=".intro_logo"
+                    android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

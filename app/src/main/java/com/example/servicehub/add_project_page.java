@@ -19,9 +19,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -60,10 +62,11 @@ public class add_project_page extends AppCompatActivity {
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_decreaseSlot, iv_increaseSlot, iv_projectImage;
     EditText et_projectName,  et_price, et_specialInstruction;
-    Button btn_pickTime, btn_save;
-    TextView tv_uploadPhoto, tv_slotCount, tv_timeSlot, tv_address;
+    Button btn_pickStartTime, btn_save;
+    TextView tv_uploadPhoto, tv_slotCount, tv_startTime, tv_address;
     Uri imageUri;
     Bitmap bitmap;
+    Spinner spinner_projCategory;
 
     int hour, minute;
     int slotCount = 1;
@@ -92,6 +95,10 @@ public class add_project_page extends AppCompatActivity {
         initPlaces();
         ClickListener();
         bottomNavTaskbar();
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.project_category, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_projCategory.setAdapter(adapter);
     }
 
     private void initPlaces() {
@@ -115,7 +122,7 @@ public class add_project_page extends AppCompatActivity {
             }
         });
 
-        btn_pickTime.setOnClickListener(new View.OnClickListener() {
+        btn_pickStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -126,7 +133,7 @@ public class add_project_page extends AppCompatActivity {
                         hour = i;
                         minute = i1;
 
-                        tv_timeSlot.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+                        tv_startTime.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
 
                     }
                 };
@@ -223,7 +230,7 @@ public class add_project_page extends AppCompatActivity {
         String projName = et_projectName.getText().toString();
         String projAddress = tv_address.getText().toString();
         String price = et_price.getText().toString();
-        String projTimeSlot = tv_timeSlot.getText().toString();
+        String projTimeSlot = tv_startTime.getText().toString();
         String projInstruction = et_specialInstruction.getText().toString();
         String imageName = imageUri.getLastPathSegment();
         int ratings = 0;
@@ -320,12 +327,15 @@ public class add_project_page extends AppCompatActivity {
         iv_projectImage = findViewById(R.id.iv_projectImage);
         et_projectName = findViewById(R.id.et_projectName);
         et_price = findViewById(R.id.et_price);
-        tv_timeSlot = findViewById(R.id.tv_timeSlot);
+        tv_startTime = findViewById(R.id.tv_startTime);
         tv_address = findViewById(R.id.tv_address);
         et_specialInstruction = findViewById(R.id.et_specialInstruction);
         btn_save = findViewById(R.id.btn_save);
-        btn_pickTime = findViewById(R.id.btn_pickTime);
+        btn_pickStartTime = findViewById(R.id.btn_pickStartTime);
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
+        spinner_projCategory = findViewById(R.id.spinner_projCategory);
+
+
 
     }
 
