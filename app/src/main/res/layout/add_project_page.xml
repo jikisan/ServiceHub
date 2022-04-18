@@ -276,28 +276,22 @@
 
             <TextView
                 android:id="@+id/tv_startTime"
-                android:layout_width="70dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:background="@drawable/rounded_blue"
                 android:gravity="center"
                 android:hint="00:00"
-                android:padding="5dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="5dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="5dp"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="@+id/textView38"
                 app:layout_constraintStart_toEndOf="@+id/textView38"
                 app:layout_constraintTop_toTopOf="@+id/textView38" />
 
-            <Button
-                android:id="@+id/btn_pickStartTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
-                android:backgroundTint="@color/light_blue"
-                android:text="Pick time"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_startTime"
-                app:layout_constraintStart_toEndOf="@+id/tv_startTime"
-                app:layout_constraintTop_toTopOf="@+id/tv_startTime" />
 
             <TextView
                 android:id="@+id/textView39"
@@ -312,30 +306,21 @@
 
             <TextView
                 android:id="@+id/tv_endTime"
-                android:layout_width="70dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
                 android:background="@drawable/rounded_blue"
                 android:gravity="center"
                 android:hint="00:00"
-                android:padding="5dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="5dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="5dp"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="@+id/textView39"
                 app:layout_constraintStart_toEndOf="@+id/textView39"
                 app:layout_constraintTop_toTopOf="@+id/textView39" />
-
-            <Button
-                android:id="@+id/btn_pickStartTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="34dp"
-                android:layout_marginLeft="34dp"
-                android:backgroundTint="@color/light_blue"
-                android:text="Pick time"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_endTime"
-                app:layout_constraintStart_toEndOf="@+id/tv_endTime"
-                app:layout_constraintTop_toBottomOf="@+id/tv_startTime" />
 
             <TextView
                 android:id="@+id/textView40"
@@ -360,6 +345,7 @@
                 android:gravity="center"
                 android:hint="Price"
                 android:inputType="number"
+                android:drawablePadding="16dp"
                 android:padding="10dp"
                 app:layout_constraintStart_toStartOf="@+id/textView40"
                 app:layout_constraintTop_toBottomOf="@+id/textView40" />

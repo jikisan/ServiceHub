@@ -2,32 +2,63 @@ package com.example.servicehub;
 
 public class Projects {
 
+
+
+    String category;
     String imageUrl;
     String imageName;
     String projName;
     String projLatLng;
     String projAddress;
     String price;
-    String projTimeSlot;
+    String startTime;
+    String endTime;
     String projInstruction;
     String ratings;
+    boolean isAvailableMon;
+    boolean isAvailableTue;
+    boolean isAvailableWed;
+    boolean isAvailableThu;
+    boolean isAvailableFri;
+    boolean isAvailableSat;
+    boolean isAvailableSun;
+
 
     Projects(){
 
     }
 
-    public Projects(String imageUrl, String imageName, String projName, String projLatLng, String projAddress, String price, String projTimeSlot, String projInstruction, String ratings) {
+    public Projects(String category, String imageUrl, String imageName, String projName, String projLatLng, String projAddress, String price,
+                    String startTime, String endTime, String projInstruction, String ratings, boolean isAvailableMon, boolean isAvailableTue,
+                    boolean isAvailableWed, boolean isAvailableThu, boolean isAvailableFri, boolean isAvailableSat, boolean isAvailableSun)
+    {
+        this.category = category;
         this.imageUrl = imageUrl;
         this.imageName = imageName;
         this.projName = projName;
         this.projLatLng = projLatLng;
         this.projAddress = projAddress;
         this.price = price;
-        this.projTimeSlot = projTimeSlot;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.projInstruction = projInstruction;
         this.ratings = ratings;
+        this.isAvailableMon = isAvailableMon;
+        this.isAvailableTue = isAvailableTue;
+        this.isAvailableWed = isAvailableWed;
+        this.isAvailableThu = isAvailableThu;
+        this.isAvailableFri = isAvailableFri;
+        this.isAvailableSat = isAvailableSat;
+        this.isAvailableSun = isAvailableSun;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public String getImageUrl() {
         return imageUrl;
@@ -45,7 +76,6 @@ public class Projects {
         this.imageName = imageName;
     }
 
-
     public String getProjName() {
         return projName;
     }
@@ -54,7 +84,6 @@ public class Projects {
         this.projName = projName;
     }
 
-
     public String getProjLatLng() {
         return projLatLng;
     }
@@ -62,7 +91,6 @@ public class Projects {
     public void setProjLatLng(String projLatLng) {
         this.projLatLng = projLatLng;
     }
-
 
     public String getProjAddress() {
         return projAddress;
@@ -80,12 +108,20 @@ public class Projects {
         this.price = price;
     }
 
-    public String getProjTimeSlot() {
-        return projTimeSlot;
+    public String getStartTime() {
+        return startTime;
     }
 
-    public void setProjTimeSlot(String projTimeSlot) {
-        this.projTimeSlot = projTimeSlot;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setProjTimeSlot(String endTime) {
+        this.endTime = endTime;
     }
 
     public String getProjInstruction() {
@@ -103,6 +139,63 @@ public class Projects {
     public void setRatings(String ratings) {
         this.ratings = ratings;
     }
+
+    public boolean isAvailableMon() {
+        return isAvailableMon;
+    }
+
+    public void setAvailableMon(boolean availableMon) {
+        isAvailableMon = availableMon;
+    }
+
+    public boolean isAvailableTue() {
+        return isAvailableTue;
+    }
+
+    public void setAvailableTue(boolean availableTue) {
+        isAvailableTue = availableTue;
+    }
+
+    public boolean isAvailableWed() {
+        return isAvailableWed;
+    }
+
+    public void setAvailableWed(boolean availableWed) {
+        isAvailableWed = availableWed;
+    }
+
+    public boolean isAvailableThu() {
+        return isAvailableThu;
+    }
+
+    public void setAvailableThu(boolean availableThu) {
+        isAvailableThu = availableThu;
+    }
+
+    public boolean isAvailableFri() {
+        return isAvailableFri;
+    }
+
+    public void setAvailableFri(boolean availableFri) {
+        isAvailableFri = availableFri;
+    }
+
+    public boolean isAvailableSat() {
+        return isAvailableSat;
+    }
+
+    public void setAvailableSat(boolean availableSat) {
+        isAvailableSat = availableSat;
+    }
+
+    public boolean isAvailableSun() {
+        return isAvailableSun;
+    }
+
+    public void setAvailableSun(boolean availableSun) {
+        isAvailableSun = availableSun;
+    }
+
 
 
 }

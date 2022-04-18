@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ServiceHub">
 
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8"/>
+
         <activity android:name=".add_listing_page"></activity>
         <activity android:name=".edit_listing_page" />
         <activity android:name=".seller_dashboard" />
@@ -55,6 +58,8 @@
 
         <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat"/>
+
+
     </application>
 
 </manifest>
