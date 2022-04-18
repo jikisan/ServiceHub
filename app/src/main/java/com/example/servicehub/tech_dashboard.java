@@ -2,10 +2,13 @@ package com.example.servicehub;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -60,8 +63,8 @@ public class tech_dashboard extends AppCompatActivity {
 
     private void generateTabLayout() {
 
-        tabLayout.addTab(tabLayout.newTab().setText("Active Projects"));
-        tabLayout.addTab(tabLayout.newTab().setText("Active Bookings"));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_project).setText("Projects"));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_booking).setText("Bookings"));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         adapter = new fragmentAdapter(fragmentManager, getLifecycle());

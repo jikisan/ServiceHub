@@ -56,8 +56,8 @@ public class seller_dashboard extends AppCompatActivity {
 
     private void generateTabLayout() {
 
-        tabLayout.addTab(tabLayout.newTab().setText("My Listings"));
-        tabLayout.addTab(tabLayout.newTab().setText("Active Orders"));
+        tabLayout.addTab(tabLayout.newTab().setText("Listings").setIcon(R.drawable.ic_listing));
+        tabLayout.addTab(tabLayout.newTab().setText("Orders").setIcon(R.drawable.ic_order));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         adapter = new fragmentAdapterListings(fragmentManager, getLifecycle());

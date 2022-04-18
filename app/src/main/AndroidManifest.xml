@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ServiceHub">
 
+        <meta-data android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8"/>
+
         <activity android:name=".add_listing_page"></activity>
         <activity android:name=".edit_listing_page" />
         <activity android:name=".seller_dashboard" />
@@ -42,7 +45,8 @@
         <activity android:name=".homepage" />
         <activity android:name=".sign_up_page" />
 
-        <activity android:name=".intro_logo" >
+        <activity android:name=".intro_logo"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
