@@ -59,12 +59,12 @@ public class edit_listing_page extends AppCompatActivity {
     private StorageTask addTask;
     private String userID, imageUriText;
 
-    ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_listingImage, iv_decreaseBtn, iv_increaseBtn, btn_delete;
-    TextView tv_uploadPhoto, tv_address, tv_quantity;
-    EditText et_listingName, et_price, et_listDesc;
-    Button btn_save;
-    Uri imageUri;
+    private TextView tv_uploadPhoto, tv_address, tv_quantity;
+    private EditText et_listingName, et_price, et_listDesc;
+    private Button btn_save;
+    private Uri imageUri;
     int quantity = 1;
     String quantityText, latLng, listingIdFromIntent;
     FirebaseAuth fAuth;
