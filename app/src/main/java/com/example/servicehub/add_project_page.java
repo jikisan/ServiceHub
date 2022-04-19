@@ -215,18 +215,18 @@ public class add_project_page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                placePicker();
+               // placePicker();
 
 
-//                //Initialize place field list
-//                List<Place.Field> fieldList = Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ADDRESS,
-//                        com.google.android.libraries.places.api.model.Place.Field.LAT_LNG, com.google.android.libraries.places.api.model.Place.Field.NAME);
-//
-//                //Create intent
-//                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(add_project_page.this);
-//
-//                //Start Activity result
-//                startActivityForResult(intent, 100);
+                //Initialize place field list
+                List<com.google.android.libraries.places.api.model.Place.Field> fieldList = Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ADDRESS,
+                        com.google.android.libraries.places.api.model.Place.Field.LAT_LNG, com.google.android.libraries.places.api.model.Place.Field.NAME);
+
+                //Create intent
+                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(add_project_page.this);
+
+                //Start Activity result
+                startActivityForResult(intent, 100);
 
 
 
@@ -351,25 +351,24 @@ public class add_project_page extends AppCompatActivity {
             }
         }
 
-//        else if(requestCode == 100 && resultCode == RESULT_OK){
-//            com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
-//            tv_address.setText(place.getAddress());
-//            latLng = place.getLatLng().toString();
-//
-//        }
+        else if(requestCode == 100 && resultCode == RESULT_OK){
+            com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
+            tv_address.setText(place.getAddress());
+            latLng = place.getLatLng().toString();
+
+        }
 
         else if(resultCode == AutocompleteActivity.RESULT_ERROR){
             Status status = Autocomplete.getStatusFromIntent(data);
         }
 
-        else if(requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
+        else if(resultCode != RESULT_CANCELED) {
+            if (requestCode == PLACE_PICKER_REQUEST) {
 
 
                 List<Address> address = null;
                 geocoder = new Geocoder(this, Locale.getDefault());
 
-                assert data != null;
                 Place place = PlacePicker.getPlace(data, this);
 
                 try {
@@ -409,35 +408,38 @@ public class add_project_page extends AppCompatActivity {
         if(!chip_Mon.isChecked() && !chip_Tue.isChecked() && !chip_Wed.isChecked() && !chip_Thu.isChecked()
                 && !chip_Fri.isChecked() && !chip_Sat.isChecked() && !chip_Sun.isChecked()){
             Toast.makeText(this, "Please choose a day you are available", Toast.LENGTH_SHORT).show();
+        }else{
+
+            if(chip_Mon.isChecked()){
+                isAvailableMon = true;
+            }
+
+            if(chip_Tue.isChecked()){
+                isAvailableTue = true;
+            }
+
+            if(chip_Wed.isChecked()){
+                isAvailableWed = true;
+            }
+
+            if(chip_Thu.isChecked()){
+                isAvailableThu = true;
+            }
+
+            if(chip_Fri.isChecked()){
+                isAvailableFri = true;
+            }
+
+            if(chip_Sat.isChecked()){
+                isAvailableSat = true;
+            }
+
+            if(chip_Sun.isChecked()){
+                isAvailableSun = true;
+            }
         }
 
-        if(chip_Mon.isChecked()){
-            isAvailableMon = true;
-        }
 
-        if(chip_Tue.isChecked()){
-            isAvailableTue = true;
-        }
-
-        if(chip_Wed.isChecked()){
-            isAvailableWed = true;
-        }
-
-        if(chip_Thu.isChecked()){
-            isAvailableThu = true;
-        }
-
-        if(chip_Fri.isChecked()){
-            isAvailableFri = true;
-        }
-
-        if(chip_Sat.isChecked()){
-            isAvailableSat = true;
-        }
-
-        if(chip_Sun.isChecked()){
-            isAvailableSun = true;
-        }
     }
 
     private void bottomNavTaskbar() {
@@ -510,26 +512,26 @@ public class add_project_page extends AppCompatActivity {
 
     // place picker
 
-    private void placePicker() {
-
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-
-
-        try
-        {
-            startActivityForResult (builder.build ( add_project_page.this)
-                    , PLACE_PICKER_REQUEST);
-        }
-
-        catch (GooglePlayServicesRepairableException e)
-        {
-            e.printStackTrace ();
-        }
-
-        catch (GooglePlayServicesNotAvailableException e)
-        {
-            e.printStackTrace ();
-        }
-    }
+//    private void placePicker() {
+//
+//        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+//
+//
+//        try
+//        {
+//            startActivityForResult (builder.build ( add_project_page.this)
+//                    , PLACE_PICKER_REQUEST);
+//        }
+//
+//        catch (GooglePlayServicesRepairableException e)
+//        {
+//            e.printStackTrace ();
+//        }
+//
+//        catch (GooglePlayServicesNotAvailableException e)
+//        {
+//            e.printStackTrace ();
+//        }
+//    }
 
 }

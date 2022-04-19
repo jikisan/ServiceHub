@@ -2,9 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.servicehub">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -16,11 +16,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ServiceHub">
+        <activity
+            android:name=".order_details_page"
+            android:exported="false" />
+        <activity
+            android:name=".booking_details"
+            android:exported="false" />
 
-        <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8"/>
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8" />
 
-        <activity android:name=".add_listing_page"></activity>
+        <activity android:name=".add_listing_page" />
         <activity android:name=".edit_listing_page" />
         <activity android:name=".seller_dashboard" />
         <activity android:name=".add_project_page" />
@@ -44,22 +51,19 @@
         <activity android:name=".search_page" />
         <activity android:name=".homepage" />
         <activity android:name=".sign_up_page" />
-
-        <activity android:name=".intro_logo"
-                    android:exported="true">
+        <activity
+            android:name=".intro_logo"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".login_page">
-        </activity>
-
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
-
-
+        <activity android:name=".login_page" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
     </application>
 
 </manifest>

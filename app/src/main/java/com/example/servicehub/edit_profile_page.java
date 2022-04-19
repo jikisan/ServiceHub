@@ -115,6 +115,7 @@ public class edit_profile_page extends AppCompatActivity {
             }
         }); // end of more button
     }
+
     private void setRef() {
 
         iv_messageBtn = findViewById(R.id.iv_messageBtn);

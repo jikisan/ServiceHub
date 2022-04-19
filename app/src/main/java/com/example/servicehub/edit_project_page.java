@@ -248,18 +248,18 @@ public class edit_project_page extends AppCompatActivity {
         tv_address.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//
-//                //Initialize place field list
-//                List<Place.Field> fieldList = Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ADDRESS,
-//                        com.google.android.libraries.places.api.model.Place.Field.LAT_LNG, com.google.android.libraries.places.api.model.Place.Field.NAME);
-//
-//                //Create intent
-//                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(edit_project_page.this);
-//
-//                //Start Activity result
-//                startActivityForResult(intent, 100);
 
-                placePicker();
+                //Initialize place field list
+                List<Place.Field> fieldList = Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ADDRESS,
+                        com.google.android.libraries.places.api.model.Place.Field.LAT_LNG, com.google.android.libraries.places.api.model.Place.Field.NAME);
+
+                //Create intent
+                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(edit_project_page.this);
+
+                //Start Activity result
+                startActivityForResult(intent, 100);
+
+               // placePicker();
             }
         });
 
@@ -318,14 +318,14 @@ public class edit_project_page extends AppCompatActivity {
                 fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        final String downloadUrl = uri.toString();
+                        final String imageURL = uri.toString();
 
 
                         chipsValidation();
 
                         HashMap<String, Object> hashMap = new HashMap<String, Object>();
                         hashMap.put("category", sp_projCategory);
-                        hashMap.put("imageUrl", imageUriText);
+                        hashMap.put("imageUrl", imageURL);
                         hashMap.put("imageName", imageName);
                         hashMap.put("projName", projName);
                         hashMap.put("projLatLng", latLng);
@@ -367,6 +367,7 @@ public class edit_project_page extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
@@ -387,12 +388,12 @@ public class edit_project_page extends AppCompatActivity {
             }
         }
 
-//        else if(requestCode == 100 && resultCode == RESULT_OK){
-//            com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
-//            tv_address.setText(place.getAddress());
-//            latLng = place.getLatLng().toString();
-//
-//        }
+        else if(requestCode == 100 && resultCode == RESULT_OK){
+            com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
+            tv_address.setText(place.getAddress());
+            latLng = place.getLatLng().toString();
+
+        }
 
         else if(resultCode == AutocompleteActivity.RESULT_ERROR){
             Status status = Autocomplete.getStatusFromIntent(data);
@@ -629,25 +630,25 @@ public class edit_project_page extends AppCompatActivity {
     }
 
     // place picker
-    private void placePicker() {
-
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-
-
-        try
-        {
-            startActivityForResult (builder.build ( edit_project_page.this)
-                    , PLACE_PICKER_REQUEST);
-        }
-
-        catch (GooglePlayServicesRepairableException e)
-        {
-            e.printStackTrace ();
-        }
-
-        catch (GooglePlayServicesNotAvailableException e)
-        {
-            e.printStackTrace ();
-        }
-    }
+//    private void placePicker() {
+//
+//        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+//
+//
+//        try
+//        {
+//            startActivityForResult (builder.build ( edit_project_page.this)
+//                    , PLACE_PICKER_REQUEST);
+//        }
+//
+//        catch (GooglePlayServicesRepairableException e)
+//        {
+//            e.printStackTrace ();
+//        }
+//
+//        catch (GooglePlayServicesNotAvailableException e)
+//        {
+//            e.printStackTrace ();
+//        }
+//    }
 }
