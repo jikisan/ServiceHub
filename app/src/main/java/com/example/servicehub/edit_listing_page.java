@@ -21,10 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
@@ -36,7 +34,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -193,9 +190,12 @@ public class edit_listing_page extends AppCompatActivity {
 
                 try{
 
-                    InputStream stream = getContentResolver().openInputStream(imageUri);
-                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                    iv_listingImage.setImageBitmap(bitmap);
+//                    InputStream stream = getContentResolver().openInputStream(imageUri);
+//                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
+//                    iv_listingImage.setImageBitmap(bitmap);
+
+                    Picasso.get().load(imageUri)
+                            .into(iv_listingImage);
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -417,7 +417,7 @@ public class edit_listing_page extends AppCompatActivity {
         et_listingName = findViewById(R.id.et_listingName);
         et_price = findViewById(R.id.et_price);
         et_listDesc = findViewById(R.id.et_listDesc);
-        btn_save = findViewById(R.id.btn_save);
+        btn_save = findViewById(R.id.iv_editButton);
         btn_delete = findViewById(R.id.btn_delete);
 
     }

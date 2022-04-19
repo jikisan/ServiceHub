@@ -26,14 +26,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.ui.PlacePicker;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
@@ -47,7 +43,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -58,8 +53,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -283,7 +276,7 @@ public class edit_project_page extends AppCompatActivity {
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
         tv_endTime = findViewById(R.id.tv_endTime);
 
-        btn_save = findViewById(R.id.btn_save);
+        btn_save = findViewById(R.id.iv_editButton);
         btn_delete = findViewById(R.id.btn_delete);
         spinner_projCategory = findViewById(R.id.spinner_projCategory);
 
@@ -375,9 +368,12 @@ public class edit_project_page extends AppCompatActivity {
 
                 try{
 
-                    InputStream stream = getContentResolver().openInputStream(imageUri);
-                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                    iv_projectImage.setImageBitmap(bitmap);
+//                    InputStream stream = getContentResolver().openInputStream(imageUri);
+//                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
+//                    iv_projectImage.setImageBitmap(bitmap);
+
+                    Picasso.get().load(imageUri)
+                            .into(iv_projectImage);
 
                 }catch (Exception e){
                     e.printStackTrace();
