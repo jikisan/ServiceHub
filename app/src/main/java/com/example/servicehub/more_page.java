@@ -1,5 +1,6 @@
 package com.example.servicehub;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -7,23 +8,40 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class more_page extends AppCompatActivity {
+
+    private FirebaseUser user;
+    private DatabaseReference userDatabase;
+    private String userID;
 
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn;
 
-    TextView tv_editProfile, tv_changePassword, tv_contactUs, tv_aboutUs, tv_logout;
+    TextView tv_editProfile, tv_changePassword, tv_contactUs, tv_aboutUs, tv_logout, tv_bannerName, tv_ratings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.more_page);
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userDatabase = FirebaseDatabase.getInstance().getReference("Users");
+        userID = user.getUid();
+
+
         setRef();
         buttonNav();
+        generateProfile();
         bottomNavTaskbar();
 
 
@@ -116,10 +134,39 @@ public class more_page extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
+
+
         tv_editProfile = findViewById(R.id.tv_editProfile);
         tv_changePassword = findViewById(R.id.tv_changePassword);
         tv_contactUs = findViewById(R.id.tv_contactUs);
         tv_aboutUs = findViewById(R.id.tv_aboutUs);
         tv_logout = findViewById(R.id.tv_logout);
+        tv_bannerName = findViewById(R.id.tv_bannerName);
+
     }
+
+    private void generateProfile() {
+        userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users userProfile = snapshot.getValue(Users.class);
+
+                if(userProfile != null){
+                    String sp_fName = userProfile.firstName;
+                    String sp_lName = userProfile.lastName;
+                    String sp_fullName = sp_fName.substring(0, 1).toUpperCase()+ sp_fName.substring(1).toLowerCase()
+                            + " " + sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();
+
+                    tv_bannerName.setText(sp_fullName);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(more_page.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
