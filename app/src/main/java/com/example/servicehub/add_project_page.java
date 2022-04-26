@@ -79,7 +79,6 @@ public class add_project_page extends AppCompatActivity {
     boolean isAvailableSat = false;
     boolean isAvailableSun = false;
 
-    FirebaseAuth fAuth;
     private FirebaseUser user;
     private DatabaseReference projectDatabase;
     private StorageReference projectStorage;
