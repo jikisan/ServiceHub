@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,7 +14,9 @@ public class switch_account_page extends AppCompatActivity {
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn;
 
-    TextView tv_tech, tv_seller;
+    TextView tv_techWelcome, tv_sellerWelcome, tv_techMessage, tv_sellerMessage;
+
+    Button btn_tech, btn_seller, btn_techApply, btn_sellerApply;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,12 +25,12 @@ public class switch_account_page extends AppCompatActivity {
 
         setRef();
         bottomNavTaskbar();
-        accountSelect();
+        clickListener();
     }
 
-    private void accountSelect() {
+    private void clickListener() {
 
-        tv_tech.setOnClickListener(new View.OnClickListener() {
+        btn_tech.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intentTechSelect = new Intent(switch_account_page.this, tech_dashboard.class);
@@ -35,7 +38,23 @@ public class switch_account_page extends AppCompatActivity {
             }
         }); // end of tech button
 
-        tv_seller.setOnClickListener(new View.OnClickListener() {
+        btn_seller.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentSellerSelect = new Intent(switch_account_page.this, seller_dashboard.class);
+                startActivity(intentSellerSelect);
+            }
+        }); // end of seller button
+
+        btn_techApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentSellerSelect = new Intent(switch_account_page.this, tech_application_page.class);
+                startActivity(intentSellerSelect);
+            }
+        }); // end of seller button
+
+        btn_sellerApply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intentSellerSelect = new Intent(switch_account_page.this, seller_dashboard.class);
@@ -88,6 +107,7 @@ public class switch_account_page extends AppCompatActivity {
             }
         }); // end of more button
     }
+
     private void setRef() {
 
         iv_messageBtn = findViewById(R.id.iv_messageBtn);
@@ -95,8 +115,19 @@ public class switch_account_page extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        tv_tech = findViewById(R.id.tv_tech);
-        tv_seller = findViewById(R.id.tv_seller);
+
+        tv_techWelcome = findViewById(R.id.tv_techWelcome);
+        tv_sellerWelcome = findViewById(R.id.tv_sellerWelcome);
+        tv_techMessage = findViewById(R.id.tv_techMessage);
+        tv_sellerMessage = findViewById(R.id.tv_sellerMessage);
+
+
+
+        btn_tech = findViewById(R.id.btn_tech);
+        btn_seller = findViewById(R.id.btn_seller);
+        btn_sellerApply = findViewById(R.id.btn_sellerApply);
+        btn_techApply = findViewById(R.id.btn_techApply);
+
 
     }
 }

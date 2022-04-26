@@ -40,7 +40,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:elevation="10dp"
-                android:src="@drawable/edit_black"
+                android:src="@drawable/edit"
                 android:text="Edit profile"
                 android:textSize="18sp"
                 app:tint="@color/quantum_googgreen800"
