@@ -322,9 +322,6 @@ public class add_project_page extends AppCompatActivity {
                 imageUri = result.getUri();
 
                 try{
-//                    InputStream stream = getContentResolver().openInputStream(imageUri);
-//                    bitmap = BitmapFactory.decodeStream(stream);
-//                    iv_projectImage.setImageBitmap(bitmap);
 
                     Picasso.get().load(imageUri)
                             .into(iv_projectImage);

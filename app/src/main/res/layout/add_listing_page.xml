@@ -87,7 +87,7 @@
 
 
             <TextView
-                android:id="@+id/textView33"
+                android:id="@+id/tv_uploadSelfie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -109,7 +109,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView33" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_uploadSelfie" />
 
             <TextView
                 android:id="@+id/textView34"
