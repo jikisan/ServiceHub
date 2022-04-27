@@ -2,8 +2,6 @@ package com.example.servicehub;
 
 public class Projects {
 
-
-
     String category;
     String imageUrl;
     String imageName;
