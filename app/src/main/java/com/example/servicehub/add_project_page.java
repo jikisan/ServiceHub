@@ -6,15 +6,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -56,20 +62,20 @@ import java.util.Locale;
 public class add_project_page extends AppCompatActivity {
 
 
-    ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_projectImage;
-    EditText et_projectName,  et_price, et_specialInstruction;
-    Button btn_pickStartTime, btn_pickEndTime, btn_save;
-    TextView tv_uploadPhoto, tv_startTime, tv_endTime, tv_address;
-    Chip chip_Mon, chip_Tue, chip_Wed, chip_Thu, chip_Fri, chip_Sat, chip_Sun;
-    Uri imageUri;
-    Bitmap bitmap;
-    Geocoder geocoder;
-    Spinner spinner_projCategory;
+    private EditText et_projectName,  et_price, et_specialInstruction;
+    private Button btn_pickStartTime, btn_pickEndTime, btn_save;
+    private TextView tv_uploadPhoto, tv_startTime, tv_endTime, tv_address, tv_back;
+    private Chip chip_Mon, chip_Tue, chip_Wed, chip_Thu, chip_Fri, chip_Sat, chip_Sun;
+    private Uri imageUri;
+    private Bitmap bitmap;
+    private Geocoder geocoder;
+    private Spinner spinner_projCategory;
 
-    int PLACE_PICKER_REQUEST = 1;
-    int hour, minute;
-    String latLng;
+    private int PLACE_PICKER_REQUEST = 1;
+    private int hour, minute;
+    private String latLng;
 
     boolean isAvailableMon = false;
     boolean isAvailableTue = false;
@@ -122,7 +128,7 @@ public class add_project_page extends AppCompatActivity {
                 if(addTask != null && addTask.isInProgress()){
                     Toast.makeText(add_project_page.this, "In progress", Toast.LENGTH_SHORT).show();
                 } else {
-                    addProj();
+                    inputValidation();
                 }
             }
         });
@@ -219,7 +225,67 @@ public class add_project_page extends AppCompatActivity {
             }
         });
 
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(add_project_page.this, tech_dashboard.class);
+                startActivity(intent);
+            }
+        });
 
+
+    }
+
+    private void inputValidation() {
+        String sp_projName = et_projectName.getText().toString();
+        String sp_address = tv_address.getText().toString();
+        String time_start = tv_startTime.getText().toString();
+        String time_end = tv_endTime.getText().toString();
+        String price = et_price.getText().toString();
+
+        if(hasImage(iv_projectImage)){
+            Toast.makeText(this, "Project photo is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(sp_projName)){
+            Toast.makeText(this, "Project Name is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(sp_address)){
+            Toast.makeText(this, "Address is required", Toast.LENGTH_SHORT).show();
+        }
+        else if(!chip_Mon.isChecked() && !chip_Tue.isChecked() && !chip_Wed.isChecked() && !chip_Thu.isChecked()
+                && !chip_Fri.isChecked() && !chip_Sat.isChecked() && !chip_Sun.isChecked()){
+            Toast.makeText(this, "Availability is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(time_start)){
+            Toast.makeText(this, "Starting time is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(time_end)){
+            Toast.makeText(this, "End time is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(price)){
+            Toast.makeText(this, "Price is required", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            new AlertDialog.Builder(add_project_page.this)
+                    .setIcon(R.drawable.logo)
+                    .setTitle("ServiceHUB")
+                    .setMessage("Please make sure all information entered are correct")
+                    .setCancelable(true)
+                    .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            addProj();
+
+                        }
+                    })
+                    .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int i) {
+                        }
+                    })
+                    .show();
+        }
 
     }
 
@@ -241,6 +307,7 @@ public class add_project_page extends AppCompatActivity {
         tv_address = findViewById(R.id.tv_address);
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
         tv_endTime = findViewById(R.id.tv_endTime);
+        tv_back = findViewById(R.id.iv_back);
 
         btn_save = findViewById(R.id.btn_update);
         spinner_projCategory = findViewById(R.id.spinner_projCategory);
@@ -257,6 +324,10 @@ public class add_project_page extends AppCompatActivity {
     }
 
     private void addProj() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Adding Project...");
+        progressDialog.show();
+
         StorageReference fileReference = projectStorage.child(imageUri.getLastPathSegment());
 
         String projName = et_projectName.getText().toString();
@@ -269,9 +340,6 @@ public class add_project_page extends AppCompatActivity {
         int ratings = 0;
         String ratingsText = String.valueOf(ratings);
         String category = spinner_projCategory.getSelectedItem().toString();
-
-
-
 
         addTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -291,9 +359,11 @@ public class add_project_page extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(add_project_page.this, "Project Added", Toast.LENGTH_LONG).show();
+                                    progressDialog.dismiss();
                                     Intent intent = new Intent(add_project_page.this, tech_dashboard.class);
                                     startActivity(intent);
+                                    Toast.makeText(add_project_page.this, "Project Added", Toast.LENGTH_LONG).show();
+
                                 } else {
                                     Toast.makeText(add_project_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
@@ -388,10 +458,7 @@ public class add_project_page extends AppCompatActivity {
 
     private void chipsValidation() {
 
-        if(!chip_Mon.isChecked() && !chip_Tue.isChecked() && !chip_Wed.isChecked() && !chip_Thu.isChecked()
-                && !chip_Fri.isChecked() && !chip_Sat.isChecked() && !chip_Sun.isChecked()){
-            Toast.makeText(this, "Please choose a day you are available", Toast.LENGTH_SHORT).show();
-        }else{
+
 
             if(chip_Mon.isChecked()){
                 isAvailableMon = true;
@@ -420,7 +487,7 @@ public class add_project_page extends AppCompatActivity {
             if(chip_Sun.isChecked()){
                 isAvailableSun = true;
             }
-        }
+
 
 
     }
@@ -467,6 +534,15 @@ public class add_project_page extends AppCompatActivity {
             }
         }); // end of more button
     }
+
+    private boolean hasImage(ImageView iv){
+
+        Drawable drawable = iv.getDrawable();
+        BitmapDrawable bitmapDrawable = drawable instanceof BitmapDrawable ? (BitmapDrawable)drawable : null;
+
+        return bitmapDrawable == null || bitmapDrawable.getBitmap() == null;
+    }
+
 
 
     //validate permissions

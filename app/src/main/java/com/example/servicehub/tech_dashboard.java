@@ -36,7 +36,7 @@ public class tech_dashboard extends AppCompatActivity {
     private fragmentAdapter adapter;
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, iv_editProject;
+            iv_moreBtn, iv_editProject, iv_back;
     private TextView tv_bannerName;
     private Button btn_addProject;
     private String imageUriText;
@@ -57,10 +57,30 @@ public class tech_dashboard extends AppCompatActivity {
 
         setRef();
         generateTabLayout();
-        buttonNav();
+        clickListener();
         getTechInfo();
         bottomNavTaskbar();
 
+    }
+
+    private void clickListener() {
+
+
+        btn_addProject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentAddProject = new Intent(tech_dashboard.this, add_project_page.class);
+                startActivity(intentAddProject);
+            }
+        }); // end of add project button
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(tech_dashboard.this, switch_account_page.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setRef() {
@@ -70,16 +90,21 @@ public class tech_dashboard extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
+        iv_back = findViewById(R.id.iv_back);
+
+
         tv_bannerName = findViewById(R.id.tv_bannerName);
+
         btn_addProject = findViewById(R.id.btn_addProject);
+
         tabLayout = findViewById(R.id.tab_layout);
+
         vp_viewPager2 = findViewById(R.id.vp_viewPager2);
 
         progressBar = findViewById(R.id.progressBar);
 
 
     }
-
 
     private void generateTabLayout() {
 
@@ -141,26 +166,6 @@ public class tech_dashboard extends AppCompatActivity {
             }
         });
         progressBar.setVisibility(View.GONE);
-
-    }
-
-    private void buttonNav() {
-
-//        iv_editProject.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intentEditProject = new Intent(tech_dashboard.this, edit_project_page.class);
-//                startActivity(intentEditProject);
-//            }
-//        }); // end of edit project button
-
-        btn_addProject.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentAddProject = new Intent(tech_dashboard.this, add_project_page.class);
-                startActivity(intentAddProject);
-            }
-        }); // end of add project button
 
     }
 

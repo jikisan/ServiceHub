@@ -35,7 +35,7 @@ public class seller_dashboard extends AppCompatActivity {
     private fragmentAdapterListings adapter;
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, iv_editListing;
+            iv_moreBtn, iv_back;
     private TextView tv_bannerName;
     private Button btn_addListing;
     private ProgressBar progressBar;
@@ -52,7 +52,7 @@ public class seller_dashboard extends AppCompatActivity {
 
         setRef();
         generateTabLayout();
-        buttonNav();
+        clickListener();
         getSellerInfo();
         bottomNavTaskbar();
     }
@@ -64,10 +64,14 @@ public class seller_dashboard extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        // iv_editListing = findViewById(R.id.iv_editListing);
+        iv_back = findViewById(R.id.iv_back);
+
         btn_addListing = findViewById(R.id.btn_addListing);
+
         tv_bannerName = findViewById(R.id.tv_bannerName);
+
         tabLayout = findViewById(R.id.tab_layout);
+
         vp_viewPager2 = findViewById(R.id.vp_viewPager2);
 
         progressBar = findViewById(R.id.progressBar);
@@ -108,7 +112,6 @@ public class seller_dashboard extends AppCompatActivity {
         });
     }
 
-
     private void getSellerInfo() {
         progressBar.setVisibility(View.VISIBLE);
 
@@ -139,16 +142,7 @@ public class seller_dashboard extends AppCompatActivity {
 
     }
 
-    private void buttonNav() {
-
-//        iv_editListing.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intentEditListing = new Intent(seller_dashboard.this, edit_listing_page.class);
-//                startActivity(intentEditListing);
-//            }
-//        }); // end of edit listing button
-
+    private void clickListener() {
 
         btn_addListing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,7 +152,13 @@ public class seller_dashboard extends AppCompatActivity {
             }
         }); // end of add listing button
 
-
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(seller_dashboard.this, switch_account_page.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
