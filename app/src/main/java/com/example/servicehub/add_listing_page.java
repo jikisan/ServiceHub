@@ -353,6 +353,6 @@ public class add_listing_page extends AppCompatActivity {
         et_listingName = findViewById(R.id.et_listingName);
         et_price = findViewById(R.id.et_price);
         et_listDesc = findViewById(R.id.et_listDesc);
-        btn_save = findViewById(R.id.iv_editButton);
+        btn_save = findViewById(R.id.btn_update);
     }
 }

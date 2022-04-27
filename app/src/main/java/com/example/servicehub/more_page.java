@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,27 +24,29 @@ public class more_page extends AppCompatActivity {
     private FirebaseUser user;
     private DatabaseReference userDatabase;
     private String userID;
+    private ProgressBar progressBar;
 
-    ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn;
 
-    TextView tv_editProfile, tv_changePassword, tv_contactUs, tv_aboutUs, tv_logout, tv_bannerName, tv_ratings;
+    private TextView tv_editProfile, tv_changePassword, tv_contactUs, tv_aboutUs, tv_logout, tv_bannerName, tv_ratings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.more_page);
 
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         userDatabase = FirebaseDatabase.getInstance().getReference("Users");
         userID = user.getUid();
 
-
         setRef();
+
+        progressBar.setVisibility(View.VISIBLE);
         buttonNav();
         generateProfile();
         bottomNavTaskbar();
-
 
     }
 
@@ -143,9 +146,12 @@ public class more_page extends AppCompatActivity {
         tv_logout = findViewById(R.id.tv_logout);
         tv_bannerName = findViewById(R.id.tv_bannerName);
 
+        progressBar = findViewById(R.id.progressBar);
     }
 
     private void generateProfile() {
+
+
         userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -167,6 +173,9 @@ public class more_page extends AppCompatActivity {
                 Toast.makeText(more_page.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+        progressBar.setVisibility(View.GONE);
+
     }
 
 }

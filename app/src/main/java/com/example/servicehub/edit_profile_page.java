@@ -9,19 +9,16 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,8 +28,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
-
-import java.io.InputStream;
 
 public class edit_profile_page extends AppCompatActivity {
 
@@ -44,8 +39,9 @@ public class edit_profile_page extends AppCompatActivity {
             iv_moreBtn, iv_editButton, iv_saveButton, iv_profile_photo;
     private EditText tv_fname, tv_lname, tv_contactNum, tv_email;
     private  TextView tv_uploadPhoto;
+    private ProgressBar progressBar;
 
-    Uri imageUri;
+    private Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +113,7 @@ public class edit_profile_page extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        iv_editButton = findViewById(R.id.iv_editButton);
+        iv_editButton = findViewById(R.id.btn_update);
         iv_saveButton = findViewById(R.id.iv_saveButton);
         iv_profile_photo = findViewById(R.id.iv_profile_photo);
 
@@ -127,9 +123,14 @@ public class edit_profile_page extends AppCompatActivity {
         tv_email = findViewById(R.id.tv_email);
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
 
+        progressBar = findViewById(R.id.progressBar);
+
+
     }
 
     private void generateProfile() {
+        progressBar.setVisibility(View.VISIBLE);
+
         userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -154,6 +155,9 @@ public class edit_profile_page extends AppCompatActivity {
                 Toast.makeText(edit_profile_page.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+        progressBar.setVisibility(View.GONE);
+
     }
 
     private void bottomNavTaskbar() {

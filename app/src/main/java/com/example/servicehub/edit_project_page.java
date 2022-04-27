@@ -6,11 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
@@ -52,7 +55,6 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +66,7 @@ public class edit_project_page extends AppCompatActivity {
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_projectImage, btn_delete ;
     EditText et_projectName,  et_price, et_specialInstruction;
-    Button btn_pickStartTime, btn_pickEndTime, btn_save;
+    Button btn_pickStartTime, btn_pickEndTime, btn_update;
     TextView tv_uploadPhoto, tv_startTime, tv_endTime, tv_address;
     Chip chip_Mon, chip_Tue, chip_Wed, chip_Thu, chip_Fri, chip_Sat, chip_Sun;
     ChipGroup chipGroup;
@@ -125,47 +127,93 @@ public class edit_project_page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                projectIdFromIntent = getIntent().getStringExtra("Project ID");
+                new AlertDialog.Builder(edit_project_page.this)
+                        .setIcon(R.drawable.logo)
+                        .setTitle("Delete Application")
+                        .setMessage("Are you sure that you want to permanently delete this project?")
+                        .setCancelable(true)
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                projectDatabase.child(projectIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Projects projectData = snapshot.getValue(Projects.class);
+                                projectIdFromIntent = getIntent().getStringExtra("Project ID");
+                                projectDatabase.child(projectIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Projects projectData = snapshot.getValue(Projects.class);
 
-                        String imageName = projectData.getImageName();
-                        StorageReference imageRef = projectStorage.child(imageName);
+                                        String imageName = projectData.getImageName();
+                                        StorageReference imageRef = projectStorage.child(imageName);
 
 
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                            imageRef.delete();
-                            dataSnapshot.getRef().removeValue();
+                                            imageRef.delete();
+                                            dataSnapshot.getRef().removeValue();
 
-                        }
+                                        }
 
-                        Toast.makeText(edit_project_page.this, "Project Deleted", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(edit_project_page.this, tech_dashboard.class);
-                        startActivity(intent);
-                    }
+                                        Toast.makeText(edit_project_page.this, "Project Deleted", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(edit_project_page.this, tech_dashboard.class);
+                                        startActivity(intent);
+                                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                                    }
+                                });
+
+                            }
+                        })
+                        .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                            }
+                        })
+                        .show();
+
             }
         });
 
-        btn_save.setOnClickListener(new View.OnClickListener() {
+        btn_update.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 if(addTask != null && addTask.isInProgress()){
                     Toast.makeText(edit_project_page.this, "In progress", Toast.LENGTH_SHORT).show();
                 } else {
-                    updateProject();
-                }            }
-        });
 
+                    new AlertDialog.Builder(edit_project_page.this)
+                        .setIcon(R.drawable.logo)
+                        .setTitle("ServiceHUB")
+                        .setMessage("Please make sure all information entered are correct")
+                        .setCancelable(true)
+                        .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+                             if(hasImage(iv_projectImage)){
+                                 updateProject();
+                             }
+                             else
+                             {
+                                 updateProjectNoImage();
+                             }
+
+                            }
+                        })
+                        .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                            }
+                        })
+                        .show();
+                }
+
+            }
+        });
 
         tv_startTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,11 +300,12 @@ public class edit_project_page extends AppCompatActivity {
                 //Start Activity result
                 startActivityForResult(intent, 100);
 
-               // placePicker();
+                // placePicker();
             }
         });
 
     }
+
 
     private void setRef() {
 
@@ -276,7 +325,7 @@ public class edit_project_page extends AppCompatActivity {
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
         tv_endTime = findViewById(R.id.tv_endTime);
 
-        btn_save = findViewById(R.id.iv_editButton);
+        btn_update = findViewById(R.id.btn_update);
         btn_delete = findViewById(R.id.btn_delete);
         spinner_projCategory = findViewById(R.id.spinner_projCategory);
 
@@ -292,6 +341,10 @@ public class edit_project_page extends AppCompatActivity {
     }
 
     private void updateProject() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Updating list...");
+        progressDialog.show();
+
         StorageReference fileReference = projectStorage.child(imageUri.getLastPathSegment());
 
         String sp_projCategory = spinner_projCategory.getSelectedItem().toString();
@@ -339,9 +392,11 @@ public class edit_project_page extends AppCompatActivity {
                         projectDatabase.child(projectIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
                             @Override
                             public void onSuccess(Object o) {
-                                Toast.makeText(edit_project_page.this, "Project is updated", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
                                 Intent intent = new Intent(edit_project_page.this, tech_dashboard.class);
                                 startActivity(intent);
+                                Toast.makeText(edit_project_page.this, "Project is updated", Toast.LENGTH_SHORT).show();
+
                             }
                         });
                     }
@@ -356,6 +411,54 @@ public class edit_project_page extends AppCompatActivity {
                 });
 
     }
+
+    private void updateProjectNoImage() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Updating list...");
+        progressDialog.show();
+
+        String sp_projCategory = spinner_projCategory.getSelectedItem().toString();
+        String projName = et_projectName.getText().toString();
+        String projAddress = tv_address.getText().toString();
+        String price = et_price.getText().toString();
+        String sp_projStartTime = tv_startTime.getText().toString();
+        String sp_projEndTime = tv_endTime.getText().toString();
+        String projInstruction = et_specialInstruction.getText().toString();
+        String imageName = imageUri.getLastPathSegment();
+        int ratings = 0;
+
+        chipsValidation();
+
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("category", sp_projCategory);
+        hashMap.put("projName", projName);
+        hashMap.put("projLatLng", latLng);
+        hashMap.put("projAddress", projAddress);
+        hashMap.put("price", price);
+        hashMap.put("startTime", sp_projStartTime);
+        hashMap.put("endTime", sp_projEndTime);
+        hashMap.put("projInstruction", projInstruction);
+        hashMap.put("isAvailableMon", isAvailableMon);
+        hashMap.put("isAvailableTue", isAvailableTue);
+        hashMap.put("isAvailableWed", isAvailableWed);
+        hashMap.put("isAvailableThu", isAvailableThu);
+        hashMap.put("isAvailableFri", isAvailableFri);
+        hashMap.put("isAvailableSat", isAvailableSat);
+        hashMap.put("isAvailableSun", isAvailableSun);
+
+        projectIdFromIntent = getIntent().getStringExtra("Project ID");
+        projectDatabase.child(projectIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                progressDialog.dismiss();
+                Intent intent = new Intent(edit_project_page.this, tech_dashboard.class);
+                startActivity(intent);
+                Toast.makeText(edit_project_page.this, "Project is updated", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -599,7 +702,13 @@ public class edit_project_page extends AppCompatActivity {
         }); // end of more button
     }
 
+    private boolean hasImage(ImageView iv){
 
+        Drawable drawable = iv.getDrawable();
+        BitmapDrawable bitmapDrawable = drawable instanceof BitmapDrawable ? (BitmapDrawable)drawable : null;
+
+        return bitmapDrawable == null || bitmapDrawable.getBitmap() == null;
+    }
 
 
     // validate permissions

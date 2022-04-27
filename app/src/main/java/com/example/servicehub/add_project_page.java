@@ -242,7 +242,7 @@ public class add_project_page extends AppCompatActivity {
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
         tv_endTime = findViewById(R.id.tv_endTime);
 
-        btn_save = findViewById(R.id.iv_editButton);
+        btn_save = findViewById(R.id.btn_update);
         spinner_projCategory = findViewById(R.id.spinner_projCategory);
 
         chip_Mon = findViewById(R.id.chip_Mon);

@@ -6,10 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,7 +45,6 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -101,31 +103,49 @@ public class edit_listing_page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                listingIdFromIntent = getIntent().getStringExtra("Listing ID");
-                listingDatabase.child(listingIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        Listings listingsData = snapshot.getValue(Listings.class);
+                new AlertDialog.Builder(edit_listing_page.this)
+                        .setIcon(R.drawable.logo)
+                        .setTitle("Delete Application")
+                        .setMessage("Are you sure that you want to permanently delete this listing?")
+                        .setCancelable(true)
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                        String imageName = listingsData.getImageName();
+                                listingIdFromIntent = getIntent().getStringExtra("Listing ID");
+                                listingDatabase.child(listingIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Listings listingsData = snapshot.getValue(Listings.class);
 
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            StorageReference imageRef = listingStorage.child(imageName);
+                                        String imageName = listingsData.getImageName();
 
-                            imageRef.delete();
-                            dataSnapshot.getRef().removeValue();
+                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                            StorageReference imageRef = listingStorage.child(imageName);
 
-                            Toast.makeText(edit_listing_page.this, "Listing Deleted", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(edit_listing_page.this, seller_dashboard.class);
-                            startActivity(intent);
-                        }
-                    }
+                                            imageRef.delete();
+                                            dataSnapshot.getRef().removeValue();
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                                            Toast.makeText(edit_listing_page.this, "Listing Deleted", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(edit_listing_page.this, seller_dashboard.class);
+                                            startActivity(intent);
+                                        }
+                                    }
 
-                    }
-                });
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                            }
+                        })
+                        .show();
+
             }
         });
 
@@ -144,6 +164,8 @@ public class edit_listing_page extends AppCompatActivity {
                     if(!checkStoragePermission()){
                         requestStoragePermission();
                     }else
+
+
                         PickImage();
                 }
             }
@@ -172,13 +194,40 @@ public class edit_listing_page extends AppCompatActivity {
                     Toast.makeText(edit_listing_page.this, "In progress", Toast.LENGTH_SHORT).show();
 
                 } else {
-                    updateListing();
+
+                    new AlertDialog.Builder(edit_listing_page.this)
+                            .setIcon(R.drawable.logo)
+                            .setTitle("ServiceHUB")
+                            .setMessage("Please make sure all information entered are correct")
+                            .setCancelable(true)
+                            .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+
+                                    if(hasImage(iv_listingImage)){
+                                        updateListing();
+                                    }
+                                    else
+                                    {
+                                        updateListingNoImage();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int i) {
+                                }
+                            })
+                            .show();
                 }
             }
         });
 
 
     }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -256,6 +305,10 @@ public class edit_listing_page extends AppCompatActivity {
     }
 
     private void updateListing() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Updating list...");
+        progressDialog.show();
+
         StorageReference fileReference = listingStorage.child(imageUri.getLastPathSegment());
 
         String listName = et_listingName.getText().toString();
@@ -288,9 +341,11 @@ public class edit_listing_page extends AppCompatActivity {
                         listingDatabase.child(listingIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
                             @Override
                             public void onSuccess(Object o) {
-                                Toast.makeText(edit_listing_page.this, "Listing is updated", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
                                 Intent intent = new Intent(edit_listing_page.this, seller_dashboard.class);
                                 startActivity(intent);
+                                Toast.makeText(edit_listing_page.this, "Listing is updated", Toast.LENGTH_SHORT).show();
+
 
                             }
                         });
@@ -306,6 +361,46 @@ public class edit_listing_page extends AppCompatActivity {
                         Toast.makeText(edit_listing_page.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
+
+
+    }
+
+    private void updateListingNoImage() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Updating list...");
+        progressDialog.show();
+
+        StorageReference fileReference = listingStorage.child(imageUri.getLastPathSegment());
+
+        String listName = et_listingName.getText().toString();
+        String listAddress = tv_address.getText().toString();
+        String listPrice = et_price.getText().toString();
+        String listQuantity = tv_quantity.getText().toString();
+        String listDesc = et_listDesc.getText().toString();
+        String imageName = imageUri.getLastPathSegment();
+
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("listName", listName);
+        hashMap.put("listLatLng", latLng);
+        hashMap.put("listAddress", listAddress);
+        hashMap.put("listPrice", listPrice);
+        hashMap.put("listQuantity", listQuantity);
+        hashMap.put("listDesc", listDesc);
+
+        listingIdFromIntent = getIntent().getStringExtra("Listing ID");
+        listingDatabase.child(listingIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+
+                progressDialog.dismiss();
+                Intent intent = new Intent(edit_listing_page.this, seller_dashboard.class);
+                startActivity(intent);
+                Toast.makeText(edit_listing_page.this, "Listing is updated", Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+
     }
 
     private void generateDataValue() {
@@ -417,7 +512,7 @@ public class edit_listing_page extends AppCompatActivity {
         et_listingName = findViewById(R.id.et_listingName);
         et_price = findViewById(R.id.et_price);
         et_listDesc = findViewById(R.id.et_listDesc);
-        btn_save = findViewById(R.id.iv_editButton);
+        btn_save = findViewById(R.id.btn_update);
         btn_delete = findViewById(R.id.btn_delete);
 
     }
@@ -425,6 +520,15 @@ public class edit_listing_page extends AppCompatActivity {
     private void PickImage() {
         CropImage.activity().start(this);
     }
+
+    private boolean hasImage(ImageView iv){
+
+        Drawable drawable = iv.getDrawable();
+        BitmapDrawable bitmapDrawable = drawable instanceof BitmapDrawable ? (BitmapDrawable)drawable : null;
+
+        return bitmapDrawable == null || bitmapDrawable.getBitmap() == null;
+    }
+
 
     // validate permissions
     @RequiresApi(api = Build.VERSION_CODES.M)
