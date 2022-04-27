@@ -2,18 +2,16 @@ package com.example.servicehub;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,12 +35,14 @@ public class tech_dashboard extends AppCompatActivity {
     private ViewPager2 vp_viewPager2;
     private fragmentAdapter adapter;
 
-    ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_editProject;
-    TextView tv_bannerName;
-    Button btn_addProject;
-    String imageUriText;
-    Uri imageUri;
+    private TextView tv_bannerName;
+    private Button btn_addProject;
+    private String imageUriText;
+    private Uri imageUri;
+    private ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,8 @@ public class tech_dashboard extends AppCompatActivity {
         userDatabase = FirebaseDatabase.getInstance().getReference("Users");
         userID = user.getUid();
 
+
+
         setRef();
         generateTabLayout();
         buttonNav();
@@ -61,10 +63,29 @@ public class tech_dashboard extends AppCompatActivity {
 
     }
 
+    private void setRef() {
+
+        iv_messageBtn = findViewById(R.id.iv_messageBtn);
+        iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
+        iv_homeBtn = findViewById(R.id.iv_homeBtn);
+        iv_accountBtn = findViewById(R.id.iv_accountBtn);
+        iv_moreBtn = findViewById(R.id.iv_moreBtn);
+        tv_bannerName = findViewById(R.id.tv_bannerName);
+        btn_addProject = findViewById(R.id.btn_addProject);
+        tabLayout = findViewById(R.id.tab_layout);
+        vp_viewPager2 = findViewById(R.id.vp_viewPager2);
+
+        progressBar = findViewById(R.id.progressBar);
+
+
+    }
+
+
     private void generateTabLayout() {
 
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_project).setText("Projects"));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_booking).setText("Bookings"));
+
+        tabLayout.addTab(tabLayout.newTab().setText("Active Projects"));
+        tabLayout.addTab(tabLayout.newTab().setText("Active Bookings"));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         adapter = new fragmentAdapter(fragmentManager, getLifecycle());
@@ -96,6 +117,8 @@ public class tech_dashboard extends AppCompatActivity {
     }
 
     private void getTechInfo() {
+        progressBar.setVisibility(View.VISIBLE);
+
         userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -105,7 +128,10 @@ public class tech_dashboard extends AppCompatActivity {
                     String sp_fName = userProfile.firstName;
                     String sp_lName = userProfile.lastName;
 
-                    tv_bannerName.setText(sp_fName + " " + sp_lName);
+                    String firstName = sp_fName.substring(0, 1).toUpperCase()+ sp_fName.substring(1).toLowerCase();
+                    String lastName = sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();
+
+                    tv_bannerName.setText(firstName + " " + lastName);
                 }
             }
 
@@ -114,6 +140,8 @@ public class tech_dashboard extends AppCompatActivity {
                 Toast.makeText(tech_dashboard.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        progressBar.setVisibility(View.GONE);
+
     }
 
     private void buttonNav() {
@@ -178,16 +206,5 @@ public class tech_dashboard extends AppCompatActivity {
             }
         }); // end of more button
     }
-    private void setRef() {
 
-        iv_messageBtn = findViewById(R.id.iv_messageBtn);
-        iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
-        iv_homeBtn = findViewById(R.id.iv_homeBtn);
-        iv_accountBtn = findViewById(R.id.iv_accountBtn);
-        iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        tv_bannerName = findViewById(R.id.tv_bannerName);
-        btn_addProject = findViewById(R.id.btn_addProject);
-        tabLayout = findViewById(R.id.tab_layout);
-        vp_viewPager2 = findViewById(R.id.vp_viewPager2);
-    }
 }

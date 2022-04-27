@@ -65,7 +65,7 @@
                 android:textColor="@color/quantum_amber400"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:visibility="visible"
+                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -73,20 +73,20 @@
                 android:id="@+id/tv_sellerWelcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="8dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="10dp"
-                android:text="Welcome \nTech!"
+                android:text="Welcome \nSeller!"
                 android:textColor="@color/quantum_amber400"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
+                android:id="@+id/imageView15"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="60dp"
@@ -158,6 +158,21 @@
             android:layout_height="match_parent"
             android:background="@color/quantum_googred300">
 
+            <ImageView
+                android:id="@+id/imageView16"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
+                android:layout_marginLeft="60dp"
+                android:layout_marginBottom="24dp"
+                android:src="@drawable/tech_logo1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.53" />
+
             <TextView
                 android:id="@+id/tv_techMessage"
                 android:layout_width="wrap_content"
@@ -171,7 +186,7 @@
                 android:textColor="@color/quantum_indigo700"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:visibility="visible"
+                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -179,32 +194,19 @@
                 android:id="@+id/tv_techWelcome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="8dp"
                 android:gravity="center_vertical"
                 android:paddingLeft="10dp"
-                android:text="Welcome \nSeller!"
-                android:textColor="@color/quantum_indigo500"
+                android:text="Welcome \nTech!"
+                android:textColor="@color/quantum_indigo700"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:visibility="invisible"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginBottom="24dp"
-                android:src="@drawable/tech_logo1"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.53" />
+                />
+
 
             <Button
                 android:id="@+id/btn_techApply"
@@ -270,7 +272,7 @@
 
             <TextView
                 android:layout_width="166dp"
-                android:layout_height="86dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:gravity="center_horizontal"
                 android:paddingLeft="10dp"

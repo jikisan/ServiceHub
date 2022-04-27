@@ -312,16 +312,21 @@ public class switch_account_page extends AppCompatActivity {
                         boolean sp_isSellerApproved = tech_application_data.isApproved();
 
                         if(!sp_isSellerApproved && !sp_isSellerPending){
+                            tv_sellerWelcome.setVisibility(View.INVISIBLE);
+                            tv_sellerMessage.setVisibility(View.VISIBLE);
                             cardView1.setVisibility(View.VISIBLE);
                             cardViewPendingSeller.setVisibility(View.INVISIBLE);
                             btn_sellerApply.setVisibility(View.VISIBLE);
                             btn_seller.setVisibility(View.INVISIBLE);
                         }
                         else if(sp_isSellerPending && !sp_isSellerApproved){
+
                             cardView1.setVisibility(View.INVISIBLE);
                             cardViewPendingSeller.setVisibility(View.VISIBLE);
                         }
                         else if(sp_isSellerApproved && !sp_isSellerPending){
+                            tv_sellerWelcome.setVisibility(View.VISIBLE);
+                            tv_sellerMessage.setVisibility(View.INVISIBLE);
                             cardView1.setVisibility(View.VISIBLE);
                             cardViewPendingSeller.setVisibility(View.INVISIBLE);
                             btn_sellerApply.setVisibility(View.INVISIBLE);
@@ -336,6 +341,8 @@ public class switch_account_page extends AppCompatActivity {
                 }
                 else
                 {
+                    tv_sellerWelcome.setVisibility(View.INVISIBLE);
+                    tv_sellerMessage.setVisibility(View.VISIBLE);
                     cardView1.setVisibility(View.VISIBLE);
                     cardViewPendingSeller.setVisibility(View.INVISIBLE);
                     btn_sellerApply.setVisibility(View.VISIBLE);
@@ -362,6 +369,8 @@ public class switch_account_page extends AppCompatActivity {
                         boolean sp_isTechApproved = tech_application_data.isApproved();
 
                         if(!sp_isTechApproved && !sp_isTechPending){
+                            tv_techWelcome.setVisibility(View.INVISIBLE);
+                            tv_techMessage.setVisibility(View.VISIBLE);
                             cardView2.setVisibility(View.VISIBLE);
                             cardViewPendingTech.setVisibility(View.INVISIBLE);
                             btn_techApply.setVisibility(View.VISIBLE);
@@ -372,6 +381,8 @@ public class switch_account_page extends AppCompatActivity {
                             cardViewPendingTech.setVisibility(View.VISIBLE);
                         }
                         else if(sp_isTechApproved && !sp_isTechPending){
+                            tv_techWelcome.setVisibility(View.VISIBLE);
+                            tv_techMessage.setVisibility(View.INVISIBLE);
                             cardView2.setVisibility(View.VISIBLE);
                             cardViewPendingTech.setVisibility(View.INVISIBLE);
                             btn_techApply.setVisibility(View.INVISIBLE);
@@ -386,6 +397,12 @@ public class switch_account_page extends AppCompatActivity {
                 }
                 else
                 {
+                    tv_techWelcome.setVisibility(View.INVISIBLE);
+                    tv_techMessage.setVisibility(View.VISIBLE);
+                    cardView2.setVisibility(View.VISIBLE);
+                    cardViewPendingTech.setVisibility(View.INVISIBLE);
+                    btn_techApply.setVisibility(View.VISIBLE);
+                    btn_tech.setVisibility(View.INVISIBLE);
                     cardView2.setVisibility(View.VISIBLE);
                     cardViewPendingTech.setVisibility(View.INVISIBLE);
                     btn_techApply.setVisibility(View.VISIBLE);

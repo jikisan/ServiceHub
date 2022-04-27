@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,10 +34,12 @@ public class seller_dashboard extends AppCompatActivity {
     private ViewPager2 vp_viewPager2;
     private fragmentAdapterListings adapter;
 
-    ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_editListing;
-    TextView tv_bannerName;
-    Button btn_addListing;
+    private TextView tv_bannerName;
+    private Button btn_addListing;
+    private ProgressBar progressBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +57,27 @@ public class seller_dashboard extends AppCompatActivity {
         bottomNavTaskbar();
     }
 
+    private void setRef() {
+
+        iv_messageBtn = findViewById(R.id.iv_messageBtn);
+        iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
+        iv_homeBtn = findViewById(R.id.iv_homeBtn);
+        iv_accountBtn = findViewById(R.id.iv_accountBtn);
+        iv_moreBtn = findViewById(R.id.iv_moreBtn);
+        // iv_editListing = findViewById(R.id.iv_editListing);
+        btn_addListing = findViewById(R.id.btn_addListing);
+        tv_bannerName = findViewById(R.id.tv_bannerName);
+        tabLayout = findViewById(R.id.tab_layout);
+        vp_viewPager2 = findViewById(R.id.vp_viewPager2);
+
+        progressBar = findViewById(R.id.progressBar);
+
+    }
+
     private void generateTabLayout() {
 
-        tabLayout.addTab(tabLayout.newTab().setText("Listings").setIcon(R.drawable.ic_listing));
-        tabLayout.addTab(tabLayout.newTab().setText("Orders").setIcon(R.drawable.ic_order));
+        tabLayout.addTab(tabLayout.newTab().setText("My Listings"));
+        tabLayout.addTab(tabLayout.newTab().setText("Active Orders"));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         adapter = new fragmentAdapterListings(fragmentManager, getLifecycle());
@@ -90,6 +110,9 @@ public class seller_dashboard extends AppCompatActivity {
 
 
     private void getSellerInfo() {
+        progressBar.setVisibility(View.VISIBLE);
+
+
         userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -99,7 +122,10 @@ public class seller_dashboard extends AppCompatActivity {
                     String sp_fName = userProfile.firstName;
                     String sp_lName = userProfile.lastName;
 
-                    tv_bannerName.setText(sp_fName + " " + sp_lName);
+                    String firstName = sp_fName.substring(0, 1).toUpperCase()+ sp_fName.substring(1).toLowerCase();
+                    String lastName = sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();
+
+                    tv_bannerName.setText(firstName + " " + lastName);
                 }
             }
 
@@ -108,6 +134,9 @@ public class seller_dashboard extends AppCompatActivity {
                 Toast.makeText(seller_dashboard.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+        progressBar.setVisibility(View.GONE);
+
     }
 
     private void buttonNav() {
@@ -174,18 +203,5 @@ public class seller_dashboard extends AppCompatActivity {
                 startActivity(intentMoreBtn);
             }
         }); // end of more button
-    }
-    private void setRef() {
-
-        iv_messageBtn = findViewById(R.id.iv_messageBtn);
-        iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
-        iv_homeBtn = findViewById(R.id.iv_homeBtn);
-        iv_accountBtn = findViewById(R.id.iv_accountBtn);
-        iv_moreBtn = findViewById(R.id.iv_moreBtn);
-       // iv_editListing = findViewById(R.id.iv_editListing);
-        btn_addListing = findViewById(R.id.btn_addListing);
-        tv_bannerName = findViewById(R.id.tv_bannerName);
-        tabLayout = findViewById(R.id.tab_layout);
-        vp_viewPager2 = findViewById(R.id.vp_viewPager2);
     }
 }
