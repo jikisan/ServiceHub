@@ -8,11 +8,14 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="bg_color">#EDEEEF</color>
+    <color name="bg_color">#F9FCFF</color>
     <color name="lighter_light_blue">#B5D1DF</color>
     <color name="light_blue">#3592BA</color>
     <color name="gray">#535D61</color>
     <color name="red">#B91D1D</color>
+    <color name="red_delete_btn">#CD4242</color>
+
+
 
 
 </resources>

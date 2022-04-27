@@ -6,40 +6,55 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-import java.io.InputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -48,20 +63,36 @@ import java.util.Locale;
 public class edit_project_page extends AppCompatActivity {
 
 
-    private FirebaseUser user;
-    private DatabaseReference projectDatabase;
-    private String userID;
-
     ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, iv_projectImage;
+            iv_moreBtn, iv_projectImage, btn_delete ;
     EditText et_projectName,  et_price, et_specialInstruction;
-    Button btn_pickTime, btn_save;
-    TextView tv_uploadPhoto, tv_slotCount, tv_timeSlot, tv_address;
+    Button btn_pickStartTime, btn_pickEndTime, btn_update;
+    TextView tv_uploadPhoto, tv_startTime, tv_endTime, tv_address;
+    Chip chip_Mon, chip_Tue, chip_Wed, chip_Thu, chip_Fri, chip_Sat, chip_Sun;
+    ChipGroup chipGroup;
     String imageUriText, projectIdFromIntent;
     Uri imageUri;
+    Spinner spinner_projCategory;
+    Geocoder geocoder;
+
+    int PLACE_PICKER_REQUEST = 1;
     int hour, minute;
-    int slotCount = 1;
-    String slotCountText, latLng;
+    String latLng;
+
+    boolean isAvailableMon = false;
+    boolean isAvailableTue = false;
+    boolean isAvailableWed = false;
+    boolean isAvailableThu = false;
+    boolean isAvailableFri = false;
+    boolean isAvailableSat = false;
+    boolean isAvailableSun = false;
+
+    private FirebaseUser user;
+    private FirebaseStorage mStorage;
+    private StorageReference projectStorage;
+    private DatabaseReference projectDatabase;
+    private StorageTask addTask;
+    private String userID;
 
 
     @Override
@@ -71,6 +102,7 @@ public class edit_project_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
+        projectStorage = FirebaseStorage.getInstance().getReference("Projects").child(userID);
         projectDatabase = FirebaseDatabase.getInstance().getReference("Projects").child(userID);
 
         setRef();
@@ -78,6 +110,7 @@ public class edit_project_page extends AppCompatActivity {
         initPlaces();
         ClickListener();
         bottomNavTaskbar();
+        spinnerCategory();
     }
 
     private void initPlaces() {
@@ -90,14 +123,99 @@ public class edit_project_page extends AppCompatActivity {
     }
 
     private void ClickListener() {
-        btn_save.setOnClickListener(new View.OnClickListener() {
+        btn_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateProject();
+
+                new AlertDialog.Builder(edit_project_page.this)
+                        .setIcon(R.drawable.logo)
+                        .setTitle("Delete Application")
+                        .setMessage("Are you sure that you want to permanently delete this project?")
+                        .setCancelable(true)
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                projectIdFromIntent = getIntent().getStringExtra("Project ID");
+                                projectDatabase.child(projectIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Projects projectData = snapshot.getValue(Projects.class);
+
+                                        String imageName = projectData.getImageName();
+                                        StorageReference imageRef = projectStorage.child(imageName);
+
+
+                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                                            imageRef.delete();
+                                            dataSnapshot.getRef().removeValue();
+
+                                        }
+
+                                        Toast.makeText(edit_project_page.this, "Project Deleted", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(edit_project_page.this, tech_dashboard.class);
+                                        startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                            }
+                        })
+                        .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                            }
+                        })
+                        .show();
+
             }
         });
 
-        btn_pickTime.setOnClickListener(new View.OnClickListener() {
+        btn_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                if(addTask != null && addTask.isInProgress()){
+                    Toast.makeText(edit_project_page.this, "In progress", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    new AlertDialog.Builder(edit_project_page.this)
+                            .setIcon(R.drawable.logo)
+                            .setTitle("ServiceHUB")
+                            .setMessage("Please make sure all information entered are correct")
+                            .setCancelable(true)
+                            .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+
+                                    if(hasImage(iv_projectImage)){
+                                        updateProject();
+                                    }
+                                    else
+                                    {
+                                        updateProjectNoImage();
+                                    }
+
+                                }
+                            })
+                            .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int i) {
+                                }
+                            })
+                            .show();
+                }
+
+            }
+        });
+
+        tv_startTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -108,7 +226,34 @@ public class edit_project_page extends AppCompatActivity {
                         hour = i;
                         minute = i1;
 
-                        tv_timeSlot.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute));
+                        boolean isPM = (hour >= 12);
+                        tv_startTime.setText(String.format("%02d:%02d %s", (hour == 12 || hour == 0) ? 12 : hour % 12, minute, isPM ? "PM" : "AM"));
+
+
+                    }
+                };
+
+                int style = TimePickerDialog.THEME_HOLO_DARK;
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(edit_project_page.this, style, onTimeSetListener, hour, minute, false);
+                timePickerDialog.setTitle("Select Time");
+                timePickerDialog.show();
+            }
+        });
+
+        tv_endTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+                        hour = i;
+                        minute = i1;
+
+                        boolean isPM = (hour >= 12);
+                        tv_endTime.setText(String.format("%02d:%02d %s", (hour == 12 || hour == 0) ? 12 : hour % 12, minute, isPM ? "PM" : "AM"));
 
                     }
                 };
@@ -154,41 +299,171 @@ public class edit_project_page extends AppCompatActivity {
 
                 //Start Activity result
                 startActivityForResult(intent, 100);
+
+                // placePicker();
+            }
+        });
+
+    }
+
+
+    private void setRef() {
+
+        iv_messageBtn = findViewById(R.id.iv_messageBtn);
+        iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
+        iv_homeBtn = findViewById(R.id.iv_homeBtn);
+        iv_accountBtn = findViewById(R.id.iv_accountBtn);
+        iv_moreBtn = findViewById(R.id.iv_moreBtn);
+        iv_projectImage = findViewById(R.id.iv_projectImage);
+
+        et_specialInstruction = findViewById(R.id.et_specialInstruction);
+        et_projectName = findViewById(R.id.et_projectName);
+        et_price = findViewById(R.id.et_price);
+
+        tv_startTime = findViewById(R.id.tv_startTime);
+        tv_address = findViewById(R.id.tv_address);
+        tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
+        tv_endTime = findViewById(R.id.tv_endTime);
+
+        btn_update = findViewById(R.id.btn_update);
+        btn_delete = findViewById(R.id.btn_delete);
+        spinner_projCategory = findViewById(R.id.spinner_projCategory);
+
+        chip_Mon = findViewById(R.id.chip_Mon);
+        chip_Tue = findViewById(R.id.chip_Tue);
+        chip_Wed = findViewById(R.id.chip_Wed);
+        chip_Thu = findViewById(R.id.chip_Thu);
+        chip_Fri = findViewById(R.id.chip_Fri);
+        chip_Sat = findViewById(R.id.chip_Sat);
+        chip_Sun = findViewById(R.id.chip_Sun);
+        chipGroup = findViewById(R.id.chipGroup);
+
+    }
+
+    private void updateProject() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Updating list...");
+        progressDialog.show();
+
+        StorageReference fileReference = projectStorage.child(imageUri.getLastPathSegment());
+
+        String sp_projCategory = spinner_projCategory.getSelectedItem().toString();
+        String projName = et_projectName.getText().toString();
+        String projAddress = tv_address.getText().toString();
+        String price = et_price.getText().toString();
+        String sp_projStartTime = tv_startTime.getText().toString();
+        String sp_projEndTime = tv_endTime.getText().toString();
+        String projInstruction = et_specialInstruction.getText().toString();
+        String imageName = imageUri.getLastPathSegment();
+        int ratings = 0;
+
+
+        addTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        final String imageURL = uri.toString();
+
+
+                        chipsValidation();
+
+                        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+                        hashMap.put("category", sp_projCategory);
+                        hashMap.put("imageUrl", imageURL);
+                        hashMap.put("imageName", imageName);
+                        hashMap.put("projName", projName);
+                        hashMap.put("projLatLng", latLng);
+                        hashMap.put("projAddress", projAddress);
+                        hashMap.put("price", price);
+                        hashMap.put("startTime", sp_projStartTime);
+                        hashMap.put("endTime", sp_projEndTime);
+                        hashMap.put("projInstruction", projInstruction);
+                        hashMap.put("isAvailableMon", isAvailableMon);
+                        hashMap.put("isAvailableTue", isAvailableTue);
+                        hashMap.put("isAvailableWed", isAvailableWed);
+                        hashMap.put("isAvailableThu", isAvailableThu);
+                        hashMap.put("isAvailableFri", isAvailableFri);
+                        hashMap.put("isAvailableSat", isAvailableSat);
+                        hashMap.put("isAvailableSun", isAvailableSun);
+
+                        projectIdFromIntent = getIntent().getStringExtra("Project ID");
+                        projectDatabase.child(projectIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
+                            @Override
+                            public void onSuccess(Object o) {
+                                progressDialog.dismiss();
+                                Intent intent = new Intent(edit_project_page.this, tech_dashboard.class);
+                                startActivity(intent);
+                                Toast.makeText(edit_project_page.this, "Project is updated", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+                    }
+                });
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(edit_project_page.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+    }
+
+    private void updateProjectNoImage() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Updating list...");
+        progressDialog.show();
+
+        String sp_projCategory = spinner_projCategory.getSelectedItem().toString();
+        String projName = et_projectName.getText().toString();
+        String projAddress = tv_address.getText().toString();
+        String price = et_price.getText().toString();
+        String sp_projStartTime = tv_startTime.getText().toString();
+        String sp_projEndTime = tv_endTime.getText().toString();
+        String projInstruction = et_specialInstruction.getText().toString();
+        String imageName = imageUri.getLastPathSegment();
+        int ratings = 0;
+
+        chipsValidation();
+
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("category", sp_projCategory);
+        hashMap.put("projName", projName);
+        hashMap.put("projLatLng", latLng);
+        hashMap.put("projAddress", projAddress);
+        hashMap.put("price", price);
+        hashMap.put("startTime", sp_projStartTime);
+        hashMap.put("endTime", sp_projEndTime);
+        hashMap.put("projInstruction", projInstruction);
+        hashMap.put("isAvailableMon", isAvailableMon);
+        hashMap.put("isAvailableTue", isAvailableTue);
+        hashMap.put("isAvailableWed", isAvailableWed);
+        hashMap.put("isAvailableThu", isAvailableThu);
+        hashMap.put("isAvailableFri", isAvailableFri);
+        hashMap.put("isAvailableSat", isAvailableSat);
+        hashMap.put("isAvailableSun", isAvailableSun);
+
+        projectIdFromIntent = getIntent().getStringExtra("Project ID");
+        projectDatabase.child(projectIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
+            @Override
+            public void onSuccess(Object o) {
+                progressDialog.dismiss();
+                Intent intent = new Intent(edit_project_page.this, tech_dashboard.class);
+                startActivity(intent);
+                Toast.makeText(edit_project_page.this, "Project is updated", Toast.LENGTH_SHORT).show();
+
             }
         });
     }
 
 
-
-    private void PickImage() {
-        CropImage.activity().start(this);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestStoragePermission() {
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestCameraPermission() {
-        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-    }
-
-    private boolean checkStoragePermission() {
-        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
-        return res2;
-    }
-
-    private boolean checkCameraPermission() {
-        boolean res1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
-        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
-        return res1 && res2;
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
@@ -196,9 +471,12 @@ public class edit_project_page extends AppCompatActivity {
 
                 try{
 
-                    InputStream stream = getContentResolver().openInputStream(imageUri);
-                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                    iv_projectImage.setImageBitmap(bitmap);
+//                    InputStream stream = getContentResolver().openInputStream(imageUri);
+//                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
+//                    iv_projectImage.setImageBitmap(bitmap);
+
+                    Picasso.get().load(imageUri)
+                            .into(iv_projectImage);
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -219,6 +497,43 @@ public class edit_project_page extends AppCompatActivity {
         else if(resultCode == AutocompleteActivity.RESULT_ERROR){
             Status status = Autocomplete.getStatusFromIntent(data);
         }
+
+        else if(requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+
+
+                List<Address> address = null;
+                geocoder = new Geocoder(this, Locale.getDefault());
+
+                assert data != null;
+                com.google.android.gms.location.places.Place place = PlacePicker.getPlace(data, this);
+
+                try {
+                    address = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                String addressLine = String.valueOf(address.get(0).getAddressLine(0));
+                String locality = String.valueOf(address.get(0).getLocality());
+                String country = String.valueOf(address.get(0).getCountryName());
+
+                String addressText =  addressLine + " " + locality + " " + country;
+
+                tv_address.setText(addressText);
+                latLng = place.getLatLng().toString();
+
+
+
+
+            }
+        }
+
+    }
+
+
+    private void PickImage() {
+        CropImage.activity().start(this);
     }
 
     private void generateDataValue() {
@@ -233,34 +548,65 @@ public class edit_project_page extends AppCompatActivity {
 
                 if(projectData != null){
                     try{
-                        imageUriText = projectData.imageUri;
+                        imageUriText = projectData.getImageUrl();
                         String sp_projName = projectData.getProjName();
                         String sp_projAddress = projectData.getProjAddress();
                         String sp_projPrice = projectData.getPrice();
-                        String sp_projTimeSlot = projectData.getProjTimeSlot();
+                        String sp_projStartTime = projectData.getStartTime();
+                        String sp_projEndTime = projectData.getEndTime();
                         String sp_projSpecialInstruction = projectData.getProjInstruction();
+                        boolean sp_isAvailableMon = projectData.isAvailableMon();
+                        boolean sp_isAvailableTue = projectData.isAvailableTue();
+                        boolean sp_isAvailableWed = projectData.isAvailableWed();
+                        boolean sp_isAvailableThu = projectData.isAvailableThu();
+                        boolean sp_isAvailableFri = projectData.isAvailableFri();
+                        boolean sp_isAvailableSat = projectData.isAvailableSat();
+                        boolean sp_isAvailableSun = projectData.isAvailableSun();
 
                         imageUri = Uri.parse(imageUriText);
 
-                        InputStream stream = getContentResolver().openInputStream(imageUri);
-                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                        Picasso.get().load(imageUriText)
+                                .into(iv_projectImage);
 
-                        iv_projectImage.setImageBitmap(bitmap);
                         et_projectName.setText(sp_projName);
                         tv_address.setText(sp_projAddress);
                         et_price.setText(sp_projPrice);
-                        tv_timeSlot.setText(sp_projTimeSlot);
+                        tv_startTime.setText(sp_projStartTime);
+                        tv_endTime.setText(sp_projEndTime);
                         et_specialInstruction.setText(sp_projSpecialInstruction);
+
+                        if(sp_isAvailableMon == true){
+                            chip_Mon.setChecked(true);
+                        }
+                        if(sp_isAvailableTue == true){
+                            chip_Tue.setChecked(true);
+                        }
+                        if(sp_isAvailableWed == true){
+                            chip_Wed.setChecked(true);
+                        }
+                        if(sp_isAvailableThu == true){
+                            chip_Thu.setChecked(true);
+                        }
+                        if(sp_isAvailableFri == true){
+                            chip_Fri.setChecked(true);
+                        }
+                        if(sp_isAvailableSat == true){
+                            chip_Sat.setChecked(true);
+                        }
+                        if(sp_isAvailableSun == true){
+                            chip_Sun.setChecked(true);
+                        }
+
 
                     }catch (Exception e){
                         e.printStackTrace();
-                        System.out.println("PROJECT LOG JK:" + e.getMessage());
+
                     }
                 }
                 else
                 {
                     Toast.makeText(edit_project_page.this, "Empty", Toast.LENGTH_SHORT).show();
-                    System.out.println("PROJECT LOG JK: Empty");
+                    System.out.println("Empty");
                 }
             }
 
@@ -271,33 +617,46 @@ public class edit_project_page extends AppCompatActivity {
         });
     }
 
-    private void updateProject() {
-        String projName = et_projectName.getText().toString();
-        String projAddress = tv_address.getText().toString();
-        String price = et_price.getText().toString();
-        String projTimeSlot = tv_timeSlot.getText().toString();
-        String projInstruction = et_specialInstruction.getText().toString();
-        String imageUriText = imageUri.toString();
+    private void spinnerCategory() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.project_category, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_projCategory.setAdapter(adapter);
+    }
 
-        HashMap<String, Object> hashMap = new HashMap<String, Object>();
-        hashMap.put("imageUri", imageUriText);
-        hashMap.put("latlng", latLng);
-        hashMap.put("price", price);
-        hashMap.put("projAddress", projAddress);
-        hashMap.put("projInstruction", projInstruction);
-        hashMap.put("projName", projName);
-        hashMap.put("projTimeSlot", projTimeSlot);
-        hashMap.put("userID", userID);
+    private void chipsValidation() {
 
-        projectIdFromIntent = getIntent().getStringExtra("Project ID");
-        projectDatabase.child(projectIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
-            @Override
-            public void onSuccess(Object o) {
-                Toast.makeText(edit_project_page.this, "Project is updated", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(edit_project_page.this, tech_dashboard.class);
-                startActivity(intent);
-            }
-        });
+        if(!chip_Mon.isChecked() && !chip_Tue.isChecked() && !chip_Wed.isChecked() && !chip_Thu.isChecked()
+                && !chip_Fri.isChecked() && !chip_Sat.isChecked() && !chip_Sun.isChecked()){
+            Toast.makeText(this, "Please choose a day you are available", Toast.LENGTH_SHORT).show();
+        }
+
+        if(chip_Mon.isChecked()){
+            isAvailableMon = true;
+        }
+
+        if(chip_Tue.isChecked()){
+            isAvailableTue = true;
+        }
+
+        if(chip_Wed.isChecked()){
+            isAvailableWed = true;
+        }
+
+        if(chip_Thu.isChecked()){
+            isAvailableThu = true;
+        }
+
+        if(chip_Fri.isChecked()){
+            isAvailableFri = true;
+        }
+
+        if(chip_Sat.isChecked()){
+            isAvailableSat = true;
+        }
+
+        if(chip_Sun.isChecked()){
+            isAvailableSun = true;
+        }
     }
 
     private void bottomNavTaskbar() {
@@ -343,24 +702,58 @@ public class edit_project_page extends AppCompatActivity {
         }); // end of more button
     }
 
-    private void setRef() {
+    private boolean hasImage(ImageView iv){
 
-        iv_messageBtn = findViewById(R.id.iv_messageBtn);
-        iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
-        iv_homeBtn = findViewById(R.id.iv_homeBtn);
-        iv_accountBtn = findViewById(R.id.iv_accountBtn);
-        iv_moreBtn = findViewById(R.id.iv_moreBtn);
-//        iv_decreaseSlot = findViewById(R.id.iv_decreaseSlot);
-//        iv_increaseSlot = findViewById(R.id.iv_increaseSlot);
-        iv_projectImage = findViewById(R.id.iv_projectImage);
-        et_projectName = findViewById(R.id.et_projectName);
-        et_price = findViewById(R.id.et_price);
-        tv_timeSlot = findViewById(R.id.tv_timeSlot);
-        tv_address = findViewById(R.id.tv_address);
-        et_specialInstruction = findViewById(R.id.et_specialInstruction);
-        btn_save = findViewById(R.id.btn_save);
-        btn_pickTime = findViewById(R.id.btn_pickTime);
-        tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
+        Drawable drawable = iv.getDrawable();
+        BitmapDrawable bitmapDrawable = drawable instanceof BitmapDrawable ? (BitmapDrawable)drawable : null;
+
+        return bitmapDrawable == null || bitmapDrawable.getBitmap() == null;
+    }
+
+
+    // validate permissions
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestStoragePermission() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
 
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestCameraPermission() {
+        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+    }
+
+    private boolean checkStoragePermission() {
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+        return res2;
+    }
+
+    private boolean checkCameraPermission() {
+        boolean res1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+        return res1 && res2;
+    }
+
+    // place picker
+//    private void placePicker() {
+//
+//        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+//
+//
+//        try
+//        {
+//            startActivityForResult (builder.build ( edit_project_page.this)
+//                    , PLACE_PICKER_REQUEST);
+//        }
+//
+//        catch (GooglePlayServicesRepairableException e)
+//        {
+//            e.printStackTrace ();
+//        }
+//
+//        catch (GooglePlayServicesNotAvailableException e)
+//        {
+//            e.printStackTrace ();
+//        }
+//    }
 }

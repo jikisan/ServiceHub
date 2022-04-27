@@ -12,5 +12,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="API_KEY">AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8</string>
 
+    <string-array name="project_category">
+        <item>Installation</item>
+        <item>Repair</item>
+        <item>Cleaning</item>
+        <item>Others</item>
+    </string-array>
 
 </resources>

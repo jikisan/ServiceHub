@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -32,6 +34,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.InputStream;
@@ -47,6 +53,7 @@ public class add_listing_page extends AppCompatActivity {
     EditText et_listingName, et_price, et_listDesc;
     Button btn_save;
     Uri imageUri;
+    Bitmap bitmap;
 
     int quantity = 1;
     String quantityText, latLng;
@@ -54,6 +61,8 @@ public class add_listing_page extends AppCompatActivity {
     FirebaseAuth fAuth;
     private FirebaseUser user;
     private DatabaseReference listingDatabase;
+    private StorageReference listingStorage;
+    private StorageTask addTask;
     private String userID;
 
     @Override
@@ -63,6 +72,7 @@ public class add_listing_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
+        listingStorage = FirebaseStorage.getInstance().getReference("Listings").child(userID);
         listingDatabase = FirebaseDatabase.getInstance().getReference("Listings").child(userID);
 
         setRef();
@@ -123,7 +133,13 @@ public class add_listing_page extends AppCompatActivity {
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addListing();
+                if(addTask != null && addTask.isInProgress()) {
+                    Toast.makeText(add_listing_page.this, "In progress", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    addListing();
+                }
+
             }
         });
 
@@ -166,7 +182,7 @@ public class add_listing_page extends AppCompatActivity {
                 try{
 
                     InputStream stream = getContentResolver().openInputStream(imageUri);
-                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                    bitmap = BitmapFactory.decodeStream(stream);
                     iv_listingImage.setImageBitmap(bitmap);
 
                 }catch (Exception e){
@@ -228,30 +244,53 @@ public class add_listing_page extends AppCompatActivity {
     }
 
     private void addListing() {
+        StorageReference fileReference = listingStorage.child(imageUri.getLastPathSegment());
+
         String listName = et_listingName.getText().toString();
+        String listAddress = tv_address.getText().toString();
         String listPrice = et_price.getText().toString();
         String listQuantity = tv_quantity.getText().toString();
         String listDesc = et_listDesc.getText().toString();
-        String imageUriText = imageUri.toString();
+        String imageName = imageUri.getLastPathSegment();
         int ratings = 0;
-        String ratingsText;
+        String ratingsText = String.valueOf(ratings);
 
-        ratingsText = String.valueOf(ratings);
 
-        Listings listings = new Listings(imageUriText, listName, latLng, listPrice, listQuantity, listDesc, ratingsText);
-
-        listingDatabase.push().setValue(listings).addOnCompleteListener(new OnCompleteListener<Void>() {
+        addTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    Toast.makeText(add_listing_page.this, "Listing Added", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(add_listing_page.this, tech_dashboard.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(add_listing_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        final String downloadUrl = uri.toString();
+
+                        Listings listings = new Listings(downloadUrl, imageName, listName, latLng, listAddress, listPrice, listQuantity, listDesc, ratingsText);
+
+                        listingDatabase.push().setValue(listings).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(add_listing_page.this, "Listing Added", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(add_listing_page.this, seller_dashboard.class);
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(add_listing_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+
+                    }
+                });
+            }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(add_listing_page.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+
+
 
     }
 

@@ -11,7 +11,7 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="58dp"
-        android:backgroundTint="@color/lighter_light_blue"
+        android:backgroundTint="@color/bg_color"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="131dp">
 
@@ -23,35 +23,49 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/back_arrow"
-                android:text="Add Listing"
+                android:text="Edit Listing"
                 android:textColor="@color/black"
-                android:textSize="25sp"
+                android:textSize="16sp"
+                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/btn_delete"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:elevation="10dp"
+                android:src="@drawable/delete_btn"
+                android:text="Delete"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/red_delete_btn" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
     <ScrollView
         android:id="@+id/scrollView2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="60dp"
-        android:paddingBottom="60dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:fadingEdge="none"
         android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@+id/textView13"
+        app:layout_constraintBottom_toTopOf="@+id/cardViewBottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView"
-        tools:layout_editor_absoluteX="45dp">
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_margin="20dp"
+            android:gravity="center"
             android:orientation="vertical"
             android:paddingBottom="35dp">
 
@@ -74,45 +88,40 @@
                 android:layout_marginTop="8dp"
                 android:drawableRight="@drawable/add"
                 android:drawableTint="@color/light_blue"
+                android:elevation="10dp"
                 android:text="Upload Photo"
                 android:textColor="@color/light_blue"
                 android:textSize="15sp"
-                android:elevation="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_listingImage" />
 
+
             <TextView
-                android:id="@+id/textView33"
+                android:id="@+id/tv_uploadSelfie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Listing Name"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.034"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_uploadPhoto" />
-
 
             <EditText
                 android:id="@+id/et_listingName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_blue"
-                android:hint="Input Listing Name"
-                android:paddingLeft="15dp"
-                android:paddingTop="5dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="5dp"
+                android:hint="Listing Name"
+                android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView33" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_uploadSelfie" />
 
             <TextView
                 android:id="@+id/textView34"
@@ -120,68 +129,53 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Address"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_listingName" />
 
-            <TextView
+            <EditText
                 android:id="@+id/tv_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:background="@drawable/rounded_blue"
+                android:layout_marginTop="8dp"
                 android:drawableLeft="@drawable/ic_baseline_location"
                 android:drawableTint="@color/black"
                 android:hint="Search Address"
                 android:padding="10dp"
-                android:textColor="@color/black"
                 android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@+id/et_listingName"
+                app:layout_constraintTop_toBottomOf="@+id/textView34"
                 tools:layout_editor_absoluteX="0dp" />
 
             <TextView
-                android:id="@+id/textView34"
+                android:id="@+id/textView44"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Price"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_address" />
 
-            <TextView
-                android:id="@+id/textView35"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="36dp"
-                android:layout_marginLeft="36dp"
-                android:layout_marginTop="4dp"
-                android:text="₱ "
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView34" />
-
 
             <EditText
                 android:id="@+id/et_price"
-                android:layout_width="126dp"
-                android:layout_height="37dp"
-                android:background="@drawable/rounded_blue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:drawableStart="@drawable/peso_two"
+                android:drawablePadding="16dp"
                 android:gravity="center"
+                android:hint="Price"
                 android:inputType="number"
-                android:textColorHint="@color/black"
-                app:layout_constraintBottom_toBottomOf="@+id/textView35"
-                app:layout_constraintStart_toEndOf="@+id/textView35"
-                app:layout_constraintTop_toTopOf="@+id/textView35"
-                app:layout_constraintVertical_bias="1.0" />
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView44" />
 
             <TextView
                 android:id="@+id/textView41"
@@ -189,25 +183,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginLeft="12dp"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="16dp"
                 android:text="Quantity"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/textView39"
-                app:layout_constraintTop_toBottomOf="@+id/textView35" />
+                app:layout_constraintTop_toBottomOf="@+id/et_price" />
 
             <ImageView
                 android:id="@+id/iv_decreaseBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
                 android:src="@drawable/minus"
-                app:layout_constraintBottom_toBottomOf="@+id/textView41"
-                app:layout_constraintStart_toEndOf="@+id/textView41"
-                app:layout_constraintTop_toTopOf="@+id/textView41"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView41"
+                app:tint="@color/black" />
 
             <TextView
                 android:id="@+id/tv_quantity"
@@ -218,7 +211,6 @@
                 android:background="@drawable/rounded_blue"
                 android:gravity="center"
                 android:text="1"
-                android:textColor="@color/black"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_decreaseBtn"
                 app:layout_constraintStart_toEndOf="@+id/iv_decreaseBtn"
@@ -243,19 +235,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Description"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView41" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_quantity" />
 
             <EditText
                 android:id="@+id/et_listDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/rounded_blue"
                 android:hint="Special Instruction"
                 android:padding="10dp"
@@ -265,15 +256,16 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView45" />
 
             <Button
-                android:id="@+id/btn_save"
-                android:layout_width="match_parent"
+                android:id="@+id/btn_update"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:elevation="10dp"
-
+                android:drawableLeft="@drawable/save_1"
+                android:drawableTint="@color/white"
                 android:background="@drawable/rounded"
+                android:elevation="10dp"
                 android:text="Save"
                 app:backgroundTint="@color/light_blue"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -286,39 +278,45 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewBottom"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" >
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/white"
             android:backgroundTint="@color/white"
-            >
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/iv_messageBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
+                android:layout_margin="8dp"
                 android:layout_weight="20"
                 android:background="@color/white"
                 android:src="@drawable/message" />
 
             <ImageView
                 android:id="@+id/iv_notificationBtn"
-                android:layout_width="80dp"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_margin="8dp"
+                android:layout_weight="20"
                 android:background="@color/white"
                 android:src="@drawable/notification" />
 
             <ImageView
                 android:id="@+id/iv_homeBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
+                android:layout_margin="8dp"
                 android:layout_weight="20"
                 android:background="@color/white"
                 android:src="@drawable/home" />
@@ -326,15 +324,18 @@
             <ImageView
                 android:id="@+id/iv_accountBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
+                android:layout_margin="8dp"
                 android:layout_weight="20"
                 android:background="@color/white"
-                android:src="@drawable/accounts" />
+                android:src="@drawable/accounts"
+                app:tint="@color/light_blue" />
 
             <ImageView
                 android:id="@+id/iv_moreBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
+                android:layout_margin="8dp"
                 android:layout_weight="20"
                 android:background="@color/white"
                 android:src="@drawable/settings" />

@@ -6,10 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -34,9 +38,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -46,14 +54,16 @@ public class edit_listing_page extends AppCompatActivity {
 
     private FirebaseUser user;
     private DatabaseReference listingDatabase;
+    private StorageReference listingStorage;
+    private StorageTask addTask;
     private String userID, imageUriText;
 
-    ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, iv_listingImage, iv_decreaseBtn, iv_increaseBtn;
-    TextView tv_uploadPhoto, tv_address, tv_quantity;
-    EditText et_listingName, et_price, et_listDesc;
-    Button btn_save;
-    Uri imageUri;
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+            iv_moreBtn, iv_listingImage, iv_decreaseBtn, iv_increaseBtn, btn_delete;
+    private TextView tv_uploadPhoto, tv_address, tv_quantity;
+    private EditText et_listingName, et_price, et_listDesc;
+    private Button btn_save;
+    private Uri imageUri;
     int quantity = 1;
     String quantityText, latLng, listingIdFromIntent;
     FirebaseAuth fAuth;
@@ -66,6 +76,7 @@ public class edit_listing_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
+        listingStorage = FirebaseStorage.getInstance().getReference("Listings").child(userID);
         listingDatabase = FirebaseDatabase.getInstance().getReference("Listings").child(userID);
 
 
@@ -88,6 +99,56 @@ public class edit_listing_page extends AppCompatActivity {
 
     private void clickListener() {
 
+        btn_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new AlertDialog.Builder(edit_listing_page.this)
+                        .setIcon(R.drawable.logo)
+                        .setTitle("Delete Application")
+                        .setMessage("Are you sure that you want to permanently delete this listing?")
+                        .setCancelable(true)
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                listingIdFromIntent = getIntent().getStringExtra("Listing ID");
+                                listingDatabase.child(listingIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Listings listingsData = snapshot.getValue(Listings.class);
+
+                                        String imageName = listingsData.getImageName();
+
+                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                            StorageReference imageRef = listingStorage.child(imageName);
+
+                                            imageRef.delete();
+                                            dataSnapshot.getRef().removeValue();
+
+                                            Toast.makeText(edit_listing_page.this, "Listing Deleted", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(edit_listing_page.this, seller_dashboard.class);
+                                            startActivity(intent);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                            }
+                        })
+                        .show();
+
+            }
+        });
+
         tv_uploadPhoto.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
@@ -103,6 +164,8 @@ public class edit_listing_page extends AppCompatActivity {
                     if(!checkStoragePermission()){
                         requestStoragePermission();
                     }else
+
+
                         PickImage();
                 }
             }
@@ -127,37 +190,44 @@ public class edit_listing_page extends AppCompatActivity {
         btn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateListing();
+                if(addTask != null && addTask.isInProgress()) {
+                    Toast.makeText(edit_listing_page.this, "In progress", Toast.LENGTH_SHORT).show();
+
+                } else {
+
+                    new AlertDialog.Builder(edit_listing_page.this)
+                            .setIcon(R.drawable.logo)
+                            .setTitle("ServiceHUB")
+                            .setMessage("Please make sure all information entered are correct")
+                            .setCancelable(true)
+                            .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+
+
+                                    if(hasImage(iv_listingImage)){
+                                        updateListing();
+                                    }
+                                    else
+                                    {
+                                        updateListingNoImage();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int i) {
+                                }
+                            })
+                            .show();
+                }
             }
         });
 
-    }
-
-    private void PickImage() {
-        CropImage.activity().start(this);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestStoragePermission() {
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestCameraPermission() {
-        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-    }
 
-    private boolean checkStoragePermission() {
-        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
-        return res2;
-    }
-
-    private boolean checkCameraPermission() {
-        boolean res1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
-        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
-        return res1 && res2;
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -169,9 +239,12 @@ public class edit_listing_page extends AppCompatActivity {
 
                 try{
 
-                    InputStream stream = getContentResolver().openInputStream(imageUri);
-                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
-                    iv_listingImage.setImageBitmap(bitmap);
+//                    InputStream stream = getContentResolver().openInputStream(imageUri);
+//                    Bitmap bitmap = BitmapFactory.decodeStream(stream);
+//                    iv_listingImage.setImageBitmap(bitmap);
+
+                    Picasso.get().load(imageUri)
+                            .into(iv_listingImage);
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -232,60 +305,101 @@ public class edit_listing_page extends AppCompatActivity {
     }
 
     private void updateListing() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Updating list...");
+        progressDialog.show();
+
+        StorageReference fileReference = listingStorage.child(imageUri.getLastPathSegment());
+
         String listName = et_listingName.getText().toString();
+        String listAddress = tv_address.getText().toString();
         String listPrice = et_price.getText().toString();
         String listQuantity = tv_quantity.getText().toString();
         String listDesc = et_listDesc.getText().toString();
-        String imageUriText = imageUri.toString();
+        String imageName = imageUri.getLastPathSegment();
 
+
+        addTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        final String downloadUrl = uri.toString();
+
+                        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+                        hashMap.put("imageUrl", downloadUrl);
+                        hashMap.put("imageName", imageName);
+                        hashMap.put("listName", listName);
+                        hashMap.put("listLatLng", latLng);
+                        hashMap.put("listAddress", listAddress);
+                        hashMap.put("listPrice", listPrice);
+                        hashMap.put("listQuantity", listQuantity);
+                        hashMap.put("listDesc", listDesc);
+
+                        listingIdFromIntent = getIntent().getStringExtra("Listing ID");
+                        listingDatabase.child(listingIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
+                            @Override
+                            public void onSuccess(Object o) {
+                                progressDialog.dismiss();
+                                Intent intent = new Intent(edit_listing_page.this, seller_dashboard.class);
+                                startActivity(intent);
+                                Toast.makeText(edit_listing_page.this, "Listing is updated", Toast.LENGTH_SHORT).show();
+
+
+                            }
+                        });
+
+
+                    }
+                });
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(edit_listing_page.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+    }
+
+    private void updateListingNoImage() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Updating list...");
+        progressDialog.show();
+
+        StorageReference fileReference = listingStorage.child(imageUri.getLastPathSegment());
+
+        String listName = et_listingName.getText().toString();
+        String listAddress = tv_address.getText().toString();
+        String listPrice = et_price.getText().toString();
+        String listQuantity = tv_quantity.getText().toString();
+        String listDesc = et_listDesc.getText().toString();
+        String imageName = imageUri.getLastPathSegment();
 
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         hashMap.put("listName", listName);
-        hashMap.put("listAddress", latLng);
+        hashMap.put("listLatLng", latLng);
+        hashMap.put("listAddress", listAddress);
         hashMap.put("listPrice", listPrice);
         hashMap.put("listQuantity", listQuantity);
         hashMap.put("listDesc", listDesc);
-        hashMap.put("imageUri", imageUriText);
 
         listingIdFromIntent = getIntent().getStringExtra("Listing ID");
         listingDatabase.child(listingIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
             @Override
             public void onSuccess(Object o) {
-                Toast.makeText(edit_listing_page.this, "Listing is updated", Toast.LENGTH_SHORT).show();
+
+                progressDialog.dismiss();
                 Intent intent = new Intent(edit_listing_page.this, seller_dashboard.class);
                 startActivity(intent);
+                Toast.makeText(edit_listing_page.this, "Listing is updated", Toast.LENGTH_SHORT).show();
+
 
             }
         });
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//                if (task.isSuccessful()) {
-//                    Toast.makeText(edit_listing_page.this, "Listing Updated", Toast.LENGTH_LONG).show();
-//                    Intent intent = new Intent(edit_listing_page.this, seller_dashboard.class);
-//                    startActivity(intent);
-//                } else {
-//                    Toast.makeText(edit_listing_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
-
-
-//
-//        Listings listings = new Listings(imageUriText, listName, latLng, listPrice, listQuantity, listDesc);
-//
-//        listingDatabase.child(listingID).setValue(listings).addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//                if (task.isSuccessful()) {
-//                    Toast.makeText(edit_listing_page.this, "Listing Added", Toast.LENGTH_LONG).show();
-//                    Intent intent = new Intent(edit_listing_page.this, tech_dashboard.class);
-//                    startActivity(intent);
-//                } else {
-//                    Toast.makeText(edit_listing_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
 
     }
 
@@ -300,7 +414,7 @@ public class edit_listing_page extends AppCompatActivity {
 
                 if (listingData != null){
                     try {
-                        imageUriText = listingData.imageUri;
+                        imageUriText = listingData.getImageUrl();
                         String sp_listName = listingData.getListName();
                         String sp_listAddress = listingData.getListAddress();
                         String sp_listPrice = listingData.getListPrice();
@@ -309,10 +423,10 @@ public class edit_listing_page extends AppCompatActivity {
 
                         imageUri = Uri.parse(imageUriText);
 
-                        InputStream stream = getContentResolver().openInputStream(imageUri);
-                        Bitmap bitmap = BitmapFactory.decodeStream(stream);
+                        Picasso.get()
+                                .load(imageUriText)
+                                .into(iv_listingImage);
 
-                        iv_listingImage.setImageBitmap(bitmap);
                         et_listingName.setText(sp_listName);
                         tv_address.setText(sp_listAddress);
                         et_price.setText(sp_listPrice);
@@ -321,14 +435,12 @@ public class edit_listing_page extends AppCompatActivity {
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        System.out.println("LISTINGS LOG JK:" + e.getMessage());
 
                     }
                 }
                 else
                 {
                     Toast.makeText(edit_listing_page.this, "Empty", Toast.LENGTH_SHORT).show();
-                    System.out.println("LISTINGS LOG JK: Empty");
 
                 }
             }
@@ -336,7 +448,6 @@ public class edit_listing_page extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(edit_listing_page.this, "Empty", Toast.LENGTH_SHORT).show();
-                System.out.println("LISTINGS LOG JK: Empty");
 
             }
         });
@@ -401,6 +512,44 @@ public class edit_listing_page extends AppCompatActivity {
         et_listingName = findViewById(R.id.et_listingName);
         et_price = findViewById(R.id.et_price);
         et_listDesc = findViewById(R.id.et_listDesc);
-        btn_save = findViewById(R.id.btn_save);
+        btn_save = findViewById(R.id.btn_update);
+        btn_delete = findViewById(R.id.btn_delete);
+
+    }
+
+    private void PickImage() {
+        CropImage.activity().start(this);
+    }
+
+    private boolean hasImage(ImageView iv){
+
+        Drawable drawable = iv.getDrawable();
+        BitmapDrawable bitmapDrawable = drawable instanceof BitmapDrawable ? (BitmapDrawable)drawable : null;
+
+        return bitmapDrawable == null || bitmapDrawable.getBitmap() == null;
+    }
+
+
+    // validate permissions
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestStoragePermission() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestCameraPermission() {
+        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+    }
+
+    private boolean checkStoragePermission() {
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+        return res2;
+    }
+
+    private boolean checkCameraPermission() {
+        boolean res1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+        return res1 && res2;
     }
 }
