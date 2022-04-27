@@ -20,13 +20,14 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/iv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/back_arrow"
+                android:gravity="center"
                 android:text="Add Listing"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -57,14 +58,12 @@
             android:orientation="vertical"
             android:paddingBottom="35dp">
 
-
             <ImageView
                 android:id="@+id/iv_listingImage"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:background="@drawable/rounded_blue"
                 android:padding="5dp"
-                android:src="@drawable/upload_photo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -87,7 +86,7 @@
 
 
             <TextView
-                android:id="@+id/textView33"
+                android:id="@+id/tv_uploadSelfie"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
@@ -109,7 +108,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView33" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_uploadSelfie" />
 
             <TextView
                 android:id="@+id/textView34"
@@ -246,7 +245,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView45" />
 
             <Button
-                android:id="@+id/btn_save"
+                android:id="@+id/btn_update"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"

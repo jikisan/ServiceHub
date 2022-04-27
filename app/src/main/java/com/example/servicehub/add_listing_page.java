@@ -6,13 +6,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,18 +53,18 @@ import java.util.List;
 public class add_listing_page extends AppCompatActivity {
 
 
-    ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_listingImage, iv_decreaseBtn, iv_increaseBtn;
-    TextView tv_uploadPhoto, tv_address, tv_quantity;
-    EditText et_listingName, et_price, et_listDesc;
-    Button btn_save;
-    Uri imageUri;
-    Bitmap bitmap;
+    private TextView tv_uploadPhoto, tv_address, tv_quantity, tv_back;
+    private EditText et_listingName, et_price, et_listDesc;
+    private Button btn_save;
+    private Uri imageUri;
+    private Bitmap bitmap;
 
-    int quantity = 1;
-    String quantityText, latLng;
+    private int quantity = 1;
+    private String quantityText, latLng;
 
-    FirebaseAuth fAuth;
+    private FirebaseAuth fAuth;
     private FirebaseUser user;
     private DatabaseReference listingDatabase;
     private StorageReference listingStorage;
@@ -137,38 +143,92 @@ public class add_listing_page extends AppCompatActivity {
                     Toast.makeText(add_listing_page.this, "In progress", Toast.LENGTH_SHORT).show();
 
                 } else {
-                    addListing();
+
+                    inputValidation();
                 }
 
             }
         });
 
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(add_listing_page.this, tech_dashboard.class);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
-    private void PickImage() {
-        CropImage.activity().start(this);
+    private void setRef() {
+
+        iv_messageBtn = findViewById(R.id.iv_messageBtn);
+        iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
+        iv_homeBtn = findViewById(R.id.iv_homeBtn);
+        iv_accountBtn = findViewById(R.id.iv_accountBtn);
+        iv_listingImage = findViewById(R.id.iv_listingImage);
+        iv_decreaseBtn = findViewById(R.id.iv_decreaseBtn);
+        iv_moreBtn = findViewById(R.id.iv_moreBtn);
+        iv_increaseBtn = findViewById(R.id.iv_increaseBtn);
+
+        tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
+        tv_quantity = findViewById(R.id.tv_quantity);
+        tv_address = findViewById(R.id.tv_address);
+        tv_back = findViewById(R.id.iv_back);
+
+
+        et_listingName = findViewById(R.id.et_listingName);
+        et_price = findViewById(R.id.et_price);
+        et_listDesc = findViewById(R.id.et_listDesc);
+
+        btn_save = findViewById(R.id.btn_update);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestStoragePermission() {
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+    private void inputValidation() {
+        String sp_listingName = et_listingName.getText().toString();
+        String sp_address = tv_address.getText().toString();
+        String sp_price = et_price.getText().toString();
+        String sp_quantity = tv_quantity.getText().toString();
 
-    }
+        if(hasImage(iv_listingImage))
+        {
+            Toast.makeText(this, "Listing photo is required", Toast.LENGTH_SHORT).show();
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    private void requestCameraPermission() {
-        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-    }
+        }
+        else if (TextUtils.isEmpty(sp_listingName)){
+            Toast.makeText(this, "Listing name is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(sp_address)){
+            Toast.makeText(this, "Address is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(sp_price)){
+            Toast.makeText(this, "Price is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(sp_quantity)){
+            Toast.makeText(this, "Quantity is required", Toast.LENGTH_SHORT).show();
+        }else{
 
-    private boolean checkStoragePermission() {
-        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
-        return res2;
-    }
+            new AlertDialog.Builder(add_listing_page.this)
+                    .setIcon(R.drawable.logo)
+                    .setTitle("ServiceHUB")
+                    .setMessage("Please make sure all information entered are correct")
+                    .setCancelable(true)
+                    .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
 
-    private boolean checkCameraPermission() {
-        boolean res1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
-        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
-        return res1 && res2;
+                            addListing();
+
+                        }
+                    })
+                    .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int i) {
+                        }
+                    })
+                    .show();
+        }
     }
 
     @Override
@@ -235,15 +295,19 @@ public class add_listing_page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                    quantity = quantity + 1;
-                    quantityText = String.valueOf(quantity);
-                    tv_quantity.setText(quantityText);
+                quantity = quantity + 1;
+                quantityText = String.valueOf(quantity);
+                tv_quantity.setText(quantityText);
 
             }
         });
     }
 
     private void addListing() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Adding Listing...");
+        progressDialog.show();
+
         StorageReference fileReference = listingStorage.child(imageUri.getLastPathSegment());
 
         String listName = et_listingName.getText().toString();
@@ -270,9 +334,11 @@ public class add_listing_page extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(add_listing_page.this, "Listing Added", Toast.LENGTH_LONG).show();
+                                    progressDialog.dismiss();
                                     Intent intent = new Intent(add_listing_page.this, seller_dashboard.class);
                                     startActivity(intent);
+                                    Toast.makeText(add_listing_page.this, "Listing Added", Toast.LENGTH_LONG).show();
+
                                 } else {
                                     Toast.makeText(add_listing_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
@@ -283,12 +349,12 @@ public class add_listing_page extends AppCompatActivity {
                 });
             }
         })
-        .addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(add_listing_page.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(add_listing_page.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
 
 
 
@@ -337,22 +403,39 @@ public class add_listing_page extends AppCompatActivity {
         }); // end of more button
     }
 
-    private void setRef() {
 
-        iv_messageBtn = findViewById(R.id.iv_messageBtn);
-        iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
-        iv_homeBtn = findViewById(R.id.iv_homeBtn);
-        iv_accountBtn = findViewById(R.id.iv_accountBtn);
-        iv_listingImage = findViewById(R.id.iv_listingImage);
-        iv_decreaseBtn = findViewById(R.id.iv_decreaseBtn);
-        iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        iv_increaseBtn = findViewById(R.id.iv_increaseBtn);
-        tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
-        tv_quantity = findViewById(R.id.tv_quantity);
-        tv_address = findViewById(R.id.tv_address);
-        et_listingName = findViewById(R.id.et_listingName);
-        et_price = findViewById(R.id.et_price);
-        et_listDesc = findViewById(R.id.et_listDesc);
-        btn_save = findViewById(R.id.btn_save);
+    private void PickImage() {
+        CropImage.activity().start(this);
+    }
+
+    private boolean hasImage(ImageView iv){
+
+        Drawable drawable = iv.getDrawable();
+        BitmapDrawable bitmapDrawable = drawable instanceof BitmapDrawable ? (BitmapDrawable)drawable : null;
+
+        return bitmapDrawable == null || bitmapDrawable.getBitmap() == null;
+    }
+
+    //validate permissions
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestStoragePermission() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestCameraPermission() {
+        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+    }
+
+    private boolean checkStoragePermission() {
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+        return res2;
+    }
+
+    private boolean checkCameraPermission() {
+        boolean res1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+        return res1 && res2;
     }
 }
