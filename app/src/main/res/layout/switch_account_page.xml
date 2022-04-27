@@ -42,7 +42,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         app:cardCornerRadius="18dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView27">
@@ -274,20 +274,21 @@
                 android:layout_marginStart="8dp"
                 android:gravity="center_horizontal"
                 android:paddingLeft="10dp"
-                android:text="Your application is still being reviewed"
+                android:text="Your application is being reviewed"
                 android:textColor="@color/quantum_amber400"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/imageView14"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <ImageView
+                android:id="@+id/imageView14"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="60dp"
-                android:layout_marginLeft="60dp"
                 android:layout_marginBottom="8dp"
                 android:src="@drawable/seller_logo1"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -300,19 +301,17 @@
 
             <Button
                 android:id="@+id/btn_cancelSellerApplication"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/rounded"
-                android:drawableRight="@drawable/delete_btn"
-                android:drawableTint="@color/white"
                 android:text="Cancel Application"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="12sp"
                 android:visibility="visible"
-                app:backgroundTint="@color/red"
+                app:backgroundTint="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -363,7 +362,7 @@
                 android:layout_marginStart="8dp"
                 android:gravity="center_horizontal"
                 android:paddingLeft="10dp"
-                android:text="Your application is still being reviewed"
+                android:text="Your application is being reviewed"
                 android:textColor="@color/quantum_indigo700"
                 android:textSize="20sp"
                 android:textStyle="bold"

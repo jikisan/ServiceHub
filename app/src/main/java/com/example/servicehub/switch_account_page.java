@@ -34,8 +34,11 @@ public class switch_account_page extends AppCompatActivity {
     ProgressBar progressBar;
 
     DatabaseReference techApplicationDatabase;
+    DatabaseReference sellerApplicationDatabase;
     private String userID;
     String techAcctKey = "";
+    String sellerAcctKey = "";
+
 
     boolean isTechPending, isTechApproved, isSellerPending, isSellerApproved;
 
@@ -47,6 +50,8 @@ public class switch_account_page extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
         techApplicationDatabase = FirebaseDatabase.getInstance().getReference("Technician Applicants").child(userID);
+        sellerApplicationDatabase = FirebaseDatabase.getInstance().getReference("Seller Applicants").child(userID);
+
 
         setRef();
         getKey();
@@ -55,6 +60,51 @@ public class switch_account_page extends AppCompatActivity {
 
 
     }
+
+    private void clickListener() {
+
+        btn_tech.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentTechSelect = new Intent(switch_account_page.this, tech_dashboard.class);
+                startActivity(intentTechSelect);
+            }
+        }); // end of tech button
+
+        btn_seller.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentSellerSelect = new Intent(switch_account_page.this, seller_dashboard.class);
+                startActivity(intentSellerSelect);
+            }
+        }); // end of seller button
+
+        btn_techApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(switch_account_page.this, tech_application_page.class);
+                startActivity(intent);
+
+            }
+        }); // end of seller button
+
+        btn_sellerApply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentSellerSelect = new Intent(switch_account_page.this, seller_application_page.class);
+                startActivity(intentSellerSelect);
+            }
+        }); // end of seller button
+
+        btn_cancelTechApplication.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+    }
+
 
     private void setRef() {
 
@@ -85,21 +135,41 @@ public class switch_account_page extends AppCompatActivity {
     }
 
     private void getKey() {
-//        final ProgressDialog progressDialog = new ProgressDialog(this);
-//        progressDialog.setTitle("Submitting Application");
-//        progressDialog.show();
         progressBar.setVisibility(View.VISIBLE);
 
-        Query query = FirebaseDatabase.getInstance().getReference("Technician Applicants").child(userID)
+        Query queryTechKey = FirebaseDatabase.getInstance().getReference("Technician Applicants").child(userID)
                 .orderByChild("userID")
                 .equalTo(userID);
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        queryTechKey.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     techAcctKey = dataSnapshot.getKey().toString();
+
+                }
+                getDataFromDB();
+                progressBar.setVisibility(View.GONE);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        Query querySellerKey = FirebaseDatabase.getInstance().getReference("Seller Applicants").child(userID)
+                .orderByChild("userID")
+                .equalTo(userID);
+
+        querySellerKey.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    sellerAcctKey = dataSnapshot.getKey().toString();
 
                 }
                 getDataFromDB();
@@ -167,55 +237,59 @@ public class switch_account_page extends AppCompatActivity {
             }
         });
 
-    }
-
-    private void clickListener() {
-
-        btn_tech.setOnClickListener(new View.OnClickListener() {
+        sellerApplicationDatabase.child(sellerAcctKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                Intent intentTechSelect = new Intent(switch_account_page.this, tech_dashboard.class);
-                startActivity(intentTechSelect);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Tech_application tech_application_data = snapshot.getValue(Tech_application.class);
+
+                if(tech_application_data != null){
+                    try
+                    {
+                        boolean sp_isSellerPending = tech_application_data.isPending();
+                        boolean sp_isSellerApproved = tech_application_data.isApproved();
+
+                        if(!sp_isSellerApproved && !sp_isSellerPending){
+                            cardView1.setVisibility(View.VISIBLE);
+                            cardViewPendingSeller.setVisibility(View.INVISIBLE);
+                            btn_sellerApply.setVisibility(View.VISIBLE);
+                            btn_seller.setVisibility(View.INVISIBLE);
+                        }
+                        else if(sp_isSellerPending && !sp_isSellerApproved){
+                            cardView1.setVisibility(View.INVISIBLE);
+                            cardViewPendingSeller.setVisibility(View.VISIBLE);
+                        }
+                        else if(sp_isSellerApproved && !sp_isSellerPending){
+                            cardView1.setVisibility(View.VISIBLE);
+                            cardViewPendingSeller.setVisibility(View.INVISIBLE);
+                            btn_sellerApply.setVisibility(View.INVISIBLE);
+                            btn_seller.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    cardView1.setVisibility(View.VISIBLE);
+                    cardViewPendingSeller.setVisibility(View.INVISIBLE);
+                    btn_sellerApply.setVisibility(View.VISIBLE);
+                    btn_seller.setVisibility(View.INVISIBLE);
+                }
             }
-        }); // end of tech button
 
-        btn_seller.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intentSellerSelect = new Intent(switch_account_page.this, seller_dashboard.class);
-                startActivity(intentSellerSelect);
-            }
-        }); // end of seller button
-
-        btn_techApply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(switch_account_page.this, tech_application_page.class);
-                startActivity(intent);
-
-               // Toast.makeText(switch_account_page.this, "Pending: " + isTechPending, Toast.LENGTH_SHORT).show();
-               // Toast.makeText(switch_account_page.this, "Approved: " + isTechApproved, Toast.LENGTH_SHORT).show();
-                //Toast.makeText(switch_account_page.this, fname + "" + lname, Toast.LENGTH_SHORT).show();
-
-            }
-        }); // end of seller button
-
-        btn_sellerApply.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentSellerSelect = new Intent(switch_account_page.this, seller_dashboard.class);
-                startActivity(intentSellerSelect);
-            }
-        }); // end of seller button
-
-        btn_cancelTechApplication.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(switch_account_page.this, error.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });
 
+
     }
+
 
     private void bottomNavTaskbar() {
 

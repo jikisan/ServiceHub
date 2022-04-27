@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ServiceHub">
         <activity
+            android:name=".seller_application_page"
+            android:exported="false" />
+        <activity
             android:name=".tech_application_page"
             android:exported="false" />
         <activity
