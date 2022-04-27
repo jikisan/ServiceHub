@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -23,21 +25,26 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class switch_account_page extends AppCompatActivity {
 
-    ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn;
-    TextView tv_techWelcome, tv_sellerWelcome, tv_techMessage, tv_sellerMessage;
-    Button btn_tech, btn_seller, btn_techApply, btn_sellerApply, btn_cancelTechApplication, btn_cancelSellerApplication;
-    CardView cardView1, cardView2, cardViewPendingSeller, cardViewPendingTech;
-    ProgressBar progressBar;
+    private TextView tv_techWelcome, tv_sellerWelcome, tv_techMessage, tv_sellerMessage;
+    private Button btn_tech, btn_seller, btn_techApply, btn_sellerApply, btn_cancelTechApplication, btn_cancelSellerApplication;
+    private CardView cardView1, cardView2, cardViewPendingSeller, cardViewPendingTech;
+    private ProgressBar progressBar;
 
-    DatabaseReference techApplicationDatabase;
-    DatabaseReference sellerApplicationDatabase;
+    private DatabaseReference techApplicationDatabase;
+    private DatabaseReference sellerApplicationDatabase;
+    private StorageReference techApplicationStorage;
+    private StorageReference sellerApplicationStorage;
+
     private String userID;
-    String techAcctKey = "";
-    String sellerAcctKey = "";
+    private String techAcctKey = "";
+    private String sellerAcctKey = "";
 
 
     boolean isTechPending, isTechApproved, isSellerPending, isSellerApproved;
@@ -52,13 +59,13 @@ public class switch_account_page extends AppCompatActivity {
         techApplicationDatabase = FirebaseDatabase.getInstance().getReference("Technician Applicants").child(userID);
         sellerApplicationDatabase = FirebaseDatabase.getInstance().getReference("Seller Applicants").child(userID);
 
+        techApplicationStorage = FirebaseStorage.getInstance().getReference("Technician Applicants").child(userID);
+        sellerApplicationStorage = FirebaseStorage.getInstance().getReference("Seller Applicants").child(userID);
 
         setRef();
         getKey();
         clickListener();
         bottomNavTaskbar();
-
-
     }
 
     private void clickListener() {
@@ -98,10 +105,116 @@ public class switch_account_page extends AppCompatActivity {
 
         btn_cancelTechApplication.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view){
+
+                new AlertDialog.Builder(switch_account_page.this)
+                        .setIcon(R.drawable.logo)
+                        .setTitle("Delete Application")
+                        .setMessage("Are you sure that you want to permanently delete your application?")
+                        .setCancelable(true)
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            techApplicationDatabase.child(techAcctKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Tech_application techApplication = snapshot.getValue(Tech_application.class);
+
+                                        String validIdName = techApplication.getValidIdName();
+                                        String selfieName = techApplication.getSelfieName();
+
+                                        StorageReference validIdNameRef = techApplicationStorage.child(validIdName);
+                                        StorageReference selfieNameRef = techApplicationStorage.child(selfieName);
+
+                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                                            validIdNameRef.delete();
+                                            selfieNameRef.delete();
+
+                                            dataSnapshot.getRef().removeValue();
+                                        }
+
+                                        Toast.makeText(switch_account_page.this, "Application Deleted", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(switch_account_page.this, switch_account_page.class);
+                                        startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                            }
+                        })
+                        .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                            }
+                        })
+                        .show();
+
 
             }
         });
+
+        btn_cancelSellerApplication.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+
+                new AlertDialog.Builder(switch_account_page.this)
+                        .setIcon(R.drawable.logo)
+                        .setTitle("Delete Application")
+                        .setMessage("Are you sure that you want to permanently delete your application?")
+                        .setCancelable(true)
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            sellerApplicationDatabase.child(sellerAcctKey).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Seller_application sellerApplication = snapshot.getValue(Seller_application.class);
+
+                                        String validIdName = sellerApplication.getValidIdName();
+                                        String selfieName = sellerApplication.getSelfieName();
+
+                                        StorageReference validIdNameRef = sellerApplicationStorage.child(validIdName);
+                                        StorageReference selfieNameRef = sellerApplicationStorage.child(selfieName);
+
+                                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+
+                                            validIdNameRef.delete();
+                                            selfieNameRef.delete();
+
+                                            dataSnapshot.getRef().removeValue();
+                                        }
+
+                                        Toast.makeText(switch_account_page.this, "Application Deleted", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(switch_account_page.this, switch_account_page.class);
+                                        startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                            }
+                        })
+                        .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int i) {
+                            }
+                        })
+                        .show();
+
+            }
+        });
+
+
 
     }
 
@@ -187,56 +300,6 @@ public class switch_account_page extends AppCompatActivity {
 
     private void getDataFromDB() {
 
-        techApplicationDatabase.child(techAcctKey).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Tech_application tech_application_data = snapshot.getValue(Tech_application.class);
-
-                if(tech_application_data != null){
-                    try
-                    {
-                        boolean sp_isTechPending = tech_application_data.isPending();
-                        boolean sp_isTechApproved = tech_application_data.isApproved();
-
-                        if(!sp_isTechApproved && !sp_isTechPending){
-                            cardView2.setVisibility(View.VISIBLE);
-                            cardViewPendingTech.setVisibility(View.INVISIBLE);
-                            btn_techApply.setVisibility(View.VISIBLE);
-                            btn_tech.setVisibility(View.INVISIBLE);
-                        }
-                        else if(sp_isTechPending && !sp_isTechApproved){
-                            cardView2.setVisibility(View.INVISIBLE);
-                            cardViewPendingTech.setVisibility(View.VISIBLE);
-                        }
-                        else if(sp_isTechApproved && !sp_isTechPending){
-                            cardView2.setVisibility(View.VISIBLE);
-                            cardViewPendingTech.setVisibility(View.INVISIBLE);
-                            btn_techApply.setVisibility(View.INVISIBLE);
-                            btn_tech.setVisibility(View.VISIBLE);
-                        }
-
-                    }
-                    catch (Exception e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    cardView2.setVisibility(View.VISIBLE);
-                    cardViewPendingTech.setVisibility(View.INVISIBLE);
-                    btn_techApply.setVisibility(View.VISIBLE);
-                    btn_tech.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(switch_account_page.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
         sellerApplicationDatabase.child(sellerAcctKey).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -287,6 +350,55 @@ public class switch_account_page extends AppCompatActivity {
             }
         });
 
+        techApplicationDatabase.child(techAcctKey).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Tech_application tech_application_data = snapshot.getValue(Tech_application.class);
+
+                if(tech_application_data != null){
+                    try
+                    {
+                        boolean sp_isTechPending = tech_application_data.isPending();
+                        boolean sp_isTechApproved = tech_application_data.isApproved();
+
+                        if(!sp_isTechApproved && !sp_isTechPending){
+                            cardView2.setVisibility(View.VISIBLE);
+                            cardViewPendingTech.setVisibility(View.INVISIBLE);
+                            btn_techApply.setVisibility(View.VISIBLE);
+                            btn_tech.setVisibility(View.INVISIBLE);
+                        }
+                        else if(sp_isTechPending && !sp_isTechApproved){
+                            cardView2.setVisibility(View.INVISIBLE);
+                            cardViewPendingTech.setVisibility(View.VISIBLE);
+                        }
+                        else if(sp_isTechApproved && !sp_isTechPending){
+                            cardView2.setVisibility(View.VISIBLE);
+                            cardViewPendingTech.setVisibility(View.INVISIBLE);
+                            btn_techApply.setVisibility(View.INVISIBLE);
+                            btn_tech.setVisibility(View.VISIBLE);
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    cardView2.setVisibility(View.VISIBLE);
+                    cardViewPendingTech.setVisibility(View.INVISIBLE);
+                    btn_techApply.setVisibility(View.VISIBLE);
+                    btn_tech.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(switch_account_page.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
     }
 
