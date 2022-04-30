@@ -3,22 +3,29 @@ package com.example.servicehub;
 public class Users {
 
 
-     String userId;
-     String firstName;
-     String lastName;
-     String contactNum;
-     String username;
-     String password;
+    String userId;
+    String firstName;
+    String lastName;
+    String contactNum;
+    String email;
+    String password;
+    String imageName;
+    String imageUrl;
+    String ratings;
 
     public Users(){}
 
-    public Users(String userId, String firstName, String lastName, String contactNum, String username, String password) {
+    public Users(String userId, String firstName, String lastName, String contactNum,
+                 String email, String password, String imageName, String imageUrl, String ratings) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.contactNum = contactNum;
-        this.username = username;
+        this.email = email;
         this.password = password;
+        this.imageName = imageName;
+        this.imageUrl = imageUrl;
+        this.ratings = ratings;
     }
 
     public String getFirstName() {
@@ -45,12 +52,12 @@ public class Users {
         this.contactNum = contactNum;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmail(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -67,6 +74,30 @@ public class Users {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(String ratings) {
+        this.ratings = ratings;
     }
 
 }
