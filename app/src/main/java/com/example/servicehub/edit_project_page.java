@@ -1,10 +1,5 @@
 package com.example.servicehub;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -19,6 +14,7 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,6 +24,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.ui.PlacePicker;
@@ -63,29 +64,27 @@ import java.util.Locale;
 public class edit_project_page extends AppCompatActivity {
 
 
-    ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, iv_projectImage, btn_delete ;
-    EditText et_projectName,  et_price, et_specialInstruction;
-    Button btn_pickStartTime, btn_pickEndTime, btn_update;
-    TextView tv_uploadPhoto, tv_startTime, tv_endTime, tv_address;
-    Chip chip_Mon, chip_Tue, chip_Wed, chip_Thu, chip_Fri, chip_Sat, chip_Sun;
-    ChipGroup chipGroup;
-    String imageUriText, projectIdFromIntent;
-    Uri imageUri;
-    Spinner spinner_projCategory;
-    Geocoder geocoder;
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+            iv_moreBtn, iv_projectImage, btn_delete, iv_back;
+    private EditText et_projectName,  et_price, et_specialInstruction;
+    private Button btn_pickStartTime, btn_pickEndTime, btn_update;
+    private TextView tv_uploadPhoto, tv_startTime, tv_endTime, tv_address, tv_back;
+    private Chip chip_Mon, chip_Tue, chip_Wed, chip_Thu, chip_Fri, chip_Sat, chip_Sun;
+    private ChipGroup chipGroup;
+    private String imageUriText, projectIdFromIntent, latLng,  tempImageName;
+    private Uri imageUri, tempUri;
+    private Spinner spinner_projCategory;
+    private Geocoder geocoder;
 
-    int PLACE_PICKER_REQUEST = 1;
-    int hour, minute;
-    String latLng;
-
-    boolean isAvailableMon = false;
-    boolean isAvailableTue = false;
-    boolean isAvailableWed = false;
-    boolean isAvailableThu = false;
-    boolean isAvailableFri = false;
-    boolean isAvailableSat = false;
-    boolean isAvailableSun = false;
+    private int PLACE_PICKER_REQUEST = 1;
+    private int hour, minute;
+    private boolean isAvailableMon = false;
+    private boolean isAvailableTue = false;
+    private boolean isAvailableWed = false;
+    private boolean isAvailableThu = false;
+    private boolean isAvailableFri = false;
+    private boolean isAvailableSat = false;
+    private boolean isAvailableSun = false;
 
     private FirebaseUser user;
     private FirebaseStorage mStorage;
@@ -102,8 +101,8 @@ public class edit_project_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
-        projectStorage = FirebaseStorage.getInstance().getReference("Projects").child(userID);
-        projectDatabase = FirebaseDatabase.getInstance().getReference("Projects").child(userID);
+        projectStorage = FirebaseStorage.getInstance().getReference("Projects");
+        projectDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
         setRef();
         generateDataValue();
@@ -184,32 +183,7 @@ public class edit_project_page extends AppCompatActivity {
                     Toast.makeText(edit_project_page.this, "In progress", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    new AlertDialog.Builder(edit_project_page.this)
-                            .setIcon(R.drawable.logo)
-                            .setTitle("ServiceHUB")
-                            .setMessage("Please make sure all information entered are correct")
-                            .setCancelable(true)
-                            .setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-
-                                    if(hasImage(iv_projectImage)){
-                                        updateProject();
-                                    }
-                                    else
-                                    {
-                                        updateProjectNoImage();
-                                    }
-
-                                }
-                            })
-                            .setNegativeButton("Back", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int i) {
-                                }
-                            })
-                            .show();
+                    inputValidation();
                 }
 
             }
@@ -291,8 +265,8 @@ public class edit_project_page extends AppCompatActivity {
             public void onClick(View view) {
 
                 //Initialize place field list
-                List<Place.Field> fieldList = Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ADDRESS,
-                        com.google.android.libraries.places.api.model.Place.Field.LAT_LNG, com.google.android.libraries.places.api.model.Place.Field.NAME);
+                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,
+                        Place.Field.LAT_LNG, Place.Field.NAME);
 
                 //Create intent
                 Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(edit_project_page.this);
@@ -304,8 +278,71 @@ public class edit_project_page extends AppCompatActivity {
             }
         });
 
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(edit_project_page.this, tech_dashboard.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
+    private void inputValidation() {
+        String sp_projName = et_projectName.getText().toString();
+        String sp_address = tv_address.getText().toString();
+        String time_start = tv_startTime.getText().toString();
+        String time_end = tv_endTime.getText().toString();
+        String price = et_price.getText().toString();
+
+        if (TextUtils.isEmpty(sp_projName)){
+            Toast.makeText(this, "Project Name is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(sp_address)){
+            Toast.makeText(this, "Address is required", Toast.LENGTH_SHORT).show();
+        }
+        else if(!chip_Mon.isChecked() && !chip_Tue.isChecked() && !chip_Wed.isChecked() && !chip_Thu.isChecked()
+                && !chip_Fri.isChecked() && !chip_Sat.isChecked() && !chip_Sun.isChecked()){
+            Toast.makeText(this, "Availability is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(time_start)){
+            Toast.makeText(this, "Starting time is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(time_end)){
+            Toast.makeText(this, "End time is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(price)){
+            Toast.makeText(this, "Price is required", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            new AlertDialog.Builder(edit_project_page.this)
+                    .setIcon(R.drawable.logo)
+                    .setTitle("Updating project")
+                    .setMessage("Please make sure all information entered are correct")
+                    .setCancelable(true)
+                    .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            if(imageUri == null)
+                            {
+                                updateProjectNoImage();
+                            }
+                            else{
+                                updateProject();
+                            }
+
+                        }
+                    })
+                    .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int i) {
+                        }
+                    })
+                    .show();
+        }
+
+    }
 
     private void setRef() {
 
@@ -324,6 +361,8 @@ public class edit_project_page extends AppCompatActivity {
         tv_address = findViewById(R.id.tv_address);
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
         tv_endTime = findViewById(R.id.tv_endTime);
+        tv_back = findViewById(R.id.iv_back);
+
 
         btn_update = findViewById(R.id.btn_update);
         btn_delete = findViewById(R.id.btn_delete);
@@ -342,7 +381,7 @@ public class edit_project_page extends AppCompatActivity {
 
     private void updateProject() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Updating list...");
+        progressDialog.setTitle("Updating Project...");
         progressDialog.show();
 
         StorageReference fileReference = projectStorage.child(imageUri.getLastPathSegment());
@@ -366,7 +405,6 @@ public class edit_project_page extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         final String imageURL = uri.toString();
 
-
                         chipsValidation();
 
                         HashMap<String, Object> hashMap = new HashMap<String, Object>();
@@ -380,18 +418,23 @@ public class edit_project_page extends AppCompatActivity {
                         hashMap.put("startTime", sp_projStartTime);
                         hashMap.put("endTime", sp_projEndTime);
                         hashMap.put("projInstruction", projInstruction);
-                        hashMap.put("isAvailableMon", isAvailableMon);
-                        hashMap.put("isAvailableTue", isAvailableTue);
-                        hashMap.put("isAvailableWed", isAvailableWed);
-                        hashMap.put("isAvailableThu", isAvailableThu);
-                        hashMap.put("isAvailableFri", isAvailableFri);
-                        hashMap.put("isAvailableSat", isAvailableSat);
-                        hashMap.put("isAvailableSun", isAvailableSun);
+                        hashMap.put("availableMon", isAvailableMon);
+                        hashMap.put("availableTue", isAvailableTue);
+                        hashMap.put("availableWed", isAvailableWed);
+                        hashMap.put("availableThu", isAvailableThu);
+                        hashMap.put("availableFri", isAvailableFri);
+                        hashMap.put("availableSat", isAvailableSat);
+                        hashMap.put("availableSun", isAvailableSun);
 
                         projectIdFromIntent = getIntent().getStringExtra("Project ID");
                         projectDatabase.child(projectIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
                             @Override
                             public void onSuccess(Object o) {
+
+                                    StorageReference imageRef = projectStorage.child(tempImageName);
+                                    imageRef.delete();
+
+
                                 progressDialog.dismiss();
                                 Intent intent = new Intent(edit_project_page.this, tech_dashboard.class);
                                 startActivity(intent);
@@ -424,7 +467,6 @@ public class edit_project_page extends AppCompatActivity {
         String sp_projStartTime = tv_startTime.getText().toString();
         String sp_projEndTime = tv_endTime.getText().toString();
         String projInstruction = et_specialInstruction.getText().toString();
-        String imageName = imageUri.getLastPathSegment();
         int ratings = 0;
 
         chipsValidation();
@@ -438,13 +480,13 @@ public class edit_project_page extends AppCompatActivity {
         hashMap.put("startTime", sp_projStartTime);
         hashMap.put("endTime", sp_projEndTime);
         hashMap.put("projInstruction", projInstruction);
-        hashMap.put("isAvailableMon", isAvailableMon);
-        hashMap.put("isAvailableTue", isAvailableTue);
-        hashMap.put("isAvailableWed", isAvailableWed);
-        hashMap.put("isAvailableThu", isAvailableThu);
-        hashMap.put("isAvailableFri", isAvailableFri);
-        hashMap.put("isAvailableSat", isAvailableSat);
-        hashMap.put("isAvailableSun", isAvailableSun);
+        hashMap.put("availableMon", isAvailableMon);
+        hashMap.put("availableTue", isAvailableTue);
+        hashMap.put("availableWed", isAvailableWed);
+        hashMap.put("availableThu", isAvailableThu);
+        hashMap.put("availableFri", isAvailableFri);
+        hashMap.put("availableSat", isAvailableSat);
+        hashMap.put("availableSun", isAvailableSun);
 
         projectIdFromIntent = getIntent().getStringExtra("Project ID");
         projectDatabase.child(projectIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
@@ -458,7 +500,6 @@ public class edit_project_page extends AppCompatActivity {
             }
         });
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -476,6 +517,8 @@ public class edit_project_page extends AppCompatActivity {
 //                    iv_projectImage.setImageBitmap(bitmap);
 
                     Picasso.get().load(imageUri)
+                            .placeholder(R.drawable.logo)
+                            .error(R.drawable.logo)
                             .into(iv_projectImage);
 
                 }catch (Exception e){
@@ -488,7 +531,7 @@ public class edit_project_page extends AppCompatActivity {
         }
 
         else if(requestCode == 100 && resultCode == RESULT_OK){
-            com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
+            Place place = Autocomplete.getPlaceFromIntent(data);
             tv_address.setText(place.getAddress());
             latLng = place.getLatLng().toString();
 
@@ -524,23 +567,18 @@ public class edit_project_page extends AppCompatActivity {
                 latLng = place.getLatLng().toString();
 
 
-
-
             }
         }
 
     }
-
 
     private void PickImage() {
         CropImage.activity().start(this);
     }
 
     private void generateDataValue() {
-
-
-
         projectIdFromIntent = getIntent().getStringExtra("Project ID");
+
         projectDatabase.child(projectIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -548,6 +586,8 @@ public class edit_project_page extends AppCompatActivity {
 
                 if(projectData != null){
                     try{
+                        tempImageName = projectData.getImageName();
+
                         imageUriText = projectData.getImageUrl();
                         String sp_projName = projectData.getProjName();
                         String sp_projAddress = projectData.getProjAddress();
@@ -563,10 +603,12 @@ public class edit_project_page extends AppCompatActivity {
                         boolean sp_isAvailableSat = projectData.isAvailableSat();
                         boolean sp_isAvailableSun = projectData.isAvailableSun();
 
-                        imageUri = Uri.parse(imageUriText);
+                        tempUri = Uri.parse(imageUriText);
 
-                        Picasso.get().load(imageUriText)
+                        Picasso.get().load(tempUri)
                                 .into(iv_projectImage);
+
+
 
                         et_projectName.setText(sp_projName);
                         tv_address.setText(sp_projAddress);

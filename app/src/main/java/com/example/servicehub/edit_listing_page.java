@@ -1,10 +1,5 @@
 package com.example.servicehub;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -16,12 +11,18 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -56,17 +57,17 @@ public class edit_listing_page extends AppCompatActivity {
     private DatabaseReference listingDatabase;
     private StorageReference listingStorage;
     private StorageTask addTask;
-    private String userID, imageUriText;
+    private String userID, imageUriText, tempImageName;
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_listingImage, iv_decreaseBtn, iv_increaseBtn, btn_delete;
-    private TextView tv_uploadPhoto, tv_address, tv_quantity;
+    private TextView tv_uploadPhoto, tv_address, tv_quantity, tv_back;
     private EditText et_listingName, et_price, et_listDesc;
     private Button btn_save;
     private Uri imageUri;
-    int quantity = 1;
-    String quantityText, latLng, listingIdFromIntent;
-    FirebaseAuth fAuth;
+    private int quantity = 1;
+    private String quantityText, latLng, listingIdFromIntent;
+    private FirebaseAuth fAuth;
 
 
     @Override
@@ -76,8 +77,8 @@ public class edit_listing_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
-        listingStorage = FirebaseStorage.getInstance().getReference("Listings").child(userID);
-        listingDatabase = FirebaseDatabase.getInstance().getReference("Listings").child(userID);
+        listingStorage = FirebaseStorage.getInstance().getReference("Listings");
+        listingDatabase = FirebaseDatabase.getInstance().getReference("Listings");
 
 
         generateDataValue();
@@ -176,8 +177,8 @@ public class edit_listing_page extends AppCompatActivity {
             public void onClick(View view) {
 
                 //Initialize place field list
-                List<Place.Field> fieldList = Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ADDRESS,
-                        com.google.android.libraries.places.api.model.Place.Field.LAT_LNG, com.google.android.libraries.places.api.model.Place.Field.NAME);
+                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,
+                        Place.Field.LAT_LNG, Place.Field.NAME);
 
                 //Create intent
                 Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(edit_listing_page.this);
@@ -195,39 +196,93 @@ public class edit_listing_page extends AppCompatActivity {
 
                 } else {
 
-                    new AlertDialog.Builder(edit_listing_page.this)
-                            .setIcon(R.drawable.logo)
-                            .setTitle("ServiceHUB")
-                            .setMessage("Please make sure all information entered are correct")
-                            .setCancelable(true)
-                            .setPositiveButton("Update", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-
-                                    if(hasImage(iv_listingImage)){
-                                        updateListing();
-                                    }
-                                    else
-                                    {
-                                        updateListingNoImage();
-                                    }
-                                }
-                            })
-                            .setNegativeButton("Back", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int i) {
-                                }
-                            })
-                            .show();
+                    inputValidation();
                 }
             }
         });
 
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(edit_listing_page.this, tech_dashboard.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
+    private void setRef() {
 
+        iv_messageBtn = findViewById(R.id.iv_messageBtn);
+        iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
+        iv_homeBtn = findViewById(R.id.iv_homeBtn);
+        iv_accountBtn = findViewById(R.id.iv_accountBtn);
+        iv_listingImage = findViewById(R.id.iv_listingImage);
+        iv_decreaseBtn = findViewById(R.id.iv_decreaseBtn);
+        iv_moreBtn = findViewById(R.id.iv_moreBtn);
+        iv_increaseBtn = findViewById(R.id.iv_increaseBtn);
+
+        tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
+        tv_quantity = findViewById(R.id.tv_quantity);
+        tv_address = findViewById(R.id.tv_address);
+        tv_back = findViewById(R.id.iv_back);
+
+        et_listingName = findViewById(R.id.et_listingName);
+        et_price = findViewById(R.id.et_price);
+        et_listDesc = findViewById(R.id.et_listDesc);
+
+        btn_save = findViewById(R.id.btn_update);
+        btn_delete = findViewById(R.id.btn_delete);
+
+    }
+
+    private void inputValidation() {
+        String sp_listingName = et_listingName.getText().toString();
+        String sp_address = tv_address.getText().toString();
+        String sp_price = et_price.getText().toString();
+        String sp_quantity = tv_quantity.getText().toString();
+
+        if (TextUtils.isEmpty(sp_listingName)){
+            Toast.makeText(this, "Listing name is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(sp_address)){
+            Toast.makeText(this, "Address is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(sp_price)){
+            Toast.makeText(this, "Price is required", Toast.LENGTH_SHORT).show();
+        }
+        else if (TextUtils.isEmpty(sp_quantity)){
+            Toast.makeText(this, "Quantity is required", Toast.LENGTH_SHORT).show();
+        }else{
+            new AlertDialog.Builder(edit_listing_page.this)
+                    .setIcon(R.drawable.logo)
+                    .setTitle("ServiceHUB")
+                    .setMessage("Please make sure all information entered are correct")
+                    .setCancelable(true)
+                    .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            if(imageUri == null)
+                            {
+                                 updateListingNoImage();
+                            }
+                            else
+                            {
+                                updateListing();
+                            }
+
+                        }
+                    })
+                    .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int i) {
+                        }
+                    })
+                    .show();
+        }
+
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -256,7 +311,7 @@ public class edit_listing_page extends AppCompatActivity {
         }
 
         else if(requestCode == 100 && resultCode == RESULT_OK){
-            com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
+            Place place = Autocomplete.getPlaceFromIntent(data);
             tv_address.setText(place.getAddress());
             latLng = place.getLatLng().toString();
 
@@ -306,7 +361,7 @@ public class edit_listing_page extends AppCompatActivity {
 
     private void updateListing() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Updating list...");
+        progressDialog.setTitle("Updating...");
         progressDialog.show();
 
         StorageReference fileReference = listingStorage.child(imageUri.getLastPathSegment());
@@ -341,6 +396,10 @@ public class edit_listing_page extends AppCompatActivity {
                         listingDatabase.child(listingIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener() {
                             @Override
                             public void onSuccess(Object o) {
+
+                                StorageReference imageRef = listingStorage.child(tempImageName);
+                                imageRef.delete();
+
                                 progressDialog.dismiss();
                                 Intent intent = new Intent(edit_listing_page.this, seller_dashboard.class);
                                 startActivity(intent);
@@ -367,17 +426,14 @@ public class edit_listing_page extends AppCompatActivity {
 
     private void updateListingNoImage() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Updating list...");
+        progressDialog.setTitle("Updating...");
         progressDialog.show();
-
-        StorageReference fileReference = listingStorage.child(imageUri.getLastPathSegment());
 
         String listName = et_listingName.getText().toString();
         String listAddress = tv_address.getText().toString();
         String listPrice = et_price.getText().toString();
         String listQuantity = tv_quantity.getText().toString();
         String listDesc = et_listDesc.getText().toString();
-        String imageName = imageUri.getLastPathSegment();
 
         HashMap<String, Object> hashMap = new HashMap<String, Object>();
         hashMap.put("listName", listName);
@@ -396,7 +452,6 @@ public class edit_listing_page extends AppCompatActivity {
                 Intent intent = new Intent(edit_listing_page.this, seller_dashboard.class);
                 startActivity(intent);
                 Toast.makeText(edit_listing_page.this, "Listing is updated", Toast.LENGTH_SHORT).show();
-
 
             }
         });
@@ -421,7 +476,7 @@ public class edit_listing_page extends AppCompatActivity {
                         String sp_listQuantity = listingData.getListQuantity();
                         String sp_listDesc = listingData.getListDesc();
 
-                        imageUri = Uri.parse(imageUriText);
+                        tempImageName = listingData.getImageName();
 
                         Picasso.get()
                                 .load(imageUriText)
@@ -494,27 +549,6 @@ public class edit_listing_page extends AppCompatActivity {
                 startActivity(intentMoreBtn);
             }
         }); // end of more button
-    }
-
-    private void setRef() {
-
-        iv_messageBtn = findViewById(R.id.iv_messageBtn);
-        iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
-        iv_homeBtn = findViewById(R.id.iv_homeBtn);
-        iv_accountBtn = findViewById(R.id.iv_accountBtn);
-        iv_listingImage = findViewById(R.id.iv_listingImage);
-        iv_decreaseBtn = findViewById(R.id.iv_decreaseBtn);
-        iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        iv_increaseBtn = findViewById(R.id.iv_increaseBtn);
-        tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
-        tv_quantity = findViewById(R.id.tv_quantity);
-        tv_address = findViewById(R.id.tv_address);
-        et_listingName = findViewById(R.id.et_listingName);
-        et_price = findViewById(R.id.et_price);
-        et_listDesc = findViewById(R.id.et_listDesc);
-        btn_save = findViewById(R.id.btn_update);
-        btn_delete = findViewById(R.id.btn_delete);
-
     }
 
     private void PickImage() {

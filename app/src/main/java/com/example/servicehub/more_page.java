@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 public class more_page extends AppCompatActivity {
 
@@ -27,7 +28,7 @@ public class more_page extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn;
+            iv_moreBtn, iv_userPhoto;
 
     private TextView tv_editProfile, tv_changePassword, tv_contactUs, tv_aboutUs, tv_logout, tv_bannerName, tv_ratings;
 
@@ -137,7 +138,7 @@ public class more_page extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-
+        iv_userPhoto = findViewById(R.id.iv_userPhoto);
 
         tv_editProfile = findViewById(R.id.tv_editProfile);
         tv_changePassword = findViewById(R.id.tv_changePassword);
@@ -160,10 +161,19 @@ public class more_page extends AppCompatActivity {
                 if(userProfile != null){
                     String sp_fName = userProfile.firstName;
                     String sp_lName = userProfile.lastName;
+                    String sp_imageUrl = userProfile.imageUrl;
                     String sp_fullName = sp_fName.substring(0, 1).toUpperCase()+ sp_fName.substring(1).toLowerCase()
                             + " " + sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();
 
                     tv_bannerName.setText(sp_fullName);
+
+                    if (!sp_imageUrl.isEmpty()) {
+                        Picasso.get()
+                                .load(sp_imageUrl)
+                                .into(iv_userPhoto);
+                    }
+
+                    progressBar.setVisibility(View.GONE);
 
                 }
             }
@@ -174,7 +184,7 @@ public class more_page extends AppCompatActivity {
             }
         });
 
-        progressBar.setVisibility(View.GONE);
+
 
     }
 

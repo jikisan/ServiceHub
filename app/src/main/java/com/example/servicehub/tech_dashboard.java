@@ -1,10 +1,5 @@
 package com.example.servicehub;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +10,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import Adapter_and_fragments.fragmentAdapter;
 
@@ -36,7 +37,7 @@ public class tech_dashboard extends AppCompatActivity {
     private fragmentAdapter adapter;
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, iv_editProject;
+            iv_moreBtn, iv_editProject, iv_back, iv_userPic;
     private TextView tv_bannerName;
     private Button btn_addProject;
     private String imageUriText;
@@ -57,10 +58,30 @@ public class tech_dashboard extends AppCompatActivity {
 
         setRef();
         generateTabLayout();
-        buttonNav();
+        clickListener();
         getTechInfo();
         bottomNavTaskbar();
 
+    }
+
+    private void clickListener() {
+
+
+        btn_addProject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentAddProject = new Intent(tech_dashboard.this, add_project_page.class);
+                startActivity(intentAddProject);
+            }
+        }); // end of add project button
+
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(tech_dashboard.this, switch_account_page.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setRef() {
@@ -70,16 +91,22 @@ public class tech_dashboard extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
+        iv_back = findViewById(R.id.iv_back);
+        iv_userPic = findViewById(R.id.iv_userPic);
+
+
         tv_bannerName = findViewById(R.id.tv_bannerName);
+
         btn_addProject = findViewById(R.id.btn_addProject);
+
         tabLayout = findViewById(R.id.tab_layout);
+
         vp_viewPager2 = findViewById(R.id.vp_viewPager2);
 
         progressBar = findViewById(R.id.progressBar);
 
 
     }
-
 
     private void generateTabLayout() {
 
@@ -117,7 +144,6 @@ public class tech_dashboard extends AppCompatActivity {
     }
 
     private void getTechInfo() {
-        progressBar.setVisibility(View.VISIBLE);
 
         userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -127,11 +153,20 @@ public class tech_dashboard extends AppCompatActivity {
                 if(userProfile != null){
                     String sp_fName = userProfile.firstName;
                     String sp_lName = userProfile.lastName;
+                    String sp_imageUrl = userProfile.imageUrl;
 
                     String firstName = sp_fName.substring(0, 1).toUpperCase()+ sp_fName.substring(1).toLowerCase();
                     String lastName = sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();
 
                     tv_bannerName.setText(firstName + " " + lastName);
+                    if (!sp_imageUrl.isEmpty()) {
+                        Picasso.get()
+                                .load(sp_imageUrl)
+                                .into(iv_userPic);
+                    }
+
+                    progressBar.setVisibility(View.GONE);
+
                 }
             }
 
@@ -140,27 +175,7 @@ public class tech_dashboard extends AppCompatActivity {
                 Toast.makeText(tech_dashboard.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        progressBar.setVisibility(View.GONE);
 
-    }
-
-    private void buttonNav() {
-
-//        iv_editProject.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intentEditProject = new Intent(tech_dashboard.this, edit_project_page.class);
-//                startActivity(intentEditProject);
-//            }
-//        }); // end of edit project button
-
-        btn_addProject.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentAddProject = new Intent(tech_dashboard.this, add_project_page.class);
-                startActivity(intentAddProject);
-            }
-        }); // end of add project button
 
     }
 

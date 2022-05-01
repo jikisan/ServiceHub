@@ -1,10 +1,5 @@
 package com.example.servicehub;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.viewpager2.widget.ViewPager2;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +9,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import Adapter_and_fragments.fragmentAdapterListings;
 
@@ -35,7 +36,7 @@ public class seller_dashboard extends AppCompatActivity {
     private fragmentAdapterListings adapter;
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, iv_editListing;
+            iv_moreBtn, iv_back, iv_userPic;
     private TextView tv_bannerName;
     private Button btn_addListing;
     private ProgressBar progressBar;
@@ -52,7 +53,7 @@ public class seller_dashboard extends AppCompatActivity {
 
         setRef();
         generateTabLayout();
-        buttonNav();
+        clickListener();
         getSellerInfo();
         bottomNavTaskbar();
     }
@@ -64,10 +65,15 @@ public class seller_dashboard extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        // iv_editListing = findViewById(R.id.iv_editListing);
+        iv_back = findViewById(R.id.iv_back);
+        iv_userPic = findViewById(R.id.iv_userPic);
+
         btn_addListing = findViewById(R.id.btn_addListing);
+
         tv_bannerName = findViewById(R.id.tv_bannerName);
+
         tabLayout = findViewById(R.id.tab_layout);
+
         vp_viewPager2 = findViewById(R.id.vp_viewPager2);
 
         progressBar = findViewById(R.id.progressBar);
@@ -108,9 +114,7 @@ public class seller_dashboard extends AppCompatActivity {
         });
     }
 
-
     private void getSellerInfo() {
-        progressBar.setVisibility(View.VISIBLE);
 
 
         userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -121,11 +125,18 @@ public class seller_dashboard extends AppCompatActivity {
                 if(userProfile != null){
                     String sp_fName = userProfile.firstName;
                     String sp_lName = userProfile.lastName;
+                    String sp_imageUrl = userProfile.imageUrl;
 
                     String firstName = sp_fName.substring(0, 1).toUpperCase()+ sp_fName.substring(1).toLowerCase();
                     String lastName = sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();
 
                     tv_bannerName.setText(firstName + " " + lastName);
+                    if (!sp_imageUrl.isEmpty()) {
+                        Picasso.get()
+                                .load(sp_imageUrl)
+                                .into(iv_userPic);
+                    }
+                    progressBar.setVisibility(View.GONE);
                 }
             }
 
@@ -135,20 +146,11 @@ public class seller_dashboard extends AppCompatActivity {
             }
         });
 
-        progressBar.setVisibility(View.GONE);
+
 
     }
 
-    private void buttonNav() {
-
-//        iv_editListing.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intentEditListing = new Intent(seller_dashboard.this, edit_listing_page.class);
-//                startActivity(intentEditListing);
-//            }
-//        }); // end of edit listing button
-
+    private void clickListener() {
 
         btn_addListing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,7 +160,13 @@ public class seller_dashboard extends AppCompatActivity {
             }
         }); // end of add listing button
 
-
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(seller_dashboard.this, switch_account_page.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
