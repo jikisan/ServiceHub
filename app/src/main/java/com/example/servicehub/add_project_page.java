@@ -99,8 +99,8 @@ public class add_project_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
-        projectStorage = FirebaseStorage.getInstance().getReference("Projects").child(userID);
-        projectDatabase = FirebaseDatabase.getInstance().getReference("Projects").child(userID);
+        projectStorage = FirebaseStorage.getInstance().getReference("Projects");
+        projectDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
         setRef();
         //adjustSlot();
@@ -351,7 +351,7 @@ public class add_project_page extends AppCompatActivity {
 
                         chipsValidation();
 
-                        Projects projects = new Projects(category, downloadUrl, imageName, projName, latLng, projAddress, price,
+                        Projects projects = new Projects(userID, category, downloadUrl, imageName, projName, latLng, projAddress, price,
                                 sp_projStartTime, sp_projEndTime, projInstruction, ratingsText, isAvailableMon, isAvailableTue, isAvailableWed, isAvailableThu,
                                 isAvailableFri, isAvailableSat, isAvailableSun);
 

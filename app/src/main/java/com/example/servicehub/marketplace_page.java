@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 public class marketplace_page extends AppCompatActivity {
 
-    ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, item3;
 
     @Override
@@ -18,20 +18,10 @@ public class marketplace_page extends AppCompatActivity {
         setContentView(R.layout.marketplace_page);
 
         setRef();
-        chooseItem();
         bottomNavTaskbar();
     }
 
-    private void chooseItem() {
-        item3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentChooseItem = new Intent(marketplace_page.this, item_page.class);
-                startActivity(intentChooseItem);
-            }
-        });
 
-    }
 
     private void bottomNavTaskbar() {
 
@@ -84,7 +74,6 @@ public class marketplace_page extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        item3 = findViewById(R.id.item3);
     }
 
 }

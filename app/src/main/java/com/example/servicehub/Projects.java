@@ -2,6 +2,7 @@ package com.example.servicehub;
 
 public class Projects {
 
+    String userID;
     String category;
     String imageUrl;
     String imageName;
@@ -26,10 +27,11 @@ public class Projects {
 
     }
 
-    public Projects(String category, String imageUrl, String imageName, String projName, String projLatLng, String projAddress, String price,
+    public Projects(String userID, String category, String imageUrl, String imageName, String projName, String projLatLng, String projAddress, String price,
                     String startTime, String endTime, String projInstruction, String ratings, boolean isAvailableMon, boolean isAvailableTue,
                     boolean isAvailableWed, boolean isAvailableThu, boolean isAvailableFri, boolean isAvailableSat, boolean isAvailableSun)
     {
+        this.userID = userID;
         this.category = category;
         this.imageUrl = imageUrl;
         this.imageName = imageName;
@@ -48,6 +50,18 @@ public class Projects {
         this.isAvailableFri = isAvailableFri;
         this.isAvailableSat = isAvailableSat;
         this.isAvailableSun = isAvailableSun;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
     }
 
     public String getCategory() {

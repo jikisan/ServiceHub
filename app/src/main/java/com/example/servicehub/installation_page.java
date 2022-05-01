@@ -1,16 +1,26 @@
 package com.example.servicehub;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.google.android.material.tabs.TabLayout;
+
+import Adapter_and_fragments.fragmentAdapter;
+import Adapter_and_fragments.fragmentAdapterInstallation;
+
 public class installation_page extends AppCompatActivity {
 
-    ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, imageView11;
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+            iv_moreBtn;
+    private TabLayout tabLayout;
+    private ViewPager2 vp_viewPager2;
+    private fragmentAdapterInstallation adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,19 +28,44 @@ public class installation_page extends AppCompatActivity {
         setContentView(R.layout.installation_page);
 
         setRef();
-        techChoose();
+        generateTabLayout();
         bottomNavTaskbar();
     }
 
-    private void techChoose() {
-        imageView11.setOnClickListener(new View.OnClickListener() {
+    private void generateTabLayout() {
+
+
+        tabLayout.addTab(tabLayout.newTab().setText("Installers"));
+        tabLayout.addTab(tabLayout.newTab().setText("View in map"));
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        adapter = new fragmentAdapterInstallation(fragmentManager, getLifecycle());
+        vp_viewPager2.setAdapter(adapter);
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onClick(View v) {
-                Intent intentTechChoose = new Intent(installation_page.this, booking_page.class);
-                startActivity(intentTechChoose);            }
+            public void onTabSelected(TabLayout.Tab tab) {
+                vp_viewPager2.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        vp_viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                tabLayout.selectTab(tabLayout.getTabAt(position));
+            }
         });
     }
-
 
     private void bottomNavTaskbar() {
 
@@ -82,7 +117,10 @@ public class installation_page extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        imageView11 = findViewById(R.id.imageView11);
+
+        tabLayout = findViewById(R.id.tab_layout);
+
+        vp_viewPager2 = findViewById(R.id.vp_viewPager2);
     }
 
 

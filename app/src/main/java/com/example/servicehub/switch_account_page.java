@@ -365,8 +365,8 @@ public class switch_account_page extends AppCompatActivity {
                 if(tech_application_data != null){
                     try
                     {
-                        boolean sp_isTechPending = tech_application_data.isPending();
-                        boolean sp_isTechApproved = tech_application_data.isApproved();
+                        boolean sp_isTechPending = tech_application_data.isPending;
+                        boolean sp_isTechApproved = tech_application_data.isApproved;
 
                         if(!sp_isTechApproved && !sp_isTechPending){
                             tv_techWelcome.setVisibility(View.INVISIBLE);

@@ -296,14 +296,11 @@ public class edit_profile_page extends AppCompatActivity {
                     tv_contactNum.setText( sp_num);
                     tv_email.setText(tempEmail);
 
-                    if (sp_imageUrl.isEmpty()) {
-                        iv_profile_photo.setBackground(getResources().getDrawable(R.drawable.circle));
-                    } else{
+                    if (!sp_imageUrl.isEmpty()) {
                         Picasso.get()
                                 .load(sp_imageUrl)
                                 .into(iv_profile_photo);
                     }
-
 
                     progressBar.setVisibility(View.GONE);
 

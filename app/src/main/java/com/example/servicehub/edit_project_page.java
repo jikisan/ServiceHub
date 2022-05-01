@@ -103,8 +103,8 @@ public class edit_project_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
-        projectStorage = FirebaseStorage.getInstance().getReference("Projects").child(userID);
-        projectDatabase = FirebaseDatabase.getInstance().getReference("Projects").child(userID);
+        projectStorage = FirebaseStorage.getInstance().getReference("Projects");
+        projectDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
         setRef();
         generateDataValue();
@@ -577,10 +577,8 @@ public class edit_project_page extends AppCompatActivity {
     }
 
     private void generateDataValue() {
-
-
-
         projectIdFromIntent = getIntent().getStringExtra("Project ID");
+
         projectDatabase.child(projectIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

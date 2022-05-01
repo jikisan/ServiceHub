@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 public class nearby_tech_page extends AppCompatActivity {
 
-    ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn;
 
     @Override
@@ -65,6 +65,7 @@ public class nearby_tech_page extends AppCompatActivity {
     }
 
     private void setRef() {
+
 
 
         iv_messageBtn = findViewById(R.id.iv_messageBtn);

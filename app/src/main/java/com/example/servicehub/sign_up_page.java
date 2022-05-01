@@ -66,8 +66,6 @@ public class sign_up_page extends AppCompatActivity {
         });
 
 
-
-
     }
 
     private void signUpUser() {
@@ -82,9 +80,6 @@ public class sign_up_page extends AppCompatActivity {
         String imageName = "";
         String imageUrl = "";
         String ratings = "0";
-
-
-
 
 
         if (TextUtils.isEmpty(firstName))

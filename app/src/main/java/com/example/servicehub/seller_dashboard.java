@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import Adapter_and_fragments.fragmentAdapterListings;
 
@@ -35,7 +36,7 @@ public class seller_dashboard extends AppCompatActivity {
     private fragmentAdapterListings adapter;
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, iv_back;
+            iv_moreBtn, iv_back, iv_userPic;
     private TextView tv_bannerName;
     private Button btn_addListing;
     private ProgressBar progressBar;
@@ -65,6 +66,7 @@ public class seller_dashboard extends AppCompatActivity {
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
         iv_back = findViewById(R.id.iv_back);
+        iv_userPic = findViewById(R.id.iv_userPic);
 
         btn_addListing = findViewById(R.id.btn_addListing);
 
@@ -113,7 +115,6 @@ public class seller_dashboard extends AppCompatActivity {
     }
 
     private void getSellerInfo() {
-        progressBar.setVisibility(View.VISIBLE);
 
 
         userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -124,11 +125,18 @@ public class seller_dashboard extends AppCompatActivity {
                 if(userProfile != null){
                     String sp_fName = userProfile.firstName;
                     String sp_lName = userProfile.lastName;
+                    String sp_imageUrl = userProfile.imageUrl;
 
                     String firstName = sp_fName.substring(0, 1).toUpperCase()+ sp_fName.substring(1).toLowerCase();
                     String lastName = sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();
 
                     tv_bannerName.setText(firstName + " " + lastName);
+                    if (!sp_imageUrl.isEmpty()) {
+                        Picasso.get()
+                                .load(sp_imageUrl)
+                                .into(iv_userPic);
+                    }
+                    progressBar.setVisibility(View.GONE);
                 }
             }
 
@@ -138,7 +146,7 @@ public class seller_dashboard extends AppCompatActivity {
             }
         });
 
-        progressBar.setVisibility(View.GONE);
+
 
     }
 

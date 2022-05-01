@@ -78,8 +78,8 @@ public class add_listing_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
-        listingStorage = FirebaseStorage.getInstance().getReference("Listings").child(userID);
-        listingDatabase = FirebaseDatabase.getInstance().getReference("Listings").child(userID);
+        listingStorage = FirebaseStorage.getInstance().getReference("Listings");
+        listingDatabase = FirebaseDatabase.getInstance().getReference("Listings");
 
         setRef();
         initPlaces();
@@ -214,7 +214,7 @@ public class add_listing_page extends AppCompatActivity {
                     .setTitle("ServiceHUB")
                     .setMessage("Please make sure all information entered are correct")
                     .setCancelable(true)
-                    .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -328,7 +328,7 @@ public class add_listing_page extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         final String downloadUrl = uri.toString();
 
-                        Listings listings = new Listings(downloadUrl, imageName, listName, latLng, listAddress, listPrice, listQuantity, listDesc, ratingsText);
+                        Listings listings = new Listings(userID, downloadUrl, imageName, listName, latLng, listAddress, listPrice, listQuantity, listDesc, ratingsText);
 
                         listingDatabase.push().setValue(listings).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
