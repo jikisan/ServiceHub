@@ -145,13 +145,13 @@ public class edit_profile_page extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
-                                    if(!hasImage(iv_profile_photo))
+                                    if(imageUri == null)
                                     {
-                                        updateProject();
+                                        updateProjectNoImage();
                                     }
                                     else
                                     {
-                                        updateProjectNoImage();
+                                        updateProject();
                                     }
 
                                     Toast.makeText(edit_profile_page.this, "Image not detected", Toast.LENGTH_SHORT);
@@ -362,10 +362,8 @@ public class edit_profile_page extends AppCompatActivity {
                             public void onSuccess(Object o) {
 
 
-//                                if(tempImageName != null || !tempImageName.equals("")){
-//                                    StorageReference imageRef = userStorage.child(tempImageName);
-//                                    imageRef.delete();
-//                                }
+                                StorageReference imageRef = userStorage.child(tempImageName);
+                                imageRef.delete();
 
                                 progressDialog.dismiss();
                                 Intent intent = new Intent(edit_profile_page.this, edit_profile_page.class);

@@ -1,10 +1,5 @@
 package com.example.servicehub;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -30,6 +25,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -99,8 +99,8 @@ public class add_project_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
-        projectStorage = FirebaseStorage.getInstance().getReference("Projects").child(userID);
-        projectDatabase = FirebaseDatabase.getInstance().getReference("Projects").child(userID);
+        projectStorage = FirebaseStorage.getInstance().getReference("Projects");
+        projectDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
         setRef();
         //adjustSlot();
@@ -207,7 +207,7 @@ public class add_project_page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                // placePicker();
+               // placePicker();
 
 
                 //Initialize place field list
@@ -351,7 +351,7 @@ public class add_project_page extends AppCompatActivity {
 
                         chipsValidation();
 
-                        Projects projects = new Projects(category, downloadUrl, imageName, projName, latLng, projAddress, price,
+                        Projects projects = new Projects(userID, category, downloadUrl, imageName, projName, latLng, projAddress, price,
                                 sp_projStartTime, sp_projEndTime, projInstruction, ratingsText, isAvailableMon, isAvailableTue, isAvailableWed, isAvailableThu,
                                 isAvailableFri, isAvailableSat, isAvailableSun);
 
@@ -460,33 +460,33 @@ public class add_project_page extends AppCompatActivity {
 
 
 
-        if(chip_Mon.isChecked()){
-            isAvailableMon = true;
-        }
+            if(chip_Mon.isChecked()){
+                isAvailableMon = true;
+            }
 
-        if(chip_Tue.isChecked()){
-            isAvailableTue = true;
-        }
+            if(chip_Tue.isChecked()){
+                isAvailableTue = true;
+            }
 
-        if(chip_Wed.isChecked()){
-            isAvailableWed = true;
-        }
+            if(chip_Wed.isChecked()){
+                isAvailableWed = true;
+            }
 
-        if(chip_Thu.isChecked()){
-            isAvailableThu = true;
-        }
+            if(chip_Thu.isChecked()){
+                isAvailableThu = true;
+            }
 
-        if(chip_Fri.isChecked()){
-            isAvailableFri = true;
-        }
+            if(chip_Fri.isChecked()){
+                isAvailableFri = true;
+            }
 
-        if(chip_Sat.isChecked()){
-            isAvailableSat = true;
-        }
+            if(chip_Sat.isChecked()){
+                isAvailableSat = true;
+            }
 
-        if(chip_Sun.isChecked()){
-            isAvailableSun = true;
-        }
+            if(chip_Sun.isChecked()){
+                isAvailableSun = true;
+            }
 
 
 

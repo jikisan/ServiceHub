@@ -1,10 +1,5 @@
 package com.example.servicehub;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -25,6 +20,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -78,8 +78,8 @@ public class add_listing_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
-        listingStorage = FirebaseStorage.getInstance().getReference("Listings").child(userID);
-        listingDatabase = FirebaseDatabase.getInstance().getReference("Listings").child(userID);
+        listingStorage = FirebaseStorage.getInstance().getReference("Listings");
+        listingDatabase = FirebaseDatabase.getInstance().getReference("Listings");
 
         setRef();
         initPlaces();
@@ -125,8 +125,8 @@ public class add_listing_page extends AppCompatActivity {
             public void onClick(View view) {
 
                 //Initialize place field list
-                List<Place.Field> fieldList = Arrays.asList(com.google.android.libraries.places.api.model.Place.Field.ADDRESS,
-                        com.google.android.libraries.places.api.model.Place.Field.LAT_LNG, com.google.android.libraries.places.api.model.Place.Field.NAME);
+                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,
+                        Place.Field.LAT_LNG, Place.Field.NAME);
 
                 //Create intent
                 Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fieldList).build(add_listing_page.this);
@@ -214,7 +214,7 @@ public class add_listing_page extends AppCompatActivity {
                     .setTitle("ServiceHUB")
                     .setMessage("Please make sure all information entered are correct")
                     .setCancelable(true)
-                    .setPositiveButton("Update", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -255,7 +255,7 @@ public class add_listing_page extends AppCompatActivity {
         }
 
         else if(requestCode == 100 && resultCode == RESULT_OK){
-            com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
+            Place place = Autocomplete.getPlaceFromIntent(data);
             tv_address.setText(place.getAddress());
             latLng = place.getLatLng().toString();
 
@@ -295,9 +295,9 @@ public class add_listing_page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                quantity = quantity + 1;
-                quantityText = String.valueOf(quantity);
-                tv_quantity.setText(quantityText);
+                    quantity = quantity + 1;
+                    quantityText = String.valueOf(quantity);
+                    tv_quantity.setText(quantityText);
 
             }
         });
@@ -328,7 +328,7 @@ public class add_listing_page extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         final String downloadUrl = uri.toString();
 
-                        Listings listings = new Listings(downloadUrl, imageName, listName, latLng, listAddress, listPrice, listQuantity, listDesc, ratingsText);
+                        Listings listings = new Listings(userID, downloadUrl, imageName, listName, latLng, listAddress, listPrice, listQuantity, listDesc, ratingsText);
 
                         listingDatabase.push().setValue(listings).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -349,12 +349,12 @@ public class add_listing_page extends AppCompatActivity {
                 });
             }
         })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(add_listing_page.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(add_listing_page.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
 
 
 
