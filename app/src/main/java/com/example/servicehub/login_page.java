@@ -132,7 +132,6 @@ public class login_page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 TextInputEditText resetMail = new TextInputEditText(view.getContext());
-                resetMail.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                 resetMail.setPadding(24, 8, 8, 8);
 
 
@@ -154,7 +153,7 @@ public class login_page extends AppCompatActivity {
                         }
                         else if ( !Patterns.EMAIL_ADDRESS.matcher(email).matches())
                         {
-                            Toast.makeText(login_page.this, "Email is Required", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(login_page.this, "Invalid format", Toast.LENGTH_SHORT).show();
                         }
                         else
                         {
@@ -169,7 +168,7 @@ public class login_page extends AppCompatActivity {
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(login_page.this, "Error!" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(login_page.this,  "The email is no registered", Toast.LENGTH_LONG).show();
                                 }
                             });
 

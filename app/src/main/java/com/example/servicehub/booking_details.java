@@ -65,8 +65,7 @@ public class booking_details extends AppCompatActivity {
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(booking_details.this, tech_dashboard.class);
-                startActivity(intent);
+                onBackPressed();
             }
         });
 

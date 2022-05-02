@@ -225,7 +225,7 @@ public class edit_listing_page extends AppCompatActivity {
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
         tv_quantity = findViewById(R.id.tv_quantity);
         tv_address = findViewById(R.id.tv_address);
-        tv_back = findViewById(R.id.iv_back);
+        tv_back = findViewById(R.id.tv_back);
 
         et_listingName = findViewById(R.id.et_listingName);
         et_price = findViewById(R.id.et_price);

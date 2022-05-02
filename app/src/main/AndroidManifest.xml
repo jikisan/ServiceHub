@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.servicehub">
+    package="com.example.servicehub" >
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -15,7 +15,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ServiceHub">
+        android:theme="@style/Theme.ServiceHub" >
+        <activity
+            android:name=".booking_summary_page"
+            android:exported="false" />
         <activity
             android:name=".seller_application_page"
             android:exported="false" />
@@ -46,7 +49,7 @@
         <activity android:name=".place_order_page" />
         <activity android:name=".item_page" />
         <activity android:name=".marketplace_page" />
-        <activity android:name=".booking_confirmation_page" />
+        <activity android:name=".booking_application_page" />
         <activity android:name=".booking_page" />
         <activity android:name=".installation_page" />
         <activity android:name=".more_page" />
@@ -60,13 +63,12 @@
         <activity
             android:name=".intro_logo"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"
-            >
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity android:name=".login_page" />
         <activity

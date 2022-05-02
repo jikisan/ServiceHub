@@ -65,7 +65,7 @@ public class seller_dashboard extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        iv_back = findViewById(R.id.iv_back);
+        iv_back = findViewById(R.id.tv_back);
         iv_userPic = findViewById(R.id.iv_userPic);
 
         btn_addListing = findViewById(R.id.btn_addListing);

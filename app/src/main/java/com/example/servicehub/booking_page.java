@@ -20,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -40,7 +41,7 @@ public class booking_page extends AppCompatActivity {
     private StorageReference projectStorage;
     private DatabaseReference projectDatabase, listingDatabase;
     private StorageTask addTask;
-    private String userID, projectIdFromIntent, listingIdFromIntent, imageUriText, latLng,  tempImageName;
+    private String userID, projectIdFromIntent, listingIdFromIntent, imageUriText, latLng,  tempProjName, tempListName;
     private Uri imageUri, tempUri;
 
     private ProgressBar progressBar;
@@ -99,7 +100,8 @@ public class booking_page extends AppCompatActivity {
         btn_bookNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(booking_page.this, booking_confirmation_page.class);
+                //getKey();
+                Intent intent = new Intent(booking_page.this, booking_application_page.class);
                 startActivity(intent);
             }
         });
@@ -144,7 +146,7 @@ public class booking_page extends AppCompatActivity {
 
                 if(projectData != null){
                     try{
-                        tempImageName = projectData.getImageName();
+                        tempProjName = projectData.getProjName();
 
                         imageUriText = projectData.getImageUrl();
                         String sp_category = projectData.getCategory();
@@ -247,8 +249,6 @@ public class booking_page extends AppCompatActivity {
 
                 if(listingsData != null){
                     try{
-                        tempImageName = listingsData.getImageName();
-
                         imageUriText = listingsData.getImageUrl();
                         String sp_ratings = listingsData.getRatings();
                         String sp_projName = listingsData.getListName().substring(0, 1).toUpperCase()
@@ -288,6 +288,33 @@ public class booking_page extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(booking_page.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getKey() {
+
+
+        Query query = FirebaseDatabase.getInstance().getReference("Projects")
+                .orderByChild("projName")
+                .equalTo(tempProjName);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                    String projectName = dataSnapshot.getKey().toString();
+                    Intent intentProject = new Intent(booking_page.this, edit_project_page.class);
+                    intentProject.putExtra("Project Name", projectName);
+                    startActivity(intentProject);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }
