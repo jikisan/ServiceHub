@@ -11,7 +11,7 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="58dp"
-        android:backgroundTint="@color/lighter_light_blue"
+        app:cardElevation="100dp"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="131dp">
 
@@ -19,236 +19,284 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
             <TextView
+                android:id="@+id/tv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="26dp"
                 android:drawableLeft="@drawable/back_arrow"
-                android:text="Installation"
+                android:gravity="center"
                 android:textColor="@color/black"
-                android:textSize="25sp"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
     <ScrollView
-        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingTop="60dp"
-        android:paddingBottom="60dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:fadingEdge="none"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@+id/textView13"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout9"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView"
-        app:layout_constraintVertical_bias="0.09">
+        app:layout_constraintTop_toBottomOf="@+id/cardView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:paddingTop="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="16dp"
+            >
 
-            <ImageView
-                android:id="@+id/imageView12"
-                android:layout_width="384dp"
-                android:layout_height="202dp"
-                android:layout_marginTop="16dp"
-                android:src="@drawable/image2"
+            <androidx.cardview.widget.CardView
+                android:id="@id/cardView"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.592"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/rounded_blue"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/iv_projectImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp" />
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
 
             <TextView
-                android:id="@+id/tech_name"
+                android:id="@+id/tv_projName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:text="Tan's Aircon Installation"
+                android:layout_marginTop="8dp"
+                android:text="Project Name"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView12" />
+                app:layout_constraintStart_toStartOf="@+id/cardView"
+                app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/tv_projRating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="4dp"
                 android:drawableLeft="@drawable/star"
-                android:text="4.8(5)"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView9"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tech_name"
-                app:layout_constraintVertical_bias="0.98" />
+                android:gravity="center"
+                android:text="Ratings"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/tv_projName"
+                app:layout_constraintTop_toBottomOf="@+id/tv_projName" />
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/tv_projPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:text="₱750.00/job"
+                android:text="Price"
                 android:textColor="@color/red"
                 android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+                app:layout_constraintStart_toStartOf="@+id/tv_projRating"
+                app:layout_constraintTop_toBottomOf="@+id/tv_projRating" />
 
             <TextView
-                android:id="@+id/textView12"
+                android:id="@+id/tv_availabilityText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:text="2 km. away"
-                android:textSize="17sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView9"
+                android:layout_marginTop="16dp"
+                android:text="Availability"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/tv_projPrice"
+                app:layout_constraintTop_toBottomOf="@+id/tv_projPrice" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView11"
-                app:layout_constraintVertical_bias="0.98" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_availabilityText">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Mon"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="Mon"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Tue"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="Tue"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Wed"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="Wed"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Thu"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="Thu"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Fri"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="Fri"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Sat"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="Sat"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Sun"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:text="Sun"/>
+
+
+            </com.google.android.material.chip.ChipGroup>
 
             <TextView
-                android:id="@+id/textView14"
+                android:id="@+id/textView34"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
                 android:layout_marginTop="16dp"
                 android:text="Description"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView12" />
+                app:layout_constraintStart_toStartOf="@+id/chipGroup"
+                app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
 
             <TextView
-                android:id="@+id/tv_description"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_projDesc"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="
-o Installation of the unit\n
-o Testing and Demo\n
-o Available Add-ons:\n
- Bracket\n
- Dismantling\n
- Transfer\n
- Hole provision\n\n\n\n
-
-Reminders:\n
-o Please prepare the necessary permits and gate passes before the scheduled date\n
-o If you have any special requirements, please let us know
- before the scheduled date. The following are available upon
- request, subject to additional charges\n
- Scaffolding and ladders\n
- Parts and consumables\n
- RT-PCR tests\n
-o For installation and repair jobs, quotation is finalized after
-site survey/checkup. Kindly pay the balance in cash upon job completion\n
-o We will only perform and charge for additional works after getting your approval"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView14" />
-
-            <Button
-                android:layout_width="222dp"
-                android:layout_height="51dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="15dp"
-                android:text="show location"
+                android:textSize="16sp"
+                android:textColor="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.534"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_description" />
+                app:layout_constraintTop_toBottomOf="@+id/textView34" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
-    <TextView
-        android:id="@+id/textView13"
+    <LinearLayout
+        android:id="@+id/linearLayout9"
         android:layout_width="match_parent"
-        android:layout_height="51dp"
+        android:layout_height="60dp"
         android:background="@color/lighter_light_blue"
-        android:backgroundTint="@color/lighter_light_blue"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_bookNow"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <ImageView
-        android:id="@+id/img_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:background="@drawable/message2"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="40"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_message"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/message"
+                android:elevation="20dp"
+                app:tint="@color/black" />
+
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="2dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="?android:attr/listDivider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="40"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_cart"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:elevation="20dp"
+                android:src="@drawable/cart" />
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_bookNow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:background="@drawable/rounded_blue"
+            android:text="Book now"
+            android:elevation="20dp"
+            app:backgroundTint="@color/light_blue" />
+
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:indeterminate="true"
+        android:visibility="visible"
+        android:indeterminateTint="@color/light_blue"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/verticalLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView13"
-        app:layout_constraintVertical_bias="0.52" />
-
-    <View
-        android:id="@+id/verticalLine"
-        android:layout_width="40dp"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:rotation="90"
-        app:layout_constraintBottom_toBottomOf="@+id/textView13"
-        app:layout_constraintEnd_toStartOf="@+id/img_cart"
-        app:layout_constraintHorizontal_bias="0.29"
-        app:layout_constraintStart_toEndOf="@+id/img_message"
-        app:layout_constraintTop_toTopOf="@+id/textView13" />
-
-    <ImageView
-        android:id="@+id/img_cart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
-        android:background="@drawable/cart2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/tv_bookNow"
-        app:layout_constraintHorizontal_bias="0.57"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView13"
-        app:layout_constraintVertical_bias="0.58000004" />
-
-    <TextView
-        android:id="@+id/tv_bookNow"
-        android:layout_width="222dp"
-        android:layout_height="51dp"
-        android:background="@color/light_blue"
-        android:gravity="center"
-        android:text="Book now"
-        android:textColor="@color/white"
-        android:textSize="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.906" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

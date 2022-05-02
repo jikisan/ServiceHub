@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -20,11 +22,16 @@ public class installation_page extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager2 vp_viewPager2;
     private fragmentAdapterInstallation adapter;
+    private ProgressBar progressBar;
+    private TextView tv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.installation_page);
+
+
+
 
         setRef();
         generateTabLayout();
@@ -40,11 +47,13 @@ public class installation_page extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         adapter = new fragmentAdapterInstallation(fragmentManager, getLifecycle());
         vp_viewPager2.setAdapter(adapter);
+        progressBar.setVisibility(View.GONE);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 vp_viewPager2.setCurrentItem(tab.getPosition());
+
             }
 
             @Override
@@ -111,6 +120,8 @@ public class installation_page extends AppCompatActivity {
 
     private void setRef() {
 
+        progressBar = findViewById(R.id.progressBar);
+
         iv_messageBtn = findViewById(R.id.iv_messageBtn);
         iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
@@ -120,6 +131,15 @@ public class installation_page extends AppCompatActivity {
         tabLayout = findViewById(R.id.tab_layout);
 
         vp_viewPager2 = findViewById(R.id.vp_viewPager2);
+
+        tv_back = findViewById(R.id.tv_back);
+
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
 

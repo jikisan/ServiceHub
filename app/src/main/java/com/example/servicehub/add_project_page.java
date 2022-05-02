@@ -458,8 +458,6 @@ public class add_project_page extends AppCompatActivity {
 
     private void chipsValidation() {
 
-
-
             if(chip_Mon.isChecked()){
                 isAvailableMon = true;
             }

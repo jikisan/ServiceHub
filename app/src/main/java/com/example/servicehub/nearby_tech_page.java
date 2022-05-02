@@ -42,7 +42,7 @@ public class nearby_tech_page extends AppCompatActivity {
         iv_homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentHomeBtn = new Intent(nearby_tech_page.this, homepage.class);
+                Intent intentHomeBtn = new Intent(nearby_tech_page.this, nearby_tech_page.class);
                 startActivity(intentHomeBtn);
             }
         }); // end of home button

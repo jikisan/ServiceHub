@@ -59,12 +59,14 @@
         <activity android:name=".sign_up_page" />
         <activity
             android:name=".intro_logo"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity android:name=".login_page" />
         <activity

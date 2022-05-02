@@ -18,7 +18,7 @@ import java.util.List;
 public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerItem.ItemViewHolder> {
 
     List<Projects> arr;
-    AdapterProjectItem.OnItemClickListener onItemClickListener;
+    OnItemClickListener onItemClickListener;
 
     public AdapterInstallerItem(List<Projects> arr) {
         this.arr = arr;
@@ -58,10 +58,9 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener(AdapterProjectItem.OnItemClickListener listener){
+    public void setOnItemClickListener(OnItemClickListener listener){
         onItemClickListener = listener;
     }
-
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
 

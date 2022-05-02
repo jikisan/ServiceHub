@@ -1,24 +1,35 @@
 package Adapter_and_fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.servicehub.Listings;
 import com.example.servicehub.Projects;
 import com.example.servicehub.R;
+import com.example.servicehub.booking_page;
+import com.example.servicehub.edit_project_page;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +41,15 @@ import java.util.List;
  */
 public class fragment1Installer extends Fragment {
 
-    private List<Projects> arr;
+    private List<Projects> arrProjects;
+    private List<Listings> arrListings;
     private AdapterInstallerItem adapterInstallerItem;
-    private String userID;
-    private String projectID;
+    private AdapterMarketPlaceItem adapterMarketPlaceItem;
+    private String userID, projectID, listingID, sp_category, projCategory;
+    private FirebaseUser user;
+    private DatabaseReference projDatabase, marketDatabase;
+    private ImageView iv_sort;
+    private TextView tv_category;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,6 +85,8 @@ public class fragment1Installer extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -79,34 +97,74 @@ public class fragment1Installer extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
+
         View view = inflater.inflate(R.layout.fragment1_installer, container, false);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
+        iv_sort = (ImageView) view.findViewById(R.id.iv_sort);
+        tv_category = (TextView) view.findViewById(R.id.tv_category);
+        projCategory = getActivity().getIntent().getStringExtra("Category");
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
+        marketDatabase = FirebaseDatabase.getInstance().getReference("Listings");
         userID = user.getUid();
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewInstallers);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
 
-        arr = new ArrayList<>();
-        adapterInstallerItem = new AdapterInstallerItem(arr);
-        recyclerView.setAdapter(adapterInstallerItem);
+        if(projCategory.equals("Marketplace")){
 
-        projDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            arrListings = new ArrayList<>();
+            adapterMarketPlaceItem = new AdapterMarketPlaceItem(arrListings);
+
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false);
+            recyclerView.setLayoutManager(gridLayoutManager);
+            recyclerView.setAdapter(adapterMarketPlaceItem);
+
+            getMarketPlaceItem();
+            onClickToGetKeyList();
+        }
+        else{
+            arrProjects = new ArrayList<>();
+            adapterInstallerItem = new AdapterInstallerItem(arrProjects);
+
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setAdapter(adapterInstallerItem);
+
+            onClickToGetKeyProj();
+            getProjByCategory();
+        }
+
+
+        // Inflate the layout for this fragment
+        return view;
+    }
+
+
+
+    private void getMarketPlaceItem() {
+
+
+
+        marketDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 if (snapshot.exists()){
                     for (DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
-                        Projects projects = dataSnapshot.getValue(Projects.class);
-                        arr.add(projects);
-
+                        Listings listingsData = dataSnapshot.getValue(Listings.class);
+                        arrListings.add(listingsData);
                     }
 
-                    adapterInstallerItem.notifyDataSetChanged();
+                    adapterMarketPlaceItem.notifyDataSetChanged();
                 }
+
+                tv_category.setText(projCategory);
+                System.out.println("Category: " + projCategory);
+
             }
 
             @Override
@@ -114,29 +172,109 @@ public class fragment1Installer extends Fragment {
 
             }
         });
-
-//        projDatabase.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//
-//                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-//
-//                    Projects project = dataSnapshot.getValue(Projects.class);
-//                    arr.add(project);
-//                }
-//
-//                adapterInstallerItem.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
-
-
-        // Inflate the layout for this fragment
-        return view;
     }
+
+    private void getProjByCategory() {
+        Query query = projDatabase
+                .orderByChild("category")
+                .equalTo(projCategory);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Projects projData = snapshot.getValue(Projects.class);
+
+                if (snapshot.exists()){
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren())
+                    {
+                        Projects projects = dataSnapshot.getValue(Projects.class);
+                        arrProjects.add(projects);
+                    }
+
+                    adapterInstallerItem.notifyDataSetChanged();
+                }
+
+                    tv_category.setText(projCategory);
+                    System.out.println("Category: " + projCategory);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void onClickToGetKeyProj() {
+
+        adapterInstallerItem.setOnItemClickListener(new AdapterInstallerItem.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                arrProjects.get(position);
+
+                Query query = projDatabase
+                        .orderByChild("projName")
+                        .equalTo(arrProjects.get(position).getProjName());
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                            projectID = dataSnapshot.getKey().toString();
+                            Intent intentProject = new Intent(getContext(), booking_page.class);
+                            intentProject.putExtra("Project ID", projectID);
+                            startActivity(intentProject);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                adapterInstallerItem.notifyItemChanged(position);
+            }
+        });
+
+    }
+
+    private void onClickToGetKeyList() {
+
+        adapterMarketPlaceItem.setOnItemClickListener(new AdapterMarketPlaceItem.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                arrListings.get(position);
+
+                Query query = marketDatabase
+                        .orderByChild("listName")
+                        .equalTo(arrListings.get(position).getListName());
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                            listingID = dataSnapshot.getKey().toString();
+                            Intent intentProject = new Intent(getContext(), booking_page.class);
+                            intentProject.putExtra("Listing ID", listingID);
+                            startActivity(intentProject);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                adapterMarketPlaceItem.notifyItemChanged(position);
+            }
+        });
+    }
+
 }
