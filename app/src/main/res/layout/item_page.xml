@@ -96,7 +96,7 @@
                 android:drawableTint="#F0D590"
                 android:text="(0)"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView9"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_sort"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"

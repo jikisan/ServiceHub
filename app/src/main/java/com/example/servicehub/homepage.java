@@ -71,7 +71,9 @@ public class homepage extends AppCompatActivity {
         btn_installation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intentInsallation = new Intent(homepage.this, installation_page.class);
+                intentInsallation.putExtra("Category", "Installation");
                 startActivity(intentInsallation);
             }
         }); // end of installation button
@@ -79,7 +81,8 @@ public class homepage extends AppCompatActivity {
         btn_marketplace.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentMarketplace = new Intent(homepage.this, marketplace_page.class);
+                Intent intentMarketplace = new Intent(homepage.this, installation_page.class);
+                intentMarketplace.putExtra("Category", "Marketplace");
                 startActivity(intentMarketplace);
             }
         }); // end of marketplace button
@@ -87,10 +90,21 @@ public class homepage extends AppCompatActivity {
         btn_cleaning.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentNearbyTech = new Intent(homepage.this, nearby_tech_page.class);
+                Intent intentNearbyTech = new Intent(homepage.this, installation_page.class);
+                intentNearbyTech.putExtra("Category", "Cleaning");
                 startActivity(intentNearbyTech);
             }
         }); // end of marketplace button
+
+        btn_repair.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentNearbyTech = new Intent(homepage.this, installation_page.class);
+                intentNearbyTech.putExtra("Category", "Repair");
+                startActivity(intentNearbyTech);
+            }
+        }); // end of marketplace button
+
     }
 
     private void bottomNavTaskbar() {
