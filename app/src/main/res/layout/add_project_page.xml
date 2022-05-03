@@ -20,7 +20,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/iv_back"
+                android:id="@+id/tv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/back_arrow"
@@ -71,7 +71,7 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/iv_projectImage"
+                        android:id="@+id/iv_projPhotoSummary"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp" />

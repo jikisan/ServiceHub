@@ -298,7 +298,7 @@ public class add_project_page extends AppCompatActivity {
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
 //        iv_decreaseSlot = findViewById(R.id.iv_decreaseSlot);
 //        iv_increaseSlot = findViewById(R.id.iv_increaseSlot);
-        iv_projectImage = findViewById(R.id.iv_projectImage);
+        iv_projectImage = findViewById(R.id.iv_projPhotoSummary);
         et_projectName = findViewById(R.id.et_projectName);
         et_price = findViewById(R.id.et_price);
         et_specialInstruction = findViewById(R.id.et_specialInstruction);
@@ -307,7 +307,7 @@ public class add_project_page extends AppCompatActivity {
         tv_address = findViewById(R.id.tv_address);
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
         tv_endTime = findViewById(R.id.tv_endTime);
-        tv_back = findViewById(R.id.iv_back);
+        tv_back = findViewById(R.id.tv_back);
 
         btn_save = findViewById(R.id.btn_update);
         spinner_projCategory = findViewById(R.id.spinner_projCategory);

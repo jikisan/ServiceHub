@@ -351,7 +351,7 @@ public class edit_project_page extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        iv_projectImage = findViewById(R.id.iv_projectImage);
+        iv_projectImage = findViewById(R.id.iv_projPhotoSummary);
 
         et_specialInstruction = findViewById(R.id.et_specialInstruction);
         et_projectName = findViewById(R.id.et_projectName);
@@ -361,7 +361,7 @@ public class edit_project_page extends AppCompatActivity {
         tv_address = findViewById(R.id.tv_address);
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
         tv_endTime = findViewById(R.id.tv_endTime);
-        tv_back = findViewById(R.id.iv_back);
+        tv_back = findViewById(R.id.tv_back);
 
 
         btn_update = findViewById(R.id.btn_update);
@@ -577,8 +577,8 @@ public class edit_project_page extends AppCompatActivity {
     }
 
     private void generateDataValue() {
-        projectIdFromIntent = getIntent().getStringExtra("Project ID");
 
+        projectIdFromIntent = getIntent().getStringExtra("Project ID");
         projectDatabase.child(projectIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
