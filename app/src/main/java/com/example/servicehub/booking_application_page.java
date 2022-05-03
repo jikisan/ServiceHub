@@ -52,7 +52,7 @@ public class booking_application_page extends AppCompatActivity {
             "York","Other","I don't know"};
     private String[] airconType = {"Window","Split","Tower","Cassette","Suspended","Concealed","U-shaped Window"};
     private String[] unitType = {"Inverter","Non-Inverter","I don't know"};
-    private String latLng;
+    private String latLng, propertyType, acBrand, acType, acUnitType;
     private int hour, minute, year, month, day;
     private final SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
@@ -183,32 +183,28 @@ public class booking_application_page extends AppCompatActivity {
         auto_complete_txt.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String item = adapterView.getItemAtPosition(i).toString();
-                Toast.makeText(booking_application_page.this, "Item: " + item, Toast.LENGTH_SHORT).show();
+                 propertyType = adapterView.getItemAtPosition(i).toString();
             }
         });
 
         auto_brand.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String item = adapterView.getItemAtPosition(i).toString();
-                Toast.makeText(booking_application_page.this, "Item: " + item, Toast.LENGTH_SHORT).show();
+                 acBrand = adapterView.getItemAtPosition(i).toString();
             }
         });
 
         auto_aircon_type.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String item = adapterView.getItemAtPosition(i).toString();
-                Toast.makeText(booking_application_page.this, "Item: " + item, Toast.LENGTH_SHORT).show();
+                 acType = adapterView.getItemAtPosition(i).toString();
             }
         });
 
         auto_unit_type.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String item = adapterView.getItemAtPosition(i).toString();
-                Toast.makeText(booking_application_page.this, "Item: " + item, Toast.LENGTH_SHORT).show();
+                 acUnitType = adapterView.getItemAtPosition(i).toString();
             }
         });
 
@@ -346,9 +342,22 @@ public class booking_application_page extends AppCompatActivity {
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // String projectNameFromIntent = getIntent().getStringExtra("Project Name");
+
+               String projectIdFromIntent = getIntent().getStringExtra("projectIdFromIntent");
                Intent intent = new Intent(booking_application_page.this, booking_summary_page.class);
-               startActivity(intent);
+                Bundle extras = new Bundle();
+                extras.putString("projectIdFromIntent", projectIdFromIntent);
+                extras.putString("address", tv_address.getText().toString());
+                extras.putString("property type", propertyType);
+                extras.putString("aircon brand", acBrand);
+                extras.putString("aircon type", acType);
+                extras.putString("unit type",acUnitType);
+                extras.putString("booking date", et_date.getText().toString());
+                extras.putString("booking time", et_time.getText().toString());
+                extras.putString("contact number", "+63" + et_phoneNum.getText().toString());
+                extras.putString("add info", et_addInfo.getText().toString());
+                intent.putExtras(extras);
+                startActivity(intent);
 
             }
         });

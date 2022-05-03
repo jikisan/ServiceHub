@@ -57,7 +57,7 @@ dependencies {
     implementation 'com.vincent.filepicker:MultiTypeFilePicker:1.0.8'
     implementation 'com.github.florent37:expansionpanel:1.2.4'
     implementation 'com.asdev.PhoneEditText-Android:PhoneEditText-Android:1.1.1'
-
+    implementation 'com.github.f0ris.sweetalert:library:1.5.1'
 
 
 }

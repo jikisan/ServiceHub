@@ -69,7 +69,7 @@
                     android:gravity="center">
 
                     <ImageView
-                        android:id="@+id/iv_projectImage"
+                        android:id="@+id/iv_projPhotoSummary"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp" />
@@ -112,6 +112,19 @@
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@+id/tv_projRating"
                 app:layout_constraintTop_toBottomOf="@+id/tv_projRating" />
+
+            <TextView
+                android:id="@+id/tv_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="2"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_projPrice"
+                app:layout_constraintStart_toEndOf="@+id/tv_projPrice"
+                app:layout_constraintTop_toTopOf="@+id/tv_projPrice" />
+
 
             <TextView
                 android:id="@+id/tv_availabilityText"
@@ -193,16 +206,30 @@
 
             </com.google.android.material.chip.ChipGroup>
 
+
+            <TextView
+                android:id="@+id/tv_timeAvailable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="00:00 AM - 00:00 AM"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                app:layout_constraintStart_toStartOf="@+id/chipGroup"
+                app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
+
+
             <TextView
                 android:id="@+id/textView34"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Description"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/chipGroup"
-                app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
+                app:layout_constraintStart_toStartOf="@+id/tv_timeAvailable"
+                app:layout_constraintTop_toBottomOf="@+id/tv_timeAvailable" />
 
             <TextView
                 android:id="@+id/tv_projDesc"
@@ -256,10 +283,13 @@
             android:background="?android:attr/listDivider" />
 
         <LinearLayout
+            android:id="@+id/layout_cart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="40"
             android:gravity="center"
+
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <ImageView
@@ -272,6 +302,25 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/layout_favorite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="40"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_favorite"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:elevation="20dp"
+                android:src="@drawable/favorite"
+                app:tint="@color/red_delete_btn" />
+
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/btn_bookNow"
             android:layout_width="match_parent"
@@ -280,6 +329,17 @@
             android:background="@drawable/rounded_blue"
             android:text="Book now"
             android:elevation="20dp"
+            app:backgroundTint="@color/light_blue" />
+
+        <Button
+            android:id="@+id/btn_orderNow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:background="@drawable/rounded_blue"
+            android:text="Order now"
+            android:elevation="20dp"
+            android:visibility="gone"
             app:backgroundTint="@color/light_blue" />
 
 

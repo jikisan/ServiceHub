@@ -351,7 +351,7 @@ public class edit_project_page extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        iv_projectImage = findViewById(R.id.iv_projectImage);
+        iv_projectImage = findViewById(R.id.iv_projPhotoSummary);
 
         et_specialInstruction = findViewById(R.id.et_specialInstruction);
         et_projectName = findViewById(R.id.et_projectName);
