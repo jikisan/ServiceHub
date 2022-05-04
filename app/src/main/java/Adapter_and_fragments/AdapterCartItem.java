@@ -1,48 +1,57 @@
 package Adapter_and_fragments;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.servicehub.Booking;
+import com.example.servicehub.Cart;
+import com.example.servicehub.Listings;
 import com.example.servicehub.Projects;
 import com.example.servicehub.R;
+import com.example.servicehub.booking_page;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class AdapterProjectItem extends RecyclerView.Adapter<AdapterProjectItem.ItemViewHolder>{
+public class AdapterCartItem extends RecyclerView.Adapter<AdapterCartItem.ItemViewHolder> {
 
-    private List<Projects> arr;
+    private List<Cart> arr;
     private OnItemClickListener onItemClickListener;
 
-    public AdapterProjectItem(List<Projects> arr) {
+    public AdapterCartItem(List<Cart> arr) {
         this.arr = arr;
     }
 
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ItemViewHolder
-                (LayoutInflater.from(parent.getContext()).inflate(R.layout.item,parent, false));
+        return new AdapterCartItem.ItemViewHolder
+                (LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cart,parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         String imageUriText = null;
 
+        Cart cart = arr.get(position);
+        holder.listName.setText(cart.getListName());
+        holder.listPrice.setText(cart.getListPrice());
+        holder.listRatings.setText(cart.getListRatings());
 
-        Projects project = arr.get(position);
-        holder.projName.setText(project.getProjName());
-        holder.ratings.setText(project.getRatings());
+        imageUriText = cart.getListImageUrl();
 
-        imageUriText = project.getImageUrl();
-        Picasso.get().load(project.getImageUrl())
-                .into(holder.projectImage);
+
+        Picasso.get()
+                .load(imageUriText)
+                .into(holder.listImage);
 
     }
 
@@ -59,20 +68,18 @@ public class AdapterProjectItem extends RecyclerView.Adapter<AdapterProjectItem.
         onItemClickListener = listener;
     }
 
+    public class ItemViewHolder extends RecyclerView.ViewHolder {
 
-
-    class ItemViewHolder extends RecyclerView.ViewHolder {
-
-        TextView projName, ratings;
-        ImageView projectImage;
-
+        TextView listName, listPrice, listRatings;
+        ImageView listImage;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            projectImage = itemView.findViewById(R.id.iv_projectPhoto);
-            projName = itemView.findViewById(R.id.tv_projName);
-            ratings = itemView.findViewById(R.id.tv_listingRatings);
+            listImage = itemView.findViewById(R.id.iv_listingImage);
+            listName = itemView.findViewById(R.id.tv_itemName);
+            listPrice = itemView.findViewById(R.id.tv_price);
+            listRatings = itemView.findViewById(R.id.tv_listingRatings);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,7 +92,6 @@ public class AdapterProjectItem extends RecyclerView.Adapter<AdapterProjectItem.
                     }
                 }
             });
-
         }
     }
 }

@@ -137,7 +137,7 @@ public class booking_application_page extends AppCompatActivity {
                     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
 
                         month = month+1;
-                        SimpleDateFormat simpledateformat = new SimpleDateFormat("EEEE");
+                        SimpleDateFormat simpledateformat = new SimpleDateFormat("EEE");
                         Date dateOfWeek = new Date(year, month, day-1);
                         String dayOfWeek = simpledateformat.format(dateOfWeek);
 
@@ -146,7 +146,7 @@ public class booking_application_page extends AppCompatActivity {
                         calendar.set(year, month, day);
                         String dateString = sdf.format(calendar.getTime());
 
-                        et_date.setText(dateString  + " " + dayOfWeek);
+                        et_date.setText(dateString  + "/" + dayOfWeek);
                     }
                 }, mYear, mMonth, mDay);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000+(1000*60*60*24*3));

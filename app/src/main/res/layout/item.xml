@@ -51,7 +51,7 @@
                 app:layout_constraintTop_toTopOf="@+id/iv_projectPhoto" />
 
             <TextView
-                android:id="@+id/tv_projItemRatings"
+                android:id="@+id/tv_listingRatings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"

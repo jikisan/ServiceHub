@@ -163,8 +163,7 @@ public class seller_dashboard extends AppCompatActivity {
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(seller_dashboard.this, switch_account_page.class);
-                startActivity(intent);
+               onBackPressed();
             }
         });
 

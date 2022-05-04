@@ -24,14 +24,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -54,7 +51,7 @@ public class booking_summary_page extends AppCompatActivity {
     private RadioButton rb_gcash, rb_cod;
     private String totalPrice, imageUrl, bookingCreated, paymentMethod, custID, sp_techId , projectIdFromIntent, addressFromIntent, propertyTypeFromIntent,
             airconBrandFromIntent, airconTypeFromIntent, unitTypeFromIntent, bookingDateFromIntent, bookingTimeFromIntent,
-            contactNumberFromIntent, addInfoFromIntent;;
+            contactNumberFromIntent, addInfoFromIntent, projName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +100,8 @@ public class booking_summary_page extends AppCompatActivity {
                 {
                     new SweetAlertDialog(
                             booking_summary_page.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Error!.")
-                            .setContentText("Please choose payment method!")
+                            .setTitleText("Error!")
+                            .setContentText("Please choose payment!")
                             .show();
                 }
                 else
@@ -118,7 +115,7 @@ public class booking_summary_page extends AppCompatActivity {
                                     submitBooking();
                                 }
                             })
-                            .setContentText("Please make sure all information provided are correct!")
+                            .setContentText("Please make sure all information are correct!")
                             .show();
 
                 }
@@ -155,7 +152,7 @@ public class booking_summary_page extends AppCompatActivity {
 
         iv_projPhotoSummary = findViewById(R.id.iv_projPhotoSummary);
 
-        btn_confirmBooking = findViewById(R.id.btn_confirmBooking);
+        btn_confirmBooking = findViewById(R.id.btn_completeBooking);
     }
 
     private void generateData() {
@@ -180,10 +177,12 @@ public class booking_summary_page extends AppCompatActivity {
                 Projects projData = snapshot.getValue(Projects.class);
 
                 if(projData != null) {
+
+                    imageUrl = projData.getImageUrl();
                     custID = userID;
                     sp_techId = projData.userID;
                     String sp_projPhotUrl = projData.getImageUrl();
-                    String sp_projName = projData.projName;
+                    projName = projData.projName;
                     String sp_techLocation = projData.projAddress;
                     String sp_projPrice = projData.price;
 
@@ -208,7 +207,7 @@ public class booking_summary_page extends AppCompatActivity {
                     DecimalFormat twoPlaces = new DecimalFormat("0.00");
 
                     getTechName(sp_techId);
-                    tv_projNameSummary.setText(sp_projName);
+                    tv_projNameSummary.setText(projName);
                     tv_techLocationSummary.setText(sp_techLocation);
 
                     tv_bookPriceSummry.setText("₱ " + twoPlaces.format(price));
@@ -233,10 +232,10 @@ public class booking_summary_page extends AppCompatActivity {
         progressDialog.setTitle("Processing your booking...");
         progressDialog.show();
 
-        Date currentTime = Calendar.getInstance().getTime();
+        Date currentTime = new Date();
 
         bookingCreated = currentTime.toString();
-        Booking booking = new Booking(custID,  addressFromIntent, propertyTypeFromIntent, airconBrandFromIntent,
+        Booking booking = new Booking(imageUrl, custID, projName, addressFromIntent, propertyTypeFromIntent, airconBrandFromIntent,
                 airconTypeFromIntent, unitTypeFromIntent, bookingDateFromIntent, bookingTimeFromIntent,
                 contactNumberFromIntent, addInfoFromIntent, totalPrice, paymentMethod, sp_techId, bookingCreated);
 
@@ -285,7 +284,6 @@ public class booking_summary_page extends AppCompatActivity {
 
                             String sp_techFname = techData.firstName;
                             String sp_techLname = techData.lastName;
-                            System.out.println("Name: "+sp_techFname + " " + sp_techLname);
                             tv_techNameSummary.setText(sp_techFname + " " + sp_techLname);
 
                         }
