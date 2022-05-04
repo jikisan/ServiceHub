@@ -19,6 +19,12 @@
         android:theme="@style/Theme.ServiceHub"
         tools:replace="android:icon">
         <activity
+            android:name=".my_orders_page"
+            android:exported="false" />
+        <activity
+            android:name=".checkout_page"
+            android:exported="false" />
+        <activity
             android:name=".favorite_page"
             android:exported="false" />
         <activity
@@ -55,7 +61,6 @@
         <activity android:name=".switch_account_page" />
         <activity android:name=".edit_profile_page" />
         <activity android:name=".place_order_page" />
-        <activity android:name=".item_page" />
         <activity android:name=".marketplace_page" />
         <activity android:name=".booking_application_page" />
         <activity android:name=".booking_page" />

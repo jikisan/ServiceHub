@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -38,6 +40,8 @@ public class my_booking_page extends AppCompatActivity {
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, item3;
     private RecyclerView recyclerView_myBookings;
+    private TextView tv_back;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,13 @@ public class my_booking_page extends AppCompatActivity {
     }
 
     private void clickListeners() {
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
         adapterMyBookings.setOnItemClickListener(new AdapterMyBookings.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -97,8 +108,6 @@ public class my_booking_page extends AppCompatActivity {
 
     private void generateRecyclerView() {
 
-
-
         recyclerView_myBookings.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView_myBookings.setLayoutManager(linearLayoutManager);
@@ -119,8 +128,10 @@ public class my_booking_page extends AppCompatActivity {
 
                     Booking booking = dataSnapshot.getValue(Booking.class);
                     arr.add(booking);
+
                 }
 
+                progressBar.setVisibility(View.GONE);
                 adapterMyBookings.notifyDataSetChanged();
             }
 
@@ -184,8 +195,10 @@ public class my_booking_page extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        item3 = findViewById(R.id.item3);
+        tv_back = findViewById(R.id.tv_back);
 
         recyclerView_myBookings = findViewById(R.id.recyclerView_myBookings);
+
+        progressBar = findViewById(R.id.progressBar);
     }
 }

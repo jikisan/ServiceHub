@@ -27,6 +27,9 @@ public class AdapterMyBookings extends RecyclerView.Adapter<AdapterMyBookings.It
     private List<Booking> arr;
     private OnItemClickListener onItemClickListener;
 
+    public AdapterMyBookings() {
+    }
+
     public AdapterMyBookings(List<Booking> arr) {
         this.arr = arr;
     }

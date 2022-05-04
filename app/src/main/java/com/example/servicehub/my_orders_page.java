@@ -26,35 +26,33 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import Adapter_and_fragments.AdapterCartItem;
-import Adapter_and_fragments.AdapterFavoriteItem;
+import Adapter_and_fragments.AdapterMyBookings;
+import Adapter_and_fragments.AdapterMyOrderItem;
 
-public class favorite_page extends AppCompatActivity {
+public class my_orders_page extends AppCompatActivity {
 
-    private List<Favorites> arr;
-    private AdapterFavoriteItem favoriteItem;
-    private DatabaseReference favoriteDatabase, projectDatbase, userDatabase;
-    private String userID, custID;
+    private List<Orders> arr;
+    private AdapterMyOrderItem adapterMyOrderItem;
+    private DatabaseReference orderDatabase;
+    private String userID, orderID;
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, item3;
-    private RecyclerView recyclerView_favorites;
+    private RecyclerView recyclerView_myOrders;
     private TextView tv_back;
     private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.favorite_page);
+        setContentView(R.layout.my_orders_page);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        favoriteDatabase = FirebaseDatabase.getInstance().getReference("Favorites");
-        projectDatbase = FirebaseDatabase.getInstance().getReference("Projects");
-        userDatabase = FirebaseDatabase.getInstance().getReference("Users");
+        orderDatabase = FirebaseDatabase.getInstance().getReference("Orders");
         userID = user.getUid();
 
         setRef();
-        generateRecyclerLayout();
+        generateRecyclerView();
         clickListeners();
         bottomNavTaskbar();
     }
@@ -67,29 +65,27 @@ public class favorite_page extends AppCompatActivity {
             }
         });
 
-        favoriteItem.setOnItemClickListener(new AdapterFavoriteItem.OnItemClickListener() {
+
+        adapterMyOrderItem.setOnItemClickListener(new AdapterMyOrderItem.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                final ProgressDialog progressDialog = new ProgressDialog(favorite_page.this);
+
+                final ProgressDialog progressDialog = new ProgressDialog(my_orders_page.this);
                 progressDialog.setTitle("Loading...");
                 progressDialog.show();
 
                 arr.get(position);
 
-                Query query = FirebaseDatabase.getInstance().getReference("Favorites")
-                        .orderByChild("projName")
-                        .equalTo(arr.get(position).getProjName());
+                Query query = FirebaseDatabase.getInstance().getReference("Orders")
+                        .orderByChild("itemName")
+                        .equalTo(arr.get(position).getItemName());
 
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-
-                            String projectID = dataSnapshot.getValue(Favorites.class).projID;
-                            Intent intentListing = new Intent(favorite_page.this, booking_page.class);
-                            intentListing.putExtra("Project ID", projectID);
-                            startActivity(intentListing);
+                            Toast.makeText(my_orders_page.this, "Coming soon! " + position, Toast.LENGTH_SHORT).show();
 
                             progressDialog.dismiss();
                         }
@@ -99,36 +95,28 @@ public class favorite_page extends AppCompatActivity {
                     public void onCancelled(@NonNull DatabaseError error)
                     {
                         progressDialog.dismiss();
-                        Toast.makeText(favorite_page.this, "Error!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(my_orders_page.this, "Error!", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-                favoriteItem.notifyItemChanged(position);
+                adapterMyOrderItem.notifyItemChanged(position);
 
             }
         });
 
-
-
     }
 
-    private void generateRecyclerLayout() {
+    private void generateRecyclerView() {
 
-        recyclerView_favorites.setHasFixedSize(true);
+        recyclerView_myOrders.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView_favorites.setLayoutManager(linearLayoutManager);
+        recyclerView_myOrders.setLayoutManager(linearLayoutManager);
 
         arr = new ArrayList<>();
-        favoriteItem = new AdapterFavoriteItem(arr);
-        recyclerView_favorites.setAdapter(favoriteItem);
+        adapterMyOrderItem = new AdapterMyOrderItem(arr);
+        recyclerView_myOrders.setAdapter(adapterMyOrderItem);
 
-        getViewHolderValues();
-
-    }
-
-    private void getViewHolderValues() {
-
-        Query query = favoriteDatabase
+        Query query = orderDatabase
                 .orderByChild("custID")
                 .equalTo(userID);
 
@@ -136,15 +124,15 @@ public class favorite_page extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
-                    Favorites favorites = dataSnapshot.getValue(Favorites.class);
-                    arr.add(favorites);
+                    Orders orders = dataSnapshot.getValue(Orders.class);
+                    arr.add(orders);
 
                 }
 
                 progressBar.setVisibility(View.GONE);
-                favoriteItem.notifyDataSetChanged();
+                adapterMyOrderItem.notifyDataSetChanged();
             }
 
             @Override
@@ -153,6 +141,8 @@ public class favorite_page extends AppCompatActivity {
             }
         });
 
+
+
     }
 
     private void bottomNavTaskbar() {
@@ -160,7 +150,7 @@ public class favorite_page extends AppCompatActivity {
         iv_messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentMessageBtn = new Intent(favorite_page.this, message_page.class);
+                Intent intentMessageBtn = new Intent(my_orders_page.this, message_page.class);
                 startActivity(intentMessageBtn);
             }
         }); // end of message button
@@ -168,7 +158,7 @@ public class favorite_page extends AppCompatActivity {
         iv_notificationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentNotification = new Intent(favorite_page.this, notification_page.class);
+                Intent intentNotification = new Intent(my_orders_page.this, notification_page.class);
                 startActivity(intentNotification);
             }
         }); // end of notification button
@@ -176,7 +166,7 @@ public class favorite_page extends AppCompatActivity {
         iv_homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentHomeBtn = new Intent(favorite_page.this, homepage.class);
+                Intent intentHomeBtn = new Intent(my_orders_page.this, homepage.class);
                 startActivity(intentHomeBtn);
             }
         }); // end of home button
@@ -184,7 +174,7 @@ public class favorite_page extends AppCompatActivity {
         iv_accountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentAccount = new Intent(favorite_page.this, switch_account_page.class);
+                Intent intentAccount = new Intent(my_orders_page.this, switch_account_page.class);
                 startActivity(intentAccount);
             }
         }); // end of account button
@@ -192,14 +182,13 @@ public class favorite_page extends AppCompatActivity {
         iv_moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentMoreBtn = new Intent(favorite_page.this, more_page.class);
+                Intent intentMoreBtn = new Intent(my_orders_page.this, more_page.class);
                 startActivity(intentMoreBtn);
             }
         }); // end of more button
     }
 
     private void setRef() {
-
         iv_messageBtn = findViewById(R.id.iv_messageBtn);
         iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
@@ -207,11 +196,10 @@ public class favorite_page extends AppCompatActivity {
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
         item3 = findViewById(R.id.item3);
 
-        recyclerView_favorites = findViewById(R.id.recyclerView_favorites);
+        recyclerView_myOrders = findViewById(R.id.recyclerView_myOrders);
 
         tv_back = findViewById(R.id.tv_back);
 
         progressBar = findViewById(R.id.progressBar);
-
     }
 }

@@ -26,7 +26,7 @@ public class marketplace_page extends AppCompatActivity {
         item3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentChooseItem = new Intent(marketplace_page.this, item_page.class);
+                Intent intentChooseItem = new Intent(marketplace_page.this, homepage.class);
                 startActivity(intentChooseItem);
             }
         });

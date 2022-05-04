@@ -45,13 +45,10 @@ public class booking_page extends AppCompatActivity {
     private View layout_favorite, layout_cart;
 
     private FirebaseUser user;
-    private FirebaseStorage mStorage;
-    private StorageReference projectStorage;
     private DatabaseReference projectDatabase, listingDatabase, favoriteDatabase, cartDatabase;
-    private StorageTask addTask;
     private String userID, projectIdFromIntent, listingIdFromIntent, imageUrlText, latLng,  tempProjectID, tempProjName,
             tempProjPrice, tempProjRatings, tempListName, listPrice, listRatings;
-    private Uri imageUri, tempUri;
+    private Uri tempUri;
 
     private ProgressBar progressBar;
 
@@ -62,7 +59,7 @@ public class booking_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
-        projectStorage = FirebaseStorage.getInstance().getReference("Projects");
+        StorageReference projectStorage = FirebaseStorage.getInstance().getReference("Projects");
         projectDatabase = FirebaseDatabase.getInstance().getReference("Projects");
         listingDatabase = FirebaseDatabase.getInstance().getReference("Listings");
         favoriteDatabase = FirebaseDatabase.getInstance().getReference("Favorites");
@@ -126,6 +123,15 @@ public class booking_page extends AppCompatActivity {
                 //getKey();
                 Intent intent = new Intent(booking_page.this, booking_application_page.class);
                 intent.putExtra("projectIdFromIntent", tempProjectID);
+                startActivity(intent);
+            }
+        });
+
+        btn_orderNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(booking_page.this, checkout_page.class);
+                intent.putExtra("Listing ID", listingIdFromIntent);
                 startActivity(intent);
             }
         });
