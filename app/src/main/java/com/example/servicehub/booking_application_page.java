@@ -367,7 +367,7 @@ public class booking_application_page extends AppCompatActivity {
 
     private void setRef() {
 
-        tv_address = findViewById(R.id.tv_address);
+        tv_address = findViewById(R.id.et_address);
         tv_back = findViewById(R.id.tv_back);
 
         et_phoneNum = findViewById(R.id.et_phoneNum);

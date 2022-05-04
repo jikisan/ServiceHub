@@ -17,10 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.InputType;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -31,7 +28,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -101,7 +97,7 @@ public class edit_profile_page extends AppCompatActivity {
 
         tv_fname = findViewById(R.id.tv_fname);
         tv_lname = findViewById(R.id.tv_lname);
-        tv_contactNum = findViewById(R.id.tv_contactNum);
+        tv_contactNum = findViewById(R.id.et_contactNum);
         tv_email = findViewById(R.id.tv_email);
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
         tv_back = findViewById(R.id.tv_back);

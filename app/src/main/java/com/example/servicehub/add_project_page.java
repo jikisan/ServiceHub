@@ -304,7 +304,7 @@ public class add_project_page extends AppCompatActivity {
         et_specialInstruction = findViewById(R.id.et_specialInstruction);
 
         tv_startTime = findViewById(R.id.tv_startTime);
-        tv_address = findViewById(R.id.tv_address);
+        tv_address = findViewById(R.id.et_address);
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
         tv_endTime = findViewById(R.id.tv_endTime);
         tv_back = findViewById(R.id.tv_back);

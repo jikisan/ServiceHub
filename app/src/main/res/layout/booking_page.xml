@@ -68,6 +68,14 @@
                     android:background="@drawable/rounded_blue"
                     android:gravity="center">
 
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:indeterminate="true"
+                        android:indeterminateTint="@color/light_blue"
+                        android:visibility="visible" />
+
                     <ImageView
                         android:id="@+id/iv_projPhotoSummary"
                         android:layout_width="wrap_content"
@@ -344,19 +352,5 @@
 
 
     </LinearLayout>
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:indeterminate="true"
-        android:visibility="visible"
-        android:indeterminateTint="@color/light_blue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.906" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

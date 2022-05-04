@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ public class cart_page extends AppCompatActivity {
             iv_moreBtn, item3;
     private RecyclerView recyclerView_cart;
     private TextView tv_back;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +139,7 @@ public class cart_page extends AppCompatActivity {
                     arr.add(cart);
                 }
 
+                progressBar.setVisibility(View.GONE);
                 adapterCartItem.notifyDataSetChanged();
             }
 
@@ -203,5 +206,7 @@ public class cart_page extends AppCompatActivity {
         recyclerView_cart = findViewById(R.id.recyclerView_cart);
 
         tv_back = findViewById(R.id.tv_back);
+
+        progressBar = findViewById(R.id.progressBar);
     }
 }

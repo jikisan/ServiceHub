@@ -98,14 +98,6 @@ public class homepage extends AppCompatActivity {
             }
         }); // end of marketplace button
 
-        layout_myCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentCartBtn = new Intent(homepage.this, cart_page.class);
-                startActivity(intentCartBtn);
-            }
-        }); // end of cart button
-
         layout_myBookings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -114,11 +106,27 @@ public class homepage extends AppCompatActivity {
             }
         }); // end of cart button
 
+        layout_myOrders.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(homepage.this, my_orders_page.class);
+                startActivity(intent);
+            }
+        });
+
         layout_favorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(homepage.this, favorite_page.class);
                 startActivity(intent);
+            }
+        }); // end of cart button
+
+        layout_myCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentCartBtn = new Intent(homepage.this, cart_page.class);
+                startActivity(intentCartBtn);
             }
         }); // end of cart button
 
