@@ -59,5 +59,11 @@ dependencies {
     implementation 'com.asdev.PhoneEditText-Android:PhoneEditText-Android:1.1.1'
     implementation 'com.github.f0ris.sweetalert:library:1.5.1'
 
+    // Material Dialog Library
+    implementation 'dev.shreyaspatil.MaterialDialog:MaterialDialog:2.2.3'
+
+    // Lottie Animation Library
+    implementation 'com.airbnb.android:lottie:3.3.6'
+
 
 }

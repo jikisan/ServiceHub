@@ -11,9 +11,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.servicehub.Booking;
 import com.example.servicehub.Projects;
 import com.example.servicehub.R;
-import com.example.servicehub.booking_details;
+import com.example.servicehub.tech_booking_details;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,11 +34,10 @@ import java.util.List;
  */
 public class fragment2Booking extends Fragment {
 
-    private List<Projects> arr;
+    private List<Booking> arr;
     private AdapterBookingItem adapterBookingItem;
     private String userID;
-    private String projectID;
-
+    private String bookingID;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -86,7 +86,7 @@ public class fragment2Booking extends Fragment {
         View view = inflater.inflate(R.layout.fragment2booking, container, false);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
+        DatabaseReference bookingDatabase = FirebaseDatabase.getInstance().getReference("Bookings");
         userID = user.getUid();
 
         RecyclerView recyclerViewBookings = view.findViewById(R.id.recyclerViewBooking);
@@ -98,8 +98,8 @@ public class fragment2Booking extends Fragment {
         adapterBookingItem = new AdapterBookingItem(arr);
         recyclerViewBookings.setAdapter(adapterBookingItem);
 
-        Query query = projDatabase
-                .orderByChild("userID")
+        Query query = bookingDatabase
+                .orderByChild("techID")
                 .equalTo(userID);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -108,8 +108,8 @@ public class fragment2Booking extends Fragment {
 
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
-                    Projects project = dataSnapshot.getValue(Projects.class);
-                    arr.add(project);
+                    Booking bookings = dataSnapshot.getValue(Booking.class);
+                    arr.add(bookings);
                 }
 
                 adapterBookingItem.notifyDataSetChanged();
@@ -126,7 +126,7 @@ public class fragment2Booking extends Fragment {
             public void onItemClick(int position) {
                 arr.get(position);
 
-                Query query = FirebaseDatabase.getInstance().getReference("Projects")
+                Query query = bookingDatabase
                         .orderByChild("projName")
                         .equalTo(arr.get(position).getProjName());
 
@@ -136,9 +136,9 @@ public class fragment2Booking extends Fragment {
 
                         for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
-                            projectID = dataSnapshot.getKey().toString();
-                            Intent intentProject = new Intent(getContext(), booking_details.class);
-                            intentProject.putExtra("Project ID", projectID);
+                            bookingID = dataSnapshot.getKey().toString();
+                            Intent intentProject = new Intent(getContext(), tech_booking_details.class);
+                            intentProject.putExtra("Booking ID", bookingID);
                             startActivity(intentProject);
                         }
                     }

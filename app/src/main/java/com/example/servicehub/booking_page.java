@@ -49,7 +49,8 @@ public class booking_page extends AppCompatActivity {
     private StorageReference projectStorage;
     private DatabaseReference projectDatabase, listingDatabase, favoriteDatabase, cartDatabase;
     private StorageTask addTask;
-    private String userID, projectIdFromIntent, listingIdFromIntent, imageUriText, latLng,  tempProjectID, tempListName;
+    private String userID, projectIdFromIntent, listingIdFromIntent, imageUrlText, latLng,  tempProjectID, tempProjName,
+            tempProjPrice, tempProjRatings, tempListName, listPrice, listRatings;
     private Uri imageUri, tempUri;
 
     private ProgressBar progressBar;
@@ -140,12 +141,13 @@ public class booking_page extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     new SweetAlertDialog(booking_page.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Item already in Cart")
+                            .setTitleText("Item is already in Cart")
                             .setCancelText("Back")
                             .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
-
+                                    Intent intent = new Intent(booking_page.this, cart_page.class);
+                                    startActivity(intent);
                                 }
                             })
                             .setContentText("Go to cart?")
@@ -154,13 +156,12 @@ public class booking_page extends AppCompatActivity {
                     //Project ID doesn't exists.
                     Date currentTime = Calendar.getInstance().getTime();
                     String cartCreated = currentTime.toString();
-                    Cart cart = new Cart(userID, listingIdFromIntent, cartCreated);
+                    Cart cart = new Cart(userID, listingIdFromIntent, cartCreated, imageUrlText, tempListName, listPrice, listRatings);
 
                     cartDatabase.push().setValue(cart).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-
 
                                 new SweetAlertDialog(booking_page.this, SweetAlertDialog.SUCCESS_TYPE)
                                         .setTitleText("Item is added to Cart!")
@@ -169,7 +170,8 @@ public class booking_page extends AppCompatActivity {
                                         .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
                                             @Override
                                             public void onClick(SweetAlertDialog sweetAlertDialog) {
-
+                                                Intent intent = new Intent(booking_page.this, cart_page.class);
+                                                startActivity(intent);
                                             }
                                         })
                                         .show();
@@ -206,6 +208,8 @@ public class booking_page extends AppCompatActivity {
                             .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    Intent intent = new Intent(booking_page.this, favorite_page.class);
+                                    startActivity(intent);
 
                                 }
                             })
@@ -215,7 +219,7 @@ public class booking_page extends AppCompatActivity {
                     //Project ID doesn't exists.
                     Date currentTime = Calendar.getInstance().getTime();
                     String favoriteCreated = currentTime.toString();
-                    Favorites favorites = new Favorites(userID, projectIdFromIntent, favoriteCreated);
+                    Favorites favorites = new Favorites(userID, projectIdFromIntent, favoriteCreated, imageUrlText, tempProjName, tempProjPrice, tempProjRatings);
 
                     favoriteDatabase.push().setValue(favorites).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -301,15 +305,17 @@ public class booking_page extends AppCompatActivity {
                     try{
                         tempProjectID = projectIdFromIntent;
 
-                        imageUriText = projectData.getImageUrl();
+                        imageUrlText = projectData.getImageUrl();
                         String sp_category = projectData.getCategory();
                         String sp_ratings = projectData.getRatings();
-                        String sp_projName = projectData.getProjName().substring(0, 1).toUpperCase()
+                        tempProjName = projectData.getProjName().substring(0, 1).toUpperCase()
                                             + projectData.getProjName().substring(1).toLowerCase();
                         String sp_projPrice = projectData.getPrice();
                         String sp_projSpecialInstruction = projectData.getProjInstruction();
                         String sp_startTime = projectData.getStartTime();
                         String sp_endTime = projectData.getEndTime();
+                        tempProjRatings = projectData.getRatings();
+
                         boolean sp_isAvailableMon = projectData.isAvailableMon();
                         boolean sp_isAvailableTue = projectData.isAvailableTue();
                         boolean sp_isAvailableWed = projectData.isAvailableWed();
@@ -319,19 +325,22 @@ public class booking_page extends AppCompatActivity {
                         boolean sp_isAvailableSun = projectData.isAvailableSun();
 
 
-                        tempUri = Uri.parse(imageUriText);
-                        double price = Double.parseDouble(sp_projPrice);
+                        tempUri = Uri.parse(imageUrlText);
+
 
                         Picasso.get()
                                 .load(tempUri)
                                 .resize(800, 600)
                                 .into(iv_projectImage);
+
+                        double price = Double.parseDouble(sp_projPrice);
                         DecimalFormat twoPlaces = new DecimalFormat("0.00");
+                        tempProjPrice = twoPlaces.format(price);
 
                         tv_back.setText(sp_category);
-                        tv_projName.setText(sp_projName);
+                        tv_projName.setText(tempProjName);
                         tv_projRating.setText(sp_ratings);
-                        tv_projPrice.setText("₱ " + twoPlaces.format(price) + " /Job");
+                        tv_projPrice.setText("₱ " + tempProjPrice + " /Job");
                         tv_timeAvailable.setText(sp_startTime + " - " + sp_endTime);
                         tv_projDesc.setText(sp_projSpecialInstruction);
 
@@ -384,6 +393,7 @@ public class booking_page extends AppCompatActivity {
                 {
                     Toast.makeText(booking_page.this, "Empty", Toast.LENGTH_SHORT).show();
                     System.out.println("Empty");
+                    progressBar.setVisibility(View.GONE);
                 }
             }
 
@@ -411,15 +421,15 @@ public class booking_page extends AppCompatActivity {
 
                 if(listingsData != null){
                     try{
-                        imageUriText = listingsData.getImageUrl();
-                        String sp_ratings = listingsData.getRatings();
-                        String sp_projName = listingsData.getListName().substring(0, 1).toUpperCase()
+                        imageUrlText = listingsData.getImageUrl();
+                        listRatings= listingsData.getRatings();
+                        tempListName = listingsData.getListName().substring(0, 1).toUpperCase()
                                 + listingsData.getListName().substring(1).toLowerCase();
                         String sp_projPrice = listingsData.getListPrice();
                         String sp_quantity = listingsData.getListQuantity();
                         String sp_projSpecialInstruction = listingsData.getListDesc();
 
-                        tempUri = Uri.parse(imageUriText);
+                        tempUri = Uri.parse(imageUrlText);
                         double price = Double.parseDouble(sp_projPrice);
 
                         Picasso.get()
@@ -427,11 +437,12 @@ public class booking_page extends AppCompatActivity {
                                 .resize(800, 600)
                                 .into(iv_projectImage);
                         DecimalFormat twoPlaces = new DecimalFormat("0.00");
+                        listPrice = twoPlaces.format(price);
 
                         tv_back.setText("Marketplace");
-                        tv_projName.setText(sp_projName);
-                        tv_projRating.setText(sp_ratings);
-                        tv_projPrice.setText("₱ " + twoPlaces.format(price) + " /Job");
+                        tv_projName.setText(tempListName);
+                        tv_projRating.setText(listRatings);
+                        tv_projPrice.setText("₱ " + listPrice + " /Job");
                         tv_quantity.setText(sp_quantity + " Pieces Available");
                         tv_projDesc.setText(sp_projSpecialInstruction);
 

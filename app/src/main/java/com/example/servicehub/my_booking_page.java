@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,67 +26,55 @@ import java.util.List;
 
 import Adapter_and_fragments.AdapterBookingItem;
 import Adapter_and_fragments.AdapterCartItem;
+import Adapter_and_fragments.AdapterMyBookings;
 
-public class cart_page extends AppCompatActivity {
+public class my_booking_page extends AppCompatActivity {
 
-    private List<Cart> arr;
-    private AdapterCartItem adapterCartItem;
-    private DatabaseReference cartDatabase, listingDatbase, userDatabase;
-    private String userID, custID;
+    private List<Booking> arr;
+    private AdapterMyBookings adapterMyBookings;
+    private DatabaseReference cartDatabase;
+    private String userID, bookingID;
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, item3;
-    private RecyclerView recyclerView_cart;
-    private TextView tv_back;
+    private RecyclerView recyclerView_myBookings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.cart_page);
+        setContentView(R.layout.my_booking_page);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        cartDatabase = FirebaseDatabase.getInstance().getReference("Cart");
-        listingDatbase = FirebaseDatabase.getInstance().getReference("Listings");
-        userDatabase = FirebaseDatabase.getInstance().getReference("Users");
+        cartDatabase = FirebaseDatabase.getInstance().getReference("Bookings");
         userID = user.getUid();
 
         setRef();
-        generateRecyclerLayout();
+        generateRecyclerView();
         clickListeners();
         bottomNavTaskbar();
     }
 
     private void clickListeners() {
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-
-        adapterCartItem.setOnItemClickListener(new AdapterCartItem.OnItemClickListener() {
+        adapterMyBookings.setOnItemClickListener(new AdapterMyBookings.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                final ProgressDialog progressDialog = new ProgressDialog(cart_page.this);
+
+                final ProgressDialog progressDialog = new ProgressDialog(my_booking_page.this);
                 progressDialog.setTitle("Loading...");
                 progressDialog.show();
 
                 arr.get(position);
 
-                Query query = FirebaseDatabase.getInstance().getReference("Cart")
-                        .orderByChild("listName")
-                        .equalTo(arr.get(position).getListName());
+                Query query = FirebaseDatabase.getInstance().getReference("Bookings")
+                        .orderByChild("projName")
+                        .equalTo(arr.get(position).getProjName());
 
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-
-                            String listingID = dataSnapshot.getValue(Cart.class).listingID;
-                            Intent intentListing = new Intent(cart_page.this, booking_page.class);
-                            intentListing.putExtra("Listing ID", listingID);
-                            startActivity(intentListing);
+                            Toast.makeText(my_booking_page.this, "Coming soon!", Toast.LENGTH_SHORT).show();
 
                             progressDialog.dismiss();
                         }
@@ -97,31 +84,28 @@ public class cart_page extends AppCompatActivity {
                     public void onCancelled(@NonNull DatabaseError error)
                     {
                         progressDialog.dismiss();
-                        Toast.makeText(cart_page.this, "Error!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(my_booking_page.this, "Error!", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-                adapterCartItem.notifyItemChanged(position);
+                adapterMyBookings.notifyItemChanged(position);
+
+
             }
         });
-
     }
 
-    private void generateRecyclerLayout() {
+    private void generateRecyclerView() {
 
-        recyclerView_cart.setHasFixedSize(true);
+
+
+        recyclerView_myBookings.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView_cart.setLayoutManager(linearLayoutManager);
+        recyclerView_myBookings.setLayoutManager(linearLayoutManager);
 
         arr = new ArrayList<>();
-        adapterCartItem = new AdapterCartItem(arr);
-        recyclerView_cart.setAdapter(adapterCartItem);
-
-        getViewHolderValues();
-
-    }
-
-    private void getViewHolderValues() {
+        adapterMyBookings = new AdapterMyBookings(arr);
+        recyclerView_myBookings.setAdapter(adapterMyBookings);
 
         Query query = cartDatabase
                 .orderByChild("custID")
@@ -131,13 +115,13 @@ public class cart_page extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
-                    Cart cart = dataSnapshot.getValue(Cart.class);
-                    arr.add(cart);
+                    Booking booking = dataSnapshot.getValue(Booking.class);
+                    arr.add(booking);
                 }
 
-                adapterCartItem.notifyDataSetChanged();
+                adapterMyBookings.notifyDataSetChanged();
             }
 
             @Override
@@ -146,6 +130,8 @@ public class cart_page extends AppCompatActivity {
             }
         });
 
+
+
     }
 
     private void bottomNavTaskbar() {
@@ -153,7 +139,7 @@ public class cart_page extends AppCompatActivity {
         iv_messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentMessageBtn = new Intent(cart_page.this, message_page.class);
+                Intent intentMessageBtn = new Intent(my_booking_page.this, message_page.class);
                 startActivity(intentMessageBtn);
             }
         }); // end of message button
@@ -161,7 +147,7 @@ public class cart_page extends AppCompatActivity {
         iv_notificationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentNotification = new Intent(cart_page.this, notification_page.class);
+                Intent intentNotification = new Intent(my_booking_page.this, notification_page.class);
                 startActivity(intentNotification);
             }
         }); // end of notification button
@@ -169,7 +155,7 @@ public class cart_page extends AppCompatActivity {
         iv_homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentHomeBtn = new Intent(cart_page.this, homepage.class);
+                Intent intentHomeBtn = new Intent(my_booking_page.this, homepage.class);
                 startActivity(intentHomeBtn);
             }
         }); // end of home button
@@ -177,7 +163,7 @@ public class cart_page extends AppCompatActivity {
         iv_accountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentAccount = new Intent(cart_page.this, switch_account_page.class);
+                Intent intentAccount = new Intent(my_booking_page.this, switch_account_page.class);
                 startActivity(intentAccount);
             }
         }); // end of account button
@@ -185,7 +171,7 @@ public class cart_page extends AppCompatActivity {
         iv_moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentMoreBtn = new Intent(cart_page.this, more_page.class);
+                Intent intentMoreBtn = new Intent(my_booking_page.this, more_page.class);
                 startActivity(intentMoreBtn);
             }
         }); // end of more button
@@ -200,8 +186,6 @@ public class cart_page extends AppCompatActivity {
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
         item3 = findViewById(R.id.item3);
 
-        recyclerView_cart = findViewById(R.id.recyclerView_cart);
-
-        tv_back = findViewById(R.id.tv_back);
+        recyclerView_myBookings = findViewById(R.id.recyclerView_myBookings);
     }
 }

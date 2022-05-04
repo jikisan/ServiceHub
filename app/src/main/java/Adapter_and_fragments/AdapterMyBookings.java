@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,12 +22,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class AdapterBookingItem extends RecyclerView.Adapter<AdapterBookingItem.ItemViewHolder> {
+public class AdapterMyBookings extends RecyclerView.Adapter<AdapterMyBookings.ItemViewHolder> {
 
     private List<Booking> arr;
     private OnItemClickListener onItemClickListener;
 
-    public AdapterBookingItem(List<Booking> arr) {
+    public AdapterMyBookings(List<Booking> arr) {
         this.arr = arr;
     }
 
@@ -94,9 +95,8 @@ public class AdapterBookingItem extends RecyclerView.Adapter<AdapterBookingItem.
                 @Override
                 public void onClick(View view) {
                     int position = getAdapterPosition();
-                    if(position != RecyclerView.NO_POSITION){
-                        onItemClickListener.onItemClick(position);
-                    }
+                    if (onItemClickListener != null) onItemClickListener.onItemClick(position);
+
 
                 }
             });

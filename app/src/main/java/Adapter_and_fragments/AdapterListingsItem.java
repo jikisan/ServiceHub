@@ -1,7 +1,5 @@
 package Adapter_and_fragments;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.servicehub.Listings;
-import com.example.servicehub.Projects;
 import com.example.servicehub.R;
 import com.squareup.picasso.Picasso;
 
-import java.io.InputStream;
 import java.util.List;
 
 public class AdapterListingsItem extends RecyclerView.Adapter<AdapterListingsItem.ItemViewHolder>{
@@ -76,7 +72,7 @@ public class AdapterListingsItem extends RecyclerView.Adapter<AdapterListingsIte
 
             listImage = itemView.findViewById(R.id.iv_projectPhoto);
             listName = itemView.findViewById(R.id.tv_projName);
-            listRatings = itemView.findViewById(R.id.tv_projItemRatings);
+            listRatings = itemView.findViewById(R.id.tv_listingRatings);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

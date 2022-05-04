@@ -29,10 +29,11 @@ public class homepage extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private TextView tv_bannerName, tv_userRate,  btn_installation, btn_repair, btn_cleaning, btn_marketplace;
-    private ImageView iv_cart, iv_userPic;
+    private ImageView iv_userPic;
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn;
     private EditText et_search;
+    private View layout_myBookings, layout_myOrders, layout_favorites, layout_myCart, layout_promos, layout_history;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,14 +60,6 @@ public class homepage extends AppCompatActivity {
                 startActivity(intentSearch);
             }
         }); //end of search button
-
-        iv_cart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentCartBtn = new Intent(homepage.this, cart_page.class);
-                startActivity(intentCartBtn);
-            }
-        }); // end of cart button
 
         btn_installation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +97,30 @@ public class homepage extends AppCompatActivity {
                 startActivity(intentNearbyTech);
             }
         }); // end of marketplace button
+
+        layout_myCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentCartBtn = new Intent(homepage.this, cart_page.class);
+                startActivity(intentCartBtn);
+            }
+        }); // end of cart button
+
+        layout_myBookings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(homepage.this, my_booking_page.class);
+                startActivity(intent);
+            }
+        }); // end of cart button
+
+        layout_favorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(homepage.this, favorite_page.class);
+                startActivity(intent);
+            }
+        }); // end of cart button
 
     }
 
@@ -161,7 +178,6 @@ public class homepage extends AppCompatActivity {
         btn_cleaning = findViewById(R.id.btn_cleaning);
         btn_marketplace = findViewById(R.id.btn_marketplace);
 
-        iv_cart = findViewById(R.id.iv_cart);
         iv_userPic = findViewById(R.id.iv_userPic);
         iv_messageBtn = findViewById(R.id.iv_messageBtn);
         iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
@@ -171,10 +187,16 @@ public class homepage extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
 
+        layout_myBookings = findViewById(R.id.layout_myBookings);
+        layout_myOrders = findViewById(R.id.layout_myOrders);
+        layout_favorites = findViewById(R.id.layout_favorites);
+        layout_myCart = findViewById(R.id.layout_myCart);
+        layout_promos = findViewById(R.id.layout_promos);
+        layout_history = findViewById(R.id.layout_history);
+
     }
 
     private void generateProfile() {
-
 
         userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -185,8 +207,8 @@ public class homepage extends AppCompatActivity {
                     String sp_fName = userProfile.firstName;
                     String sp_lName = userProfile.lastName;
                     String sp_imageUrl = userProfile.imageUrl;
-                    String sp_fullName = sp_fName.substring(0, 1).toUpperCase()+ sp_fName.substring(1).toLowerCase()
-                            + " " + sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();
+                    String sp_fullName = sp_fName.substring(0, 1).toUpperCase()+ sp_fName.substring(1).toLowerCase()+",";
+//                            + " " + sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();
 
                     tv_bannerName.setText(sp_fullName);
 
@@ -206,8 +228,6 @@ public class homepage extends AppCompatActivity {
                 Toast.makeText(homepage.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
 
     }
 

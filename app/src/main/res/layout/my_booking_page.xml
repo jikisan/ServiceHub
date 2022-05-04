@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_color"
-    tools:context=".cart_page">
+    tools:context=".my_booking_page">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -25,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/back_arrow"
                 android:gravity="center"
-                android:text="My Cart"
+                android:text="My Bookings"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -39,7 +38,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.recyclerview.widget.RecyclerView
-       android:id="@+id/recyclerView_cart"
+        android:id="@+id/recyclerView_myBookings"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/cardViewBottom"
@@ -117,5 +116,6 @@
 
 
     </androidx.cardview.widget.CardView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

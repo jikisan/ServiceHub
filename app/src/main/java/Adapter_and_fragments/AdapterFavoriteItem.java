@@ -9,39 +9,43 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.servicehub.Projects;
+import com.example.servicehub.Cart;
+import com.example.servicehub.Favorites;
 import com.example.servicehub.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class AdapterProjectItem extends RecyclerView.Adapter<AdapterProjectItem.ItemViewHolder>{
+public class AdapterFavoriteItem extends RecyclerView.Adapter<AdapterFavoriteItem.ItemViewHolder> {
 
-    private List<Projects> arr;
-    private OnItemClickListener onItemClickListener;
+   private List<Favorites> arr;
+   private OnItemClickListener onItemClickListener;
 
-    public AdapterProjectItem(List<Projects> arr) {
+    public AdapterFavoriteItem(List<Favorites> arr) {
         this.arr = arr;
     }
 
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ItemViewHolder
-                (LayoutInflater.from(parent.getContext()).inflate(R.layout.item,parent, false));
+        return new AdapterFavoriteItem.ItemViewHolder
+                (LayoutInflater.from(parent.getContext()).inflate(R.layout.item_installer,parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         String imageUriText = null;
 
+        Favorites favorites = arr.get(position);
+        holder.projName.setText(favorites.getProjName());
+        holder.projPrice.setText(favorites.getProjPrice());
+        holder.projRatings.setText(favorites.getProjRatings());
 
-        Projects project = arr.get(position);
-        holder.projName.setText(project.getProjName());
-        holder.ratings.setText(project.getRatings());
+        imageUriText = favorites.getProjImageUrl();
 
-        imageUriText = project.getImageUrl();
-        Picasso.get().load(project.getImageUrl())
+
+        Picasso.get()
+                .load(imageUriText)
                 .into(holder.projectImage);
 
     }
@@ -59,20 +63,18 @@ public class AdapterProjectItem extends RecyclerView.Adapter<AdapterProjectItem.
         onItemClickListener = listener;
     }
 
+    public class ItemViewHolder extends RecyclerView.ViewHolder {
 
-
-    class ItemViewHolder extends RecyclerView.ViewHolder {
-
-        TextView projName, ratings;
+        TextView projName, projRatings, projPrice;
         ImageView projectImage;
-
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
             projectImage = itemView.findViewById(R.id.iv_projectPhoto);
             projName = itemView.findViewById(R.id.tv_projName);
-            ratings = itemView.findViewById(R.id.tv_listingRatings);
+            projRatings = itemView.findViewById(R.id.tv_projRatings);
+            projPrice = itemView.findViewById(R.id.tv_price);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
