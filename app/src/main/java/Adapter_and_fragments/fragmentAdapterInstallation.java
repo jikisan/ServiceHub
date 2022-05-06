@@ -13,16 +13,21 @@ public class fragmentAdapterInstallation extends FragmentStateAdapter {
 
     @NonNull
     @Override
-    public Fragment createFragment(int position) {
-        if  (position == 1){
-            return new fragment2Order();
-        }
-
-        return new fragment1Installer();
+    public Fragment createFragment(int position)
+    {
+            switch(position)
+            {
+                case 1:
+                    return new fragment2repair();
+                case 2:
+                    return new fragment3cleaning();
+                default:
+                    return new fragment1Installer();
+            }
     }
 
     @Override
     public int getItemCount() {
-        return 2;
+        return 3;
     }
 }

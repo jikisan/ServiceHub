@@ -59,7 +59,7 @@ public class homepage extends AppCompatActivity {
                 Intent intentSearch = new Intent(homepage.this, search_page.class);
                 startActivity(intentSearch);
             }
-        }); //end of search button
+        });
 
         btn_installation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,9 +67,30 @@ public class homepage extends AppCompatActivity {
 
                 Intent intentInsallation = new Intent(homepage.this, installation_page.class);
                 intentInsallation.putExtra("Category", "Installation");
+                intentInsallation.putExtra("tabNum", 0);
                 startActivity(intentInsallation);
             }
-        }); // end of installation button
+        });
+
+        btn_repair.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentNearbyTech = new Intent(homepage.this, installation_page.class);
+                intentNearbyTech.putExtra("Category", "Repair");
+                intentNearbyTech.putExtra("tabNum", 1);
+                startActivity(intentNearbyTech);
+            }
+        });
+
+        btn_cleaning.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentNearbyTech = new Intent(homepage.this, installation_page.class);
+                intentNearbyTech.putExtra("Category", "Cleaning");
+                intentNearbyTech.putExtra("tabNum", 2);
+                startActivity(intentNearbyTech);
+            }
+        });
 
         btn_marketplace.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,25 +99,7 @@ public class homepage extends AppCompatActivity {
                 intentMarketplace.putExtra("Category", "Marketplace");
                 startActivity(intentMarketplace);
             }
-        }); // end of marketplace button
-
-        btn_cleaning.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentNearbyTech = new Intent(homepage.this, installation_page.class);
-                intentNearbyTech.putExtra("Category", "Cleaning");
-                startActivity(intentNearbyTech);
-            }
-        }); // end of marketplace button
-
-        btn_repair.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentNearbyTech = new Intent(homepage.this, installation_page.class);
-                intentNearbyTech.putExtra("Category", "Repair");
-                startActivity(intentNearbyTech);
-            }
-        }); // end of marketplace button
+        });
 
         layout_myBookings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,7 +107,7 @@ public class homepage extends AppCompatActivity {
                 Intent intent = new Intent(homepage.this, my_booking_page.class);
                 startActivity(intent);
             }
-        }); // end of cart button
+        });
 
         layout_myOrders.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +123,7 @@ public class homepage extends AppCompatActivity {
                 Intent intent = new Intent(homepage.this, favorite_page.class);
                 startActivity(intent);
             }
-        }); // end of cart button
+        });
 
         layout_myCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,7 +131,23 @@ public class homepage extends AppCompatActivity {
                 Intent intentCartBtn = new Intent(homepage.this, cart_page.class);
                 startActivity(intentCartBtn);
             }
-        }); // end of cart button
+        });
+
+        layout_promos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentCartBtn = new Intent(homepage.this, promo_page.class);
+                startActivity(intentCartBtn);
+            }
+        });
+
+        layout_history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentCartBtn = new Intent(homepage.this, history_page.class);
+                startActivity(intentCartBtn);
+            }
+        });
 
     }
 

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -20,6 +21,7 @@ import com.example.servicehub.Projects;
 import com.example.servicehub.R;
 import com.example.servicehub.booking_page;
 import com.example.servicehub.edit_project_page;
+import com.example.servicehub.view_in_map;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -48,7 +50,7 @@ public class fragment1Installer extends Fragment {
     private String userID, projectID, listingID, sp_category, projCategory;
     private FirebaseUser user;
     private DatabaseReference projDatabase, marketDatabase;
-    private ImageView iv_sort;
+    private ImageView iv_sort, iv_Location;
     private TextView tv_category;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -102,8 +104,9 @@ public class fragment1Installer extends Fragment {
         View view = inflater.inflate(R.layout.fragment1_installer, container, false);
 
         iv_sort = (ImageView) view.findViewById(R.id.iv_sort);
+        iv_Location = (ImageView) view.findViewById(R.id.iv_Location);
         tv_category = (TextView) view.findViewById(R.id.tv_category);
-        projCategory = getActivity().getIntent().getStringExtra("Category");
+        projCategory = "Installation";
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
@@ -137,15 +140,31 @@ public class fragment1Installer extends Fragment {
             getProjByCategory();
         }
 
+        clickListeners();
 
         // Inflate the layout for this fragment
         return view;
     }
 
+    private void clickListeners() {
+        iv_Location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentProject = new Intent(getContext(), view_in_map.class);
+                intentProject.putExtra("Category", projCategory);
+                startActivity(intentProject);
+            }
+        });
 
+        iv_sort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "Sort Clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     private void getMarketPlaceItem() {
-
 
 
         marketDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -195,7 +214,6 @@ public class fragment1Installer extends Fragment {
                 }
 
                     tv_category.setText(projCategory);
-                    System.out.println("Category: " + projCategory);
 
             }
 

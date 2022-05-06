@@ -22,6 +22,17 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/iv_Location"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/map"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_sort"
+            app:layout_constraintEnd_toStartOf="@+id/iv_sort"
+            app:layout_constraintTop_toTopOf="@+id/iv_sort"
+            app:tint="@color/quantum_googgreen500" />
+
+        <ImageView
             android:id="@+id/iv_sort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

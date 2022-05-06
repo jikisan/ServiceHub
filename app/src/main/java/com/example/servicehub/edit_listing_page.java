@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,9 +48,11 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class edit_listing_page extends AppCompatActivity {
 
@@ -58,6 +62,7 @@ public class edit_listing_page extends AppCompatActivity {
     private StorageReference listingStorage;
     private StorageTask addTask;
     private String userID, imageUriText, tempImageName;
+    private Geocoder geocoder;
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_listingImage, iv_decreaseBtn, iv_increaseBtn, btn_delete;
@@ -287,6 +292,7 @@ public class edit_listing_page extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
@@ -311,9 +317,25 @@ public class edit_listing_page extends AppCompatActivity {
         }
 
         else if(requestCode == 100 && resultCode == RESULT_OK){
-            Place place = Autocomplete.getPlaceFromIntent(data);
-            tv_address.setText(place.getAddress());
-            latLng = place.getLatLng().toString();
+            com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
+
+            List<Address> address = null;
+            geocoder = new Geocoder(this, Locale.getDefault());
+
+            try {
+                address = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
+
+                String latString = String.valueOf(address.get(0).getLatitude());
+                String longString = String.valueOf(address.get(0).getLongitude());
+                String latLngText = latString + "," + longString;
+                String addressText =  place.getAddress().toString();
+
+                latLng = latLngText;
+                tv_address.setText(addressText);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
 

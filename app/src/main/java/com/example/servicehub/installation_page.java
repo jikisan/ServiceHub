@@ -23,36 +23,45 @@ public class installation_page extends AppCompatActivity {
     private ViewPager2 vp_viewPager2;
     private fragmentAdapterInstallation adapter;
     private ProgressBar progressBar;
-    private TextView tv_back;
+    private int currentTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.installation_page);
 
-
+        currentTab = getIntent().getIntExtra("tabNum", 0);
+        System.out.println(currentTab);
 
 
         setRef();
+        //selectPage();
         generateTabLayout();
         bottomNavTaskbar();
     }
 
+    void selectPage(int pageIndex){
+
+    }
+
     private void generateTabLayout() {
-
-
-        tabLayout.addTab(tabLayout.newTab().setText("Installers"));
-        tabLayout.addTab(tabLayout.newTab().setText("View in map"));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         adapter = new fragmentAdapterInstallation(fragmentManager, getLifecycle());
         vp_viewPager2.setAdapter(adapter);
         progressBar.setVisibility(View.GONE);
 
+        tabLayout.addTab(tabLayout.newTab().setText("Installation"));
+        tabLayout.addTab(tabLayout.newTab().setText("Repair"));
+        tabLayout.addTab(tabLayout.newTab().setText("Cleaning"));
+        tabLayout.setScrollPosition(currentTab,0f,true);
+        vp_viewPager2.setCurrentItem(currentTab);
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                vp_viewPager2.setCurrentItem(tab.getPosition());
+               vp_viewPager2.setCurrentItem(tab.getPosition());
+
 
             }
 
@@ -132,7 +141,7 @@ public class installation_page extends AppCompatActivity {
 
         vp_viewPager2 = findViewById(R.id.vp_viewPager2);
 
-        tv_back = findViewById(R.id.tv_back);
+        TextView tv_back = findViewById(R.id.tv_back);
 
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
