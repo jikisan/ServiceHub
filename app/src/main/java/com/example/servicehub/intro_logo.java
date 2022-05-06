@@ -10,8 +10,6 @@ import java.util.TimerTask;
 
 public class intro_logo extends AppCompatActivity {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

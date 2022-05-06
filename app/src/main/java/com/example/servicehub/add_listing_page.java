@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,9 +48,11 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class add_listing_page extends AppCompatActivity {
 
@@ -60,6 +64,7 @@ public class add_listing_page extends AppCompatActivity {
     private Button btn_save;
     private Uri imageUri;
     private Bitmap bitmap;
+    private Geocoder geocoder;
 
     private int quantity = 1;
     private String quantityText, latLng;
@@ -255,9 +260,25 @@ public class add_listing_page extends AppCompatActivity {
         }
 
         else if(requestCode == 100 && resultCode == RESULT_OK){
-            Place place = Autocomplete.getPlaceFromIntent(data);
-            tv_address.setText(place.getAddress());
-            latLng = place.getLatLng().toString();
+            com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
+
+            List<Address> address = null;
+            geocoder = new Geocoder(this, Locale.getDefault());
+
+            try {
+                address = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
+
+                String latString = String.valueOf(address.get(0).getLatitude());
+                String longString = String.valueOf(address.get(0).getLongitude());
+                String latLngText = latString + "," + longString;
+                String addressText =  place.getAddress().toString();
+
+                latLng = latLngText;
+                tv_address.setText(addressText);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
 
@@ -402,7 +423,6 @@ public class add_listing_page extends AppCompatActivity {
             }
         }); // end of more button
     }
-
 
     private void PickImage() {
         CropImage.activity().start(this);

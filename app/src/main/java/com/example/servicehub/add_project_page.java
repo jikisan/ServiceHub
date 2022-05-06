@@ -220,8 +220,6 @@ public class add_project_page extends AppCompatActivity {
                 //Start Activity result
                 startActivityForResult(intent, 100);
 
-
-
             }
         });
 
@@ -232,8 +230,6 @@ public class add_project_page extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
     }
 
     private void inputValidation() {
@@ -406,8 +402,24 @@ public class add_project_page extends AppCompatActivity {
 
         else if(requestCode == 100 && resultCode == RESULT_OK){
             com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
-            tv_address.setText(place.getAddress());
-            latLng = place.getLatLng().toString();
+
+            List<Address> address = null;
+            geocoder = new Geocoder(this, Locale.getDefault());
+
+            try {
+                address = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
+
+                String latString = String.valueOf(address.get(0).getLatitude());
+                String longString = String.valueOf(address.get(0).getLongitude());
+                String latLngText = latString + "," + longString;
+                String addressText =  place.getAddress().toString();
+
+               latLng = latLngText;
+               tv_address.setText(addressText);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
 
@@ -417,7 +429,6 @@ public class add_project_page extends AppCompatActivity {
 
         else if(resultCode != RESULT_CANCELED) {
             if (requestCode == PLACE_PICKER_REQUEST) {
-
 
                 List<Address> address = null;
                 geocoder = new Geocoder(this, Locale.getDefault());

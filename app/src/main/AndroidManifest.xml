@@ -3,12 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.servicehub">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -18,6 +18,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ServiceHub"
         tools:replace="android:icon">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8" />
+
+        <activity
+            android:name=".view_in_map"
+            android:exported="false" />
+        <activity
+            android:name=".history_page"
+            android:exported="false" />
+        <activity
+            android:name=".promo_page"
+            android:exported="false" />
         <activity
             android:name=".my_orders_page"
             android:exported="false" />
@@ -46,9 +60,7 @@
             android:name=".tech_booking_details"
             android:exported="false" />
 
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCQdaPd6EyJuLoDMLGHX2vNLL18a8kdRH8" />
+
 
         <activity android:name=".add_listing_page" />
         <activity android:name=".edit_listing_page" />
@@ -75,6 +87,7 @@
         <activity
             android:name=".intro_logo"
             android:exported="true"
+            android:noHistory="true"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
