@@ -165,7 +165,8 @@ public class address_page extends AppCompatActivity {
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent = new Intent(address_page.this, more_page.class);
+                startActivity(intent);
             }
         });
 

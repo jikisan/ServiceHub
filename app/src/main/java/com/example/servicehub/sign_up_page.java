@@ -182,8 +182,9 @@ public class sign_up_page extends AppCompatActivity {
 
         String regex = "^(?=.*[0-9])"
                 + "(?=.*[a-z])(?=.*[A-Z])"
-                + "(?=.*[@#$%^&+=?!])"
+                + "(?=.*:;<=>?@!\"#$%&()*+,-./)"
                 + "(?=\\S+$).{8,15}$";
+
 
         Pattern p = Pattern.compile(regex);
         Matcher m = p.matcher(password);
