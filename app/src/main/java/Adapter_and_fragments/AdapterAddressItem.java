@@ -38,9 +38,10 @@ public class AdapterAddressItem extends RecyclerView.Adapter<AdapterAddressItem.
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
 
         MyAddress myAddress = arr.get(position);
-
-        holder.tv_addrssLabel.setText(myAddress.getAddressLabel());
+        String addressLabel = "Address " + String.valueOf(position + 1);
+        holder.tv_addrssLabel.setText(addressLabel);
         holder.tv_addressValue.setText(myAddress.getAddressValue());
+
     }
 
     @Override
