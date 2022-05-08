@@ -18,14 +18,15 @@
 
     <TextView
         android:id="@+id/tv_orderName"
-        android:layout_width="174dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginLeft="8dp"
         android:text="name"
         android:textAllCaps="true"
         android:textColor="@color/black"
         android:textSize="16dp"
+        android:maxHeight="42dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_orderPhoto"
         app:layout_constraintTop_toTopOf="@+id/iv_orderPhoto" />
 

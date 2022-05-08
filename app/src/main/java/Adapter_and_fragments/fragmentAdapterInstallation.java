@@ -21,6 +21,8 @@ public class fragmentAdapterInstallation extends FragmentStateAdapter {
                     return new fragment2repair();
                 case 2:
                     return new fragment3cleaning();
+                case 3:
+                    return new fragment4marketplace();
                 default:
                     return new fragment1Installer();
             }
@@ -28,6 +30,6 @@ public class fragmentAdapterInstallation extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 3;
+        return 4;
     }
 }

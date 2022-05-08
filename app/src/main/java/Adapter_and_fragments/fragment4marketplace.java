@@ -2,13 +2,6 @@ package Adapter_and_fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.GridLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -16,11 +9,18 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.servicehub.Listings;
 import com.example.servicehub.Projects;
 import com.example.servicehub.R;
 import com.example.servicehub.booking_page;
-import com.example.servicehub.edit_project_page;
+import com.example.servicehub.place_order_page;
 import com.example.servicehub.view_in_map;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,23 +31,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link fragment1Installer#newInstance} factory method to
+ * Use the {@link fragment4marketplace#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class fragment1Installer extends Fragment {
+public class fragment4marketplace extends Fragment {
 
-    private List<Projects> arrProjects;
-    private AdapterInstallerItem adapterInstallerItem;
-    private String userID, projectID, projCategory;
+    private List<Listings> arrListings;
+    private AdapterMarketPlaceItem adapterMarketPlaceItem;
+    private String userID,  listingID, listCategory;
     private FirebaseUser user;
-    private DatabaseReference projDatabase, marketDatabase;
+    private DatabaseReference  marketDatabase;
     private ImageView iv_sort, iv_Location;
     private TextView tv_category;
 
@@ -60,7 +58,7 @@ public class fragment1Installer extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public fragment1Installer() {
+    public fragment4marketplace() {
         // Required empty public constructor
     }
 
@@ -70,11 +68,11 @@ public class fragment1Installer extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment fragment1Installer.
+     * @return A new instance of fragment fragment4marketplace.
      */
     // TODO: Rename and change types and number of parameters
-    public static fragment1Installer newInstance(String param1, String param2) {
-        fragment1Installer fragment = new fragment1Installer();
+    public static fragment4marketplace newInstance(String param1, String param2) {
+        fragment4marketplace fragment = new fragment4marketplace();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -85,8 +83,6 @@ public class fragment1Installer extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -104,25 +100,25 @@ public class fragment1Installer extends Fragment {
         iv_sort = (ImageView) view.findViewById(R.id.iv_sort);
         iv_Location = (ImageView) view.findViewById(R.id.iv_Location);
         tv_category = (TextView) view.findViewById(R.id.tv_category);
-        projCategory = "Installation";
+        listCategory = "Marketplace";
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
+        marketDatabase = FirebaseDatabase.getInstance().getReference("Listings");
         userID = user.getUid();
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewInstallers);
         recyclerView.setHasFixedSize(true);
 
-        arrProjects = new ArrayList<>();
-        adapterInstallerItem = new AdapterInstallerItem(arrProjects);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapterInstallerItem);
+        arrListings = new ArrayList<>();
+        adapterMarketPlaceItem = new AdapterMarketPlaceItem(arrListings);
 
-        onClickToGetKeyProj();
-        getProjByCategory();
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setAdapter(adapterMarketPlaceItem);
 
+        getMarketPlaceItem();
+        onClickToGetKeyList();
 
         clickListeners();
 
@@ -135,7 +131,7 @@ public class fragment1Installer extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intentProject = new Intent(getContext(), view_in_map.class);
-                intentProject.putExtra("Category", projCategory);
+                intentProject.putExtra("Category", listCategory);
                 startActivity(intentProject);
             }
         });
@@ -143,32 +139,28 @@ public class fragment1Installer extends Fragment {
         iv_sort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Sort Clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Sort Clicked4", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void getProjByCategory() {
-        Query query = projDatabase
-                .orderByChild("category")
-                .equalTo(projCategory);
-
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void getMarketPlaceItem() {
+        marketDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Projects projData = snapshot.getValue(Projects.class);
 
                 if (snapshot.exists()){
                     for (DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
-                        Projects projects = dataSnapshot.getValue(Projects.class);
-                        arrProjects.add(projects);
+                        Listings listingsData = dataSnapshot.getValue(Listings.class);
+                        arrListings.add(listingsData);
                     }
 
-                    adapterInstallerItem.notifyDataSetChanged();
+                    adapterMarketPlaceItem.notifyDataSetChanged();
                 }
 
-                    tv_category.setText(projCategory);
+                tv_category.setText(listCategory);
+                System.out.println("Category: " + listCategory);
 
             }
 
@@ -179,16 +171,16 @@ public class fragment1Installer extends Fragment {
         });
     }
 
-    private void onClickToGetKeyProj() {
+    private void onClickToGetKeyList() {
 
-        adapterInstallerItem.setOnItemClickListener(new AdapterInstallerItem.OnItemClickListener() {
+        adapterMarketPlaceItem.setOnItemClickListener(new AdapterMarketPlaceItem.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                arrProjects.get(position);
+                arrListings.get(position);
 
-                Query query = projDatabase
-                        .orderByChild("projName")
-                        .equalTo(arrProjects.get(position).getProjName());
+                Query query = marketDatabase
+                        .orderByChild("listName")
+                        .equalTo(arrListings.get(position).getListName());
 
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -196,9 +188,9 @@ public class fragment1Installer extends Fragment {
 
                         for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
-                            projectID = dataSnapshot.getKey().toString();
-                            Intent intentProject = new Intent(getContext(), booking_page.class);
-                            intentProject.putExtra("Project ID", projectID);
+                            listingID = dataSnapshot.getKey().toString();
+                            Intent intentProject = new Intent(getContext(), place_order_page.class);
+                            intentProject.putExtra("Listing ID", listingID);
                             startActivity(intentProject);
                         }
                     }
@@ -209,11 +201,8 @@ public class fragment1Installer extends Fragment {
                     }
                 });
 
-                adapterInstallerItem.notifyItemChanged(position);
+                adapterMarketPlaceItem.notifyItemChanged(position);
             }
         });
-
     }
-
-
 }

@@ -38,10 +38,10 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link fragment1Installer#newInstance} factory method to
+ * Use the {@link fragment3cleaning#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class fragment1Installer extends Fragment {
+public class fragment3cleaning extends Fragment {
 
     private List<Projects> arrProjects;
     private AdapterInstallerItem adapterInstallerItem;
@@ -60,7 +60,7 @@ public class fragment1Installer extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public fragment1Installer() {
+    public fragment3cleaning() {
         // Required empty public constructor
     }
 
@@ -70,11 +70,11 @@ public class fragment1Installer extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment fragment1Installer.
+     * @return A new instance of fragment fragment3cleaning.
      */
     // TODO: Rename and change types and number of parameters
-    public static fragment1Installer newInstance(String param1, String param2) {
-        fragment1Installer fragment = new fragment1Installer();
+    public static fragment3cleaning newInstance(String param1, String param2) {
+        fragment3cleaning fragment = new fragment3cleaning();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -97,35 +97,33 @@ public class fragment1Installer extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-
         View view = inflater.inflate(R.layout.fragment1_installer, container, false);
 
         iv_sort = (ImageView) view.findViewById(R.id.iv_sort);
         iv_Location = (ImageView) view.findViewById(R.id.iv_Location);
         tv_category = (TextView) view.findViewById(R.id.tv_category);
-        projCategory = "Installation";
+        projCategory = "Cleaning";
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
+        marketDatabase = FirebaseDatabase.getInstance().getReference("Listings");
         userID = user.getUid();
 
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewInstallers);
         recyclerView.setHasFixedSize(true);
 
-        arrProjects = new ArrayList<>();
-        adapterInstallerItem = new AdapterInstallerItem(arrProjects);
+            arrProjects = new ArrayList<>();
+            adapterInstallerItem = new AdapterInstallerItem(arrProjects);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(adapterInstallerItem);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setAdapter(adapterInstallerItem);
 
-        onClickToGetKeyProj();
-        getProjByCategory();
+            onClickToGetKeyProj();
+            getProjByCategory();
 
 
         clickListeners();
-
         // Inflate the layout for this fragment
         return view;
     }
@@ -143,7 +141,7 @@ public class fragment1Installer extends Fragment {
         iv_sort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Sort Clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Sort Clicked 3", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -151,7 +149,7 @@ public class fragment1Installer extends Fragment {
     private void getProjByCategory() {
         Query query = projDatabase
                 .orderByChild("category")
-                .equalTo(projCategory);
+                .equalTo("Cleaning");
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -168,7 +166,8 @@ public class fragment1Installer extends Fragment {
                     adapterInstallerItem.notifyDataSetChanged();
                 }
 
-                    tv_category.setText(projCategory);
+                tv_category.setText(projCategory);
+                System.out.println("Category: " + projCategory);
 
             }
 

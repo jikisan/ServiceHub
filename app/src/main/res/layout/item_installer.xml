@@ -41,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
+                android:maxHeight="42dp"
                 android:text="name"
                 android:textAllCaps="true"
                 android:textColor="@color/black"

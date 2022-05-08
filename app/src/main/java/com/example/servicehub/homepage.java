@@ -97,6 +97,7 @@ public class homepage extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intentMarketplace = new Intent(homepage.this, installation_page.class);
                 intentMarketplace.putExtra("Category", "Marketplace");
+                intentMarketplace.putExtra("tabNum", 3);
                 startActivity(intentMarketplace);
             }
         });

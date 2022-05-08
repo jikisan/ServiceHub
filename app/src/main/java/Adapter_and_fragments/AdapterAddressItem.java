@@ -1,61 +1,46 @@
 package Adapter_and_fragments;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.servicehub.Booking;
 import com.example.servicehub.Cart;
-import com.example.servicehub.Listings;
-import com.example.servicehub.Projects;
+import com.example.servicehub.MyAddress;
 import com.example.servicehub.R;
-import com.example.servicehub.booking_page;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class AdapterCartItem extends RecyclerView.Adapter<AdapterCartItem.ItemViewHolder> {
+public class AdapterAddressItem extends RecyclerView.Adapter<AdapterAddressItem.ItemViewHolder>{
 
-    private List<Cart> arr;
-    private OnItemClickListener onItemClickListener;
+    private List<MyAddress> arr;
 
-    public AdapterCartItem() {
+    public AdapterAddressItem() {
     }
 
-    public AdapterCartItem(List<Cart> arr) {
+    public AdapterAddressItem(List<MyAddress> arr) {
         this.arr = arr;
     }
+
+    private OnItemClickListener onItemClickListener;
 
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new AdapterCartItem.ItemViewHolder
-                (LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cart,parent, false));
+        return new AdapterAddressItem.ItemViewHolder
+                (LayoutInflater.from(parent.getContext()).inflate(R.layout.item_my_addresses,parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        String imageUriText = null;
 
-        Cart cart = arr.get(position);
-        holder.listName.setText(cart.getListName());
-        holder.listPrice.setText(cart.getListPrice());
-        holder.listRatings.setText(cart.getListRatings());
+        MyAddress myAddress = arr.get(position);
 
-        imageUriText = cart.getListImageUrl();
-
-
-        Picasso.get()
-                .load(imageUriText)
-                .into(holder.listImage);
-
+        holder.tv_addrssLabel.setText(myAddress.getAddressLabel());
+        holder.tv_addressValue.setText(myAddress.getAddressValue());
     }
 
     @Override
@@ -73,16 +58,14 @@ public class AdapterCartItem extends RecyclerView.Adapter<AdapterCartItem.ItemVi
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        TextView listName, listPrice, listRatings;
-        ImageView listImage;
+        TextView tv_addrssLabel, tv_addressValue;
+
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            listImage = itemView.findViewById(R.id.iv_listingImage);
-            listName = itemView.findViewById(R.id.tv_itemName);
-            listPrice = itemView.findViewById(R.id.tv_price);
-            listRatings = itemView.findViewById(R.id.tv_listingRatings);
+            tv_addrssLabel = itemView.findViewById(R.id.tv_addrssLabel);
+            tv_addressValue = itemView.findViewById(R.id.tv_addressValue);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
