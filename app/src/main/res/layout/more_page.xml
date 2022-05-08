@@ -20,13 +20,14 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/tv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/back_arrow"
+                android:gravity="center"
                 android:text="More"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -106,7 +107,7 @@
                 android:id="@+id/view6"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:background="@android:color/darker_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -135,7 +136,7 @@
                 android:id="@+id/tv_changePassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="16dp"
                 android:drawableLeft="@drawable/password"
                 android:drawablePadding="16dp"
                 android:gravity="center"
@@ -148,6 +149,23 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_editProfile" />
 
             <TextView
+                android:id="@+id/tv_myAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:drawableLeft="@drawable/add_location"
+                android:drawablePadding="16dp"
+                android:gravity="center"
+                android:text="My Addressess"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/tv_changePassword"
+                app:layout_constraintTop_toBottomOf="@+id/tv_changePassword" />
+
+
+            <TextView
                 android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -158,13 +176,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.034"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_changePassword" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_myAddress" />
 
             <View
                 android:id="@+id/view9"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:background="@android:color/darker_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -190,9 +208,9 @@
                 android:id="@+id/tv_aboutUs"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="16dp"
                 android:drawableLeft="@drawable/about_us"
-                android:drawablePadding="16dp"
+                android:drawablePadding="13dp"
                 android:gravity="center"
                 android:text="About Us"
                 android:textColor="@color/black"
@@ -202,6 +220,23 @@
                 app:layout_constraintStart_toStartOf="@+id/tv_editProfile"
                 app:layout_constraintTop_toBottomOf="@+id/tv_contactUs" />
 
+
+            <TextView
+                android:id="@+id/tv_privacyPolicy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:drawableLeft="@drawable/privacy_and_policy"
+                android:drawablePadding="12dp"
+                android:gravity="center"
+                android:text="Privacy Policy"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/tv_aboutUs"
+                app:layout_constraintTop_toBottomOf="@+id/tv_aboutUs" />
+
             <View
                 android:id="@+id/view10"
                 android:layout_width="match_parent"
@@ -210,7 +245,7 @@
                 android:background="@android:color/darker_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_aboutUs" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_privacyPolicy" />
 
             <TextView
                 android:id="@+id/tv_logout"
@@ -218,10 +253,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:drawableLeft="@drawable/logout"
+                android:drawableTint="@color/red"
                 android:drawablePadding="16dp"
                 android:gravity="center"
                 android:text="Log Out"
-                android:textColor="@color/black"
+                android:textColor="@color/red"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.006"

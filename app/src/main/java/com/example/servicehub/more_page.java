@@ -20,6 +20,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class more_page extends AppCompatActivity {
 
     private FirebaseUser user;
@@ -30,7 +32,8 @@ public class more_page extends AppCompatActivity {
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_userPhoto;
 
-    private TextView tv_editProfile, tv_changePassword, tv_contactUs, tv_aboutUs, tv_logout, tv_bannerName, tv_ratings;
+    private TextView tv_editProfile, tv_changePassword, tv_contactUs, tv_aboutUs, tv_logout,
+            tv_bannerName, tv_ratings, tv_privacyPolicy, tv_myAddress, tv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +48,14 @@ public class more_page extends AppCompatActivity {
         setRef();
 
         progressBar.setVisibility(View.VISIBLE);
-        buttonNav();
+        clickListeners();
         generateProfile();
         bottomNavTaskbar();
 
     }
 
-    private void buttonNav() {
+    private void clickListeners() {
+
         tv_editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,12 +83,47 @@ public class more_page extends AppCompatActivity {
         tv_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(getApplicationContext(), intro_logo.class));
-                finish();
+                new SweetAlertDialog(more_page.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Warning!.")
+                        .setCancelText("Cancel")
+                        .setConfirmButton("Log Out", new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                FirebaseAuth.getInstance().signOut();
+                                startActivity(new Intent(getApplicationContext(), intro_logo.class));
+                                finish();
+                            }
+                        })
+                        .setContentText("Are you sure you want to logout?")
+                        .show();
+
             }
         }); // end of about us button
 
+        tv_changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(more_page.this, change_password_page.class);
+                intent.putExtra("User Email", user.getEmail());
+                startActivity(intent);
+            }
+        });
+
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+        tv_myAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(more_page.this, address_page.class);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -146,6 +185,9 @@ public class more_page extends AppCompatActivity {
         tv_aboutUs = findViewById(R.id.tv_aboutUs);
         tv_logout = findViewById(R.id.tv_logout);
         tv_bannerName = findViewById(R.id.tv_bannerName);
+        tv_myAddress = findViewById(R.id.tv_myAddress);
+        tv_privacyPolicy = findViewById(R.id.tv_privacyPolicy);
+        tv_back = findViewById(R.id.tv_back);
 
         progressBar = findViewById(R.id.progressBar);
     }

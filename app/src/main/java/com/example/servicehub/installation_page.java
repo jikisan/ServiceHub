@@ -40,9 +40,6 @@ public class installation_page extends AppCompatActivity {
         bottomNavTaskbar();
     }
 
-    void selectPage(int pageIndex){
-
-    }
 
     private void generateTabLayout() {
 
@@ -54,6 +51,9 @@ public class installation_page extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Installation"));
         tabLayout.addTab(tabLayout.newTab().setText("Repair"));
         tabLayout.addTab(tabLayout.newTab().setText("Cleaning"));
+        tabLayout.addTab(tabLayout.newTab().setText("Marketplace"));
+
+        
         tabLayout.setScrollPosition(currentTab,0f,true);
         vp_viewPager2.setCurrentItem(currentTab);
 

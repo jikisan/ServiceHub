@@ -552,8 +552,6 @@ public class add_project_page extends AppCompatActivity {
         return bitmapDrawable == null || bitmapDrawable.getBitmap() == null;
     }
 
-
-
     //validate permissions
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void requestStoragePermission() {

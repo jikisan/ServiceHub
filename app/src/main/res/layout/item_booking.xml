@@ -22,11 +22,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:maxHeight="42dp"
         android:text="name"
         android:textAllCaps="true"
         android:textColor="@color/black"
         android:textSize="16dp"
         app:layout_constraintEnd_toStartOf="@+id/tv_bookingMonth"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/iv_bookingPhoto"
         app:layout_constraintTop_toTopOf="@+id/iv_bookingPhoto" />
 

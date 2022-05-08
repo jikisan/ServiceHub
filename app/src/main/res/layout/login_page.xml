@@ -43,7 +43,6 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/et_passwordLayout"
         android:layout_width="match_parent"
@@ -61,6 +60,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
 
+            android:paddingEnd="40dp"
             android:id="@+id/et_password"
             android:inputType="textPassword"
             android:layout_width="match_parent"
@@ -68,7 +68,6 @@
             />
 
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <CheckBox
         android:id="@+id/cb_rememberMe"
@@ -81,7 +80,7 @@
         app:layout_constraintTop_toBottomOf="@+id/et_passwordLayout" />
 
     <TextView
-        android:id="@+id/tv_ForgotPassword"
+        android:id="@+id/tv_forgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Forgot Password"

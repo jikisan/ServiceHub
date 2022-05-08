@@ -87,7 +87,7 @@ public class cart_page extends AppCompatActivity {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
                             String listingID = dataSnapshot.getValue(Cart.class).listingID;
-                            Intent intentListing = new Intent(cart_page.this, booking_page.class);
+                            Intent intentListing = new Intent(cart_page.this, place_order_page.class);
                             intentListing.putExtra("Listing ID", listingID);
                             startActivity(intentListing);
 

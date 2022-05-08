@@ -69,20 +69,12 @@ public class booking_page extends AppCompatActivity {
         projectIdFromIntent = getIntent().getStringExtra("Project ID");
 
         setRef();
-        if(projectIdFromIntent == null || projectIdFromIntent == ""){
-
-
-              generateListDataValue();
-        }
-        else
-        {
-            generateProjDataValue();
-        }
-
+        generateProjDataValue();
         clickListeners();
     }
 
     private void clickListeners() {
+
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,15 +87,6 @@ public class booking_page extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(booking_page.this, message_page.class);
                 startActivity(intent);
-
-            }
-        });
-
-        iv_cart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                addToCart();
 
             }
         });
@@ -126,77 +109,6 @@ public class booking_page extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        btn_orderNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(booking_page.this, checkout_page.class);
-                intent.putExtra("Listing ID", listingIdFromIntent);
-                startActivity(intent);
-            }
-        });
-
-    }
-
-    private void addToCart() {
-
-        cartDatabase
-                .orderByChild("listingID")
-                .equalTo(listingIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    new SweetAlertDialog(booking_page.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Item is already in Cart")
-                            .setCancelText("Back")
-                            .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    Intent intent = new Intent(booking_page.this, cart_page.class);
-                                    startActivity(intent);
-                                }
-                            })
-                            .setContentText("Go to cart?")
-                            .show();
-                } else {
-                    //Project ID doesn't exists.
-                    Date currentTime = Calendar.getInstance().getTime();
-                    String cartCreated = currentTime.toString();
-                    Cart cart = new Cart(userID, listingIdFromIntent, cartCreated, imageUrlText, tempListName, listPrice, listRatings);
-
-                    cartDatabase.push().setValue(cart).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-
-                                new SweetAlertDialog(booking_page.this, SweetAlertDialog.SUCCESS_TYPE)
-                                        .setTitleText("Item is added to Cart!")
-                                        .setCancelText("Back")
-                                        .setContentText("Go to Cart?")
-                                        .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
-                                            @Override
-                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                Intent intent = new Intent(booking_page.this, cart_page.class);
-                                                startActivity(intent);
-                                            }
-                                        })
-                                        .show();
-
-
-                            } else {
-                                Toast.makeText(booking_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
 
     }
 
@@ -400,69 +312,6 @@ public class booking_page extends AppCompatActivity {
                     Toast.makeText(booking_page.this, "Empty", Toast.LENGTH_SHORT).show();
                     System.out.println("Empty");
                     progressBar.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(booking_page.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void generateListDataValue() {
-        tv_availabilityText.setVisibility(View.GONE);
-        tv_timeAvailable.setVisibility(View.GONE);
-        btn_bookNow.setVisibility(View.GONE);
-        layout_favorite.setVisibility(View.GONE);
-        layout_cart.setVisibility(View.VISIBLE);
-        tv_quantity.setVisibility(View.VISIBLE);
-        btn_orderNow.setVisibility(View.VISIBLE);
-
-
-        listingDatabase.child(listingIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Listings listingsData = snapshot.getValue(Listings.class);
-
-                if(listingsData != null){
-                    try{
-                        imageUrlText = listingsData.getImageUrl();
-                        listRatings= listingsData.getRatings();
-                        tempListName = listingsData.getListName().substring(0, 1).toUpperCase()
-                                + listingsData.getListName().substring(1).toLowerCase();
-                        String sp_projPrice = listingsData.getListPrice();
-                        String sp_quantity = listingsData.getListQuantity();
-                        String sp_projSpecialInstruction = listingsData.getListDesc();
-
-                        tempUri = Uri.parse(imageUrlText);
-                        double price = Double.parseDouble(sp_projPrice);
-
-                        Picasso.get()
-                                .load(tempUri)
-                                .resize(800, 600)
-                                .into(iv_projectImage);
-                        DecimalFormat twoPlaces = new DecimalFormat("0.00");
-                        listPrice = twoPlaces.format(price);
-
-                        tv_back.setText("Marketplace");
-                        tv_projName.setText(tempListName);
-                        tv_projRating.setText(listRatings);
-                        tv_projPrice.setText("₱ " + listPrice + " /Job");
-                        tv_quantity.setText(sp_quantity + " Pieces Available");
-                        tv_projDesc.setText(sp_projSpecialInstruction);
-
-
-                        progressBar.setVisibility(View.GONE);
-                    }catch (Exception e){
-                        e.printStackTrace();
-
-                    }
-                }
-                else
-                {
-                    Toast.makeText(booking_page.this, "Empty", Toast.LENGTH_SHORT).show();
-                    System.out.println("Empty");
                 }
             }
 

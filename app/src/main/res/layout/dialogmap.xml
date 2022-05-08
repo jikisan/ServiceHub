@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingBottom="16dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.gms.maps.MapView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/mapView"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+
+    <TextView
+        android:id="@+id/btn_closeMap"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:drawableLeft="@drawable/cancel"
+        android:drawableTint="@color/red"
+        android:gravity="center_vertical"
+        android:text="CLOSE"
+        android:textColor="@color/red"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/et_autoCompAddressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/rounded"
+        android:drawableLeft="@drawable/search_icon"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
+        android:hint="Search address"
+        android:padding="8dp"
+        android:focusable="false"
+        />
+
+    <Button
+        android:id="@+id/btn_addLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/mapView"
+        android:layout_marginStart="108dp"
+        android:layout_marginEnd="108dp"
+        android:background="@drawable/rounded"
+        android:text="Add this location?"
+        app:backgroundTint="@color/light_blue" />
+
+
+</RelativeLayout>

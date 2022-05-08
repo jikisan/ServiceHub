@@ -18,6 +18,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ServiceHub"
         tools:replace="android:icon">
+        <activity
+            android:name=".address_page"
+            android:exported="false" />
+        <activity
+            android:name=".change_password_page"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -59,9 +65,6 @@
         <activity
             android:name=".tech_booking_details"
             android:exported="false" />
-
-
-
         <activity android:name=".add_listing_page" />
         <activity android:name=".edit_listing_page" />
         <activity android:name=".seller_dashboard" />

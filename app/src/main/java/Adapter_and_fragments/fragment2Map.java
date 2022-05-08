@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.servicehub.Listings;
 import com.example.servicehub.Projects;
 import com.example.servicehub.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -71,8 +72,9 @@ public class fragment2Map extends Fragment {
 
     double latitude, longitude;
     private LatLng location;
-    private ArrayList<LatLng> arrProjLoc;
-    private ArrayList<String> arrProjName;
+    private ArrayList<LatLng> arrLoc;
+    private ArrayList<String> arrName;
+    private ArrayList<String> arrPrice;
     private ArrayList<URL> arrProjImageUrl;
 
 
@@ -83,8 +85,10 @@ public class fragment2Map extends Fragment {
 
         validatePermission();
         init(inflater, container, savedInstanceState);
-        arrProjLoc = new ArrayList<>();
-        arrProjName = new ArrayList<>();
+
+        arrLoc = new ArrayList<>();
+        arrName = new ArrayList<>();
+        arrPrice = new ArrayList<>();
         arrProjImageUrl = new ArrayList<>();
 
         return view;
@@ -195,13 +199,78 @@ public class fragment2Map extends Fragment {
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 13));
 
                 googleMap.addMarker(markerOptions);
-                generateDataFromFirebase(googleMap);
+
+                projCategory = getActivity().getIntent().getStringExtra("Category");
+                if(projCategory.equals("Marketplace"))
+                {
+                    generateListingDataFromFirebase(googleMap);
+                }
+                else
+                {
+                    generateProjDataFromFirebase(googleMap);
+                }
+
 
             }
         });
     }
 
-    private void generateDataFromFirebase(GoogleMap googleMap){
+    private void generateListingDataFromFirebase(GoogleMap googleMap) {
+
+        DatabaseReference listDatabase = FirebaseDatabase.getInstance().getReference("Listings");
+
+
+        listDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (snapshot.exists()){
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren())
+                    {
+                        Listings listings = dataSnapshot.getValue(Listings.class);
+
+                        String imageUrl = listings.getImageUrl().toString();
+                        String listLatLng = listings.getListLatLng().toString();
+                        String listName = listings.getListName().toString().toUpperCase(Locale.ROOT);
+                        String listPrice = listings.getListPrice().toString();
+
+                        String[] pos = listLatLng.split(",");
+                        latitude = Double.parseDouble(pos[0]);
+                        longitude = Double.parseDouble(pos[1]);
+                        location = new LatLng(latitude, longitude);
+
+                        System.out.println("location");
+                        System.out.println("latitude");
+                        System.out.println("longitude");
+
+                        arrLoc.add(location);
+                        arrName.add(listName);
+                        arrPrice.add("₱ " + listPrice);
+
+                        for (int i = 0; i < arrLoc.size(); i++) {
+
+                            // below line is use to add marker to each location of our array list.
+                            googleMap.addMarker(new MarkerOptions()
+                                    .position(arrLoc.get(i))
+                                    .title(arrName.get(i)
+                                    + "\n" + arrPrice.get(i)));
+
+                        }
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
+    private void generateProjDataFromFirebase(GoogleMap googleMap){
 
         DatabaseReference projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
@@ -229,19 +298,16 @@ public class fragment2Map extends Fragment {
                         longitude = Double.parseDouble(pos[1]);
                         location = new LatLng(latitude, longitude);
 
-                        arrProjLoc.add(location);
-                        arrProjName.add(projName);
+                        arrLoc.add(location);
+                        arrName.add(projName);
 
-                        System.out.println(location);
-                        System.out.println(pos[0]);
-                        System.out.println(pos[1]);
 
-                        for (int i = 0; i < arrProjLoc.size(); i++) {
+                        for (int i = 0; i < arrLoc.size(); i++) {
 
                             // below line is use to add marker to each location of our array list.
                             googleMap.addMarker(new MarkerOptions()
-                                    .position(arrProjLoc.get(i))
-                                    .title(arrProjName.get(i)));
+                                    .position(arrLoc.get(i))
+                                    .title(arrName.get(i)));
 
                         }
 
