@@ -1,12 +1,17 @@
 package com.example.servicehub;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -16,6 +21,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -27,7 +33,13 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -38,11 +50,13 @@ import java.util.Locale;
 
 public class booking_application_page extends AppCompatActivity {
 
+    private ImageView iv_pickAddress;
     private EditText et_addInfo;
     private TextInputEditText et_phoneNum;
     private TextView tv_address, tv_back, et_date, et_time;
     private CardView cardView12, cardView13, cardView14, cardView15, cardView16;
     private Button btn_next1,btn_next2, btn_next3, btn_next4, btn_back2, btn_back3, btn_back4, btn_back5, btn_submit;
+    private Geocoder geocoder;
 
     private AutoCompleteTextView auto_complete_txt,auto_aircon_type,auto_brand,auto_unit_type;
     private ArrayAdapter<CharSequence> adapterPropertyItems, adapterBrand, adapterAirconType, adapterUnitType;
@@ -52,7 +66,7 @@ public class booking_application_page extends AppCompatActivity {
             "York","Other","I don't know"};
     private String[] airconType = {"Window","Split","Tower","Cassette","Suspended","Concealed","U-shaped Window"};
     private String[] unitType = {"Inverter","Non-Inverter","I don't know"};
-    private String latLng, propertyType, acBrand, acType, acUnitType;
+    private String latLng, latString, longString, propertyType, acBrand, acType, acUnitType;
     private int hour, minute, year, month, day;
     private final SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
@@ -82,8 +96,25 @@ public class booking_application_page extends AppCompatActivity {
 
         if(requestCode == 100 && resultCode == RESULT_OK){
             com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
-            tv_address.setText(place.getAddress());
-            latLng = place.getLatLng().toString();
+
+            List<Address> address = null;
+            geocoder = new Geocoder(this, Locale.getDefault());
+
+            try {
+                address = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
+
+                latString = String.valueOf(address.get(0).getLatitude());
+                longString = String.valueOf(address.get(0).getLongitude());
+                String latLngText = latString + "," + longString;
+                String addressText =  place.getAddress().toString();
+
+
+                latLng = latLngText;
+                tv_address.setText(addressText);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
 
@@ -94,6 +125,60 @@ public class booking_application_page extends AppCompatActivity {
     }
 
     private void clickListeners() {
+
+        iv_pickAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(booking_application_page.this);
+                builderSingle.setIcon(R.drawable.logo);
+                builderSingle.setTitle("Select Address:");
+
+                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(booking_application_page.this, android.R.layout.select_dialog_singlechoice);
+
+                DatabaseReference myAddressDatabase = FirebaseDatabase.getInstance().getReference("Address");
+
+                myAddressDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                            MyAddress myAddress = dataSnapshot.getValue(MyAddress.class);
+                            String addrses = myAddress.getAddressValue();
+                            latString = myAddress.getLatString();
+                            longString = myAddress.getLongString();
+                            arrayAdapter.add(addrses);
+                        }
+
+                        arrayAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                builderSingle.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String addressFromDialog = arrayAdapter.getItem(which);
+                        tv_address.setText(addressFromDialog);
+                        dialog.dismiss();
+                    }
+                });
+
+                builderSingle.show();
+            }
+        });
+
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -346,6 +431,8 @@ public class booking_application_page extends AppCompatActivity {
                String projectIdFromIntent = getIntent().getStringExtra("projectIdFromIntent");
                Intent intent = new Intent(booking_application_page.this, booking_summary_page.class);
                 Bundle extras = new Bundle();
+                extras.putString("latitude", latString);
+                extras.putString("longitude", longString);
                 extras.putString("projectIdFromIntent", projectIdFromIntent);
                 extras.putString("address", tv_address.getText().toString());
                 extras.putString("property type", propertyType);
@@ -366,6 +453,7 @@ public class booking_application_page extends AppCompatActivity {
     }
 
     private void setRef() {
+        iv_pickAddress = findViewById(R.id.iv_pickAddress);
 
         tv_address = findViewById(R.id.et_address);
         tv_back = findViewById(R.id.tv_back);

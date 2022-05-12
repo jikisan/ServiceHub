@@ -46,18 +46,20 @@ public class view_in_map extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_in_map);
 
-        //setAllPropertiesOfLocalRequest();
-       // updateGPS();
 
+
+        setRef();
+        clickListeners();
+        generateFrameLayout();
+    }
+
+    private void generateFrameLayout() {
         Fragment fragment2Map = new fragment2Map();
 
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.frame_layout, fragment2Map)
                 .commit();
-
-        setRef();
-        clickListeners();
     }
 
     private void clickListeners() {

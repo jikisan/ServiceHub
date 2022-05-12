@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.servicehub.Listings;
+import com.example.servicehub.Orders;
 import com.example.servicehub.R;
 import com.example.servicehub.order_details_page;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,10 +33,10 @@ import java.util.List;
  */
 public class fragment2Order extends Fragment {
 
-    private List<Listings> arr;
+    private List<Orders> arr;
     private AdapterOrderItem adapterOrderItem;
     private String userID;
-    private String listingsID;
+    private String orderID;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -84,9 +84,8 @@ public class fragment2Order extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_fragment2_order, container, false);
 
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference listDatabase = FirebaseDatabase.getInstance().getReference("Listings");
+        DatabaseReference orderDatabase = FirebaseDatabase.getInstance().getReference("Orders");
         userID = user.getUid();
 
         RecyclerView recyclerViewOrders = view.findViewById(R.id.recyclerViewOrder);
@@ -98,8 +97,8 @@ public class fragment2Order extends Fragment {
         adapterOrderItem = new AdapterOrderItem(arr);
         recyclerViewOrders.setAdapter(adapterOrderItem);
 
-        Query query = listDatabase
-                .orderByChild("userID")
+        Query query = orderDatabase
+                .orderByChild("sellerID")
                 .equalTo(userID);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -108,8 +107,9 @@ public class fragment2Order extends Fragment {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
 
-                    Listings listings = dataSnapshot.getValue(Listings.class);
-                    arr.add(listings);
+                    Orders orders = dataSnapshot.getValue(Orders.class);
+                    arr.add(orders);
+
                 }
 
                 adapterOrderItem.notifyDataSetChanged();
@@ -126,9 +126,9 @@ public class fragment2Order extends Fragment {
             public void onItemClick(int position) {
                 arr.get(position);
 
-                Query query = FirebaseDatabase.getInstance().getReference("Listings")
-                        .orderByChild("listName")
-                        .equalTo(arr.get(position).getListName());
+                Query query = orderDatabase
+                        .orderByChild("itemName")
+                        .equalTo(arr.get(position).getItemName());
 
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -136,9 +136,9 @@ public class fragment2Order extends Fragment {
 
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
-                            listingsID = dataSnapshot.getKey().toString();
+                            orderID = dataSnapshot.getKey().toString();
                             Intent intentListing = new Intent(getContext(), order_details_page.class);
-                            intentListing.putExtra("Listing ID", listingsID);
+                            intentListing.putExtra("Order ID", orderID);
                             startActivity(intentListing);
                         }
                     }

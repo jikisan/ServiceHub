@@ -8,7 +8,8 @@ public class Orders {
     String custName;
     String custContactNum;
     String custDeliveryAddress;
-    String latlng;
+    String latitude;
+    String longitude;
     String imageUrl;
     String itemName;
     String message;
@@ -20,7 +21,7 @@ public class Orders {
     }
 
     public Orders(String custID, String listingID, String sellerID, String custName, String custContactNum, String custDeliveryAddress,
-                  String latlng, String imageUrl, String itemName, String message, String prodSubTotal,
+                  String latitude, String longitude, String imageUrl, String itemName, String message, String prodSubTotal,
                   String shipFeeSubTotal, String totalPayment) {
         this.custID = custID;
         this.listingID = listingID;
@@ -28,7 +29,8 @@ public class Orders {
         this.custName = custName;
         this.custContactNum = custContactNum;
         this.custDeliveryAddress = custDeliveryAddress;
-        this.latlng = latlng;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.imageUrl = imageUrl;
         this.itemName = itemName;
         this.message = message;
@@ -85,12 +87,20 @@ public class Orders {
         this.custDeliveryAddress = custDeliveryAddress;
     }
 
-    public String getLatlng() {
-        return latlng;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public void setLatlng(String latlng) {
-        this.latlng = latlng;
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 
     public String getImageUrl() {

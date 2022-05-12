@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -32,21 +34,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class checkout_page extends AppCompatActivity {
 
-    private String listingIdFromIntent, userID, sellerID, latLng, imageUrl,
+    private String listingIdFromIntent, userID, sellerID, latLng, latString, longString, imageUrl,
                 prodSubTotal, shipFee, totalPayment;
     private TextView tv_custName, tv_productSub, tv_shippinSub, tv_listName,
             tv_totalPriceSub, tv_totalPrice, tv_placeOrderBtn, tv_back;
     private EditText et_contactNum, et_address, et_message;
     private ImageView iv_listPhoto;
     private ProgressBar progressBar;
+    private Geocoder geocoder;
 
     private FirebaseUser user;
     private DatabaseReference listingDatabase,  userDatabase, ordersDatabase;
@@ -244,7 +249,7 @@ public class checkout_page extends AppCompatActivity {
 //        String sp_totalPayment = tv_totalPrice.getText().toString();
 
         Orders orders = new Orders(userID, listingIdFromIntent, sellerID, sp_custName, sp_custContactNum, sp_custDeliveryAddress,
-                latLng, imageUrl, sp_itemName, sp_message, prodSubTotal, shipFee, totalPayment);
+                latString, longString, imageUrl, sp_itemName, sp_message, prodSubTotal, shipFee, totalPayment);
 
         ordersDatabase.push().setValue(orders).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -277,8 +282,25 @@ public class checkout_page extends AppCompatActivity {
 
         if(requestCode == 100 && resultCode == RESULT_OK){
             com.google.android.libraries.places.api.model.Place place = Autocomplete.getPlaceFromIntent(data);
-            et_address.setText(place.getAddress());
-            latLng = place.getLatLng().toString();
+
+            List<Address> address = null;
+            geocoder = new Geocoder(this, Locale.getDefault());
+
+            try {
+                address = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
+
+                latString = String.valueOf(address.get(0).getLatitude());
+                longString = String.valueOf(address.get(0).getLongitude());
+                String latLngText = latString + "," + longString;
+                String addressText =  place.getAddress().toString();
+
+
+                latLng = latLngText;
+                et_address.setText(addressText);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
 

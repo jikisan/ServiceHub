@@ -47,11 +47,11 @@
 
     <Button
         android:id="@+id/btn_addLocation"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/mapView"
-        android:layout_marginStart="108dp"
-        android:layout_marginEnd="108dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:background="@drawable/rounded"
         android:text="Add this location?"
         app:backgroundTint="@color/light_blue" />

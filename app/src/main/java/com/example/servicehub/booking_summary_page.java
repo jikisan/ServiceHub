@@ -51,7 +51,7 @@ public class booking_summary_page extends AppCompatActivity {
     private RadioButton rb_gcash, rb_cod;
     private String totalPrice, imageUrl, bookingCreated, paymentMethod, custID, sp_techId , projectIdFromIntent, addressFromIntent, propertyTypeFromIntent,
             airconBrandFromIntent, airconTypeFromIntent, unitTypeFromIntent, bookingDateFromIntent, bookingTimeFromIntent,
-            contactNumberFromIntent, addInfoFromIntent, projName;
+            contactNumberFromIntent, addInfoFromIntent, projName, latString, longString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +80,7 @@ public class booking_summary_page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 radioGroup.check(R.id.rb_cod);
-                paymentMethod = "Cash on Delivery (COD)";
+                paymentMethod = "COD";
             }
         });
 
@@ -115,7 +115,7 @@ public class booking_summary_page extends AppCompatActivity {
                                     submitBooking();
                                 }
                             })
-                            .setContentText("Please make sure all information are correct!")
+                            .setContentText("Please make sure \nall information \nare correct!")
                             .show();
 
                 }
@@ -159,6 +159,8 @@ public class booking_summary_page extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
 
+        latString = extras.getString("latitude");
+        longString = extras.getString("longitude");
         projectIdFromIntent = extras.getString("projectIdFromIntent");
          addressFromIntent = extras.getString("address");
          propertyTypeFromIntent = extras.getString("property type");
@@ -235,7 +237,7 @@ public class booking_summary_page extends AppCompatActivity {
         Date currentTime = new Date();
 
         bookingCreated = currentTime.toString();
-        Booking booking = new Booking(imageUrl, custID, projName, addressFromIntent, propertyTypeFromIntent, airconBrandFromIntent,
+        Booking booking = new Booking(imageUrl, custID, projName, addressFromIntent, latString, longString, propertyTypeFromIntent, airconBrandFromIntent,
                 airconTypeFromIntent, unitTypeFromIntent, bookingDateFromIntent, bookingTimeFromIntent,
                 contactNumberFromIntent, addInfoFromIntent, totalPrice, paymentMethod, sp_techId, bookingCreated);
 

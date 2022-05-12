@@ -70,7 +70,6 @@
             android:orientation="vertical"
             android:paddingBottom="35dp">
 
-
             <ImageView
                 android:id="@+id/iv_listingImage"
                 android:layout_width="match_parent"
@@ -117,9 +116,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:hint="Listing Name"
-                android:minHeight="48dp"
-                android:padding="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="8dp"
+                android:gravity="center_vertical"
+                android:background="@drawable/rounded_black"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_uploadSelfie" />
@@ -137,18 +139,30 @@
 
             <EditText
                 android:id="@+id/et_address"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rounded_black"
                 android:drawableLeft="@drawable/ic_baseline_location"
+                android:drawablePadding="8dp"
                 android:drawableTint="@color/black"
                 android:hint="Search Address"
-                android:minHeight="48dp"
-                android:padding="10dp"
+                android:padding="12dp"
                 android:textSize="16sp"
-                app:layout_constraintTop_toBottomOf="@+id/textView34"
-                tools:layout_editor_absoluteX="0dp" />
+                app:layout_constraintEnd_toStartOf="@+id/iv_pickAddress"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView34" />
 
+            <ImageView
+                android:id="@+id/iv_pickAddress"
+                android:layout_width="35dp"
+                android:layout_height="70dp"
+                android:src="@drawable/add_location"
+                app:layout_constraintBottom_toBottomOf="@+id/et_address"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/et_address"
+                app:tint="@color/red" />
             <TextView
                 android:id="@+id/textView44"
                 android:layout_width="wrap_content"
@@ -163,33 +177,42 @@
                 app:layout_constraintTop_toBottomOf="@+id/et_address" />
 
 
+            <TextView
+                android:id="@+id/tv_pesoSign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="16dp"
+                android:gravity="center"
+                android:hint=" ₱"
+                android:inputType="number"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="@+id/textView44"
+                app:layout_constraintTop_toBottomOf="@+id/textView44" />
+
             <EditText
                 android:id="@+id/et_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:drawableStart="@drawable/peso_two"
                 android:drawablePadding="16dp"
                 android:gravity="center"
                 android:hint="Price"
                 android:inputType="number"
-                android:minHeight="48dp"
                 android:padding="10dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView44" />
+                app:layout_constraintBottom_toBottomOf="@+id/tv_pesoSign"
+                app:layout_constraintStart_toEndOf="@+id/tv_pesoSign" />
+
 
             <TextView
                 android:id="@+id/textView41"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginLeft="12dp"
                 android:layout_marginTop="16dp"
                 android:text="Quantity"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@+id/textView39"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/et_price" />
 
             <ImageView
@@ -201,8 +224,7 @@
                 android:layout_marginTop="16dp"
                 android:src="@drawable/minus"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView41"
-                app:tint="@color/black" />
+                app:layout_constraintTop_toBottomOf="@+id/textView41" />
 
             <TextView
                 android:id="@+id/tv_quantity"
@@ -236,7 +258,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Instruction (Optional)"
+                android:text="Description"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -250,8 +272,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/rounded_blue"
-                android:hint="Enter instruction"
-                android:minHeight="48dp"
+                android:hint="Special Instruction"
                 android:padding="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"

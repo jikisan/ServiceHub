@@ -326,7 +326,8 @@ public class add_listing_page extends AppCompatActivity {
 
     private void addListing() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("Adding Listing...");
+        progressDialog.setTitle("Processing...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         StorageReference fileReference = listingStorage.child(imageUri.getLastPathSegment());

@@ -81,6 +81,7 @@ public class fragment2Map extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         client = LocationServices.getFusedLocationProviderClient(getActivity());
 
         validatePermission();
@@ -205,6 +206,14 @@ public class fragment2Map extends Fragment {
                 {
                     generateListingDataFromFirebase(googleMap);
                 }
+                else if(projCategory.equals("booking"))
+                {
+                    generateBookingFromFireBase(googleMap);
+                }
+                else if(projCategory.equals("orders"))
+                {
+                    generateOrderFromFireBase(googleMap);
+                }
                 else
                 {
                     generateProjDataFromFirebase(googleMap);
@@ -213,6 +222,35 @@ public class fragment2Map extends Fragment {
 
             }
         });
+    }
+
+    private void generateOrderFromFireBase(GoogleMap googleMap) {
+        String latString = getActivity().getIntent().getStringExtra("latString");
+        String longString = getActivity().getIntent().getStringExtra("longString");
+
+        double longitude = Double.parseDouble(longString);
+        double latitude = Double.parseDouble(latString);
+
+        LatLng latLng = new LatLng(latitude, longitude);
+
+        googleMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title("Client Location"));
+    }
+
+    private void generateBookingFromFireBase(GoogleMap googleMap) {
+
+        String latString = getActivity().getIntent().getStringExtra("latString");
+        String longString = getActivity().getIntent().getStringExtra("longString");
+
+        double longitude = Double.parseDouble(longString);
+        double latitude = Double.parseDouble(latString);
+
+        LatLng latLng = new LatLng(latitude, longitude);
+
+        googleMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title("Client Location"));
     }
 
     private void generateListingDataFromFirebase(GoogleMap googleMap) {
@@ -291,11 +329,13 @@ public class fragment2Map extends Fragment {
 
                         String imageUrl = projects.getImageUrl().toString();
                         String projName = projects.getProjName().toString().toUpperCase(Locale.ROOT);
-                        String projLatLng = projects.getProjLatLng().toString();
+                        String latString = projects.getLatitude();
+                        String longString = projects.getLongitude();
+                        //String projLatLng = projects.getProjLatLng().toString();
 
-                        String[] pos = projLatLng.split(",");
-                        latitude = Double.parseDouble(pos[0]);
-                        longitude = Double.parseDouble(pos[1]);
+                       //String[] pos = projLatLng.split(",");
+                        latitude = Double.parseDouble(latString);
+                        longitude = Double.parseDouble(longString);
                         location = new LatLng(latitude, longitude);
 
                         arrLoc.add(location);

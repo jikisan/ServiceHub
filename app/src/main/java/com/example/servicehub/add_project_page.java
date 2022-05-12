@@ -2,6 +2,7 @@ package com.example.servicehub;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
@@ -15,12 +16,18 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -30,6 +37,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -45,8 +54,11 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.chip.Chip;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -59,23 +71,28 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+import Adapter_and_fragments.AdapterAddressItem;
+
 public class add_project_page extends AppCompatActivity {
 
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, iv_projectImage;
+            iv_moreBtn, iv_projectImage, iv_pickAddress;
     private EditText et_projectName,  et_price, et_specialInstruction;
     private Button btn_pickStartTime, btn_pickEndTime, btn_save;
-    private TextView tv_uploadPhoto, tv_startTime, tv_endTime, tv_address, tv_back;
+    private TextView tv_uploadPhoto, tv_startTime, tv_endTime, tv_address, tv_back, tv_percentageFee, tv_totalPrice;
     private Chip chip_Mon, chip_Tue, chip_Wed, chip_Thu, chip_Fri, chip_Sat, chip_Sun;
     private Uri imageUri;
     private Bitmap bitmap;
     private Geocoder geocoder;
-    private Spinner spinner_projCategory;
+    private AutoCompleteTextView auto_category;
 
     private int PLACE_PICKER_REQUEST = 1;
     private int hour, minute;
-    private String latLng;
+    private String latLng, latString, longString, category;
+    private String[] categoryList = {"Installation", "Repair", "Cleaning", "Others"};
+    private ArrayAdapter<CharSequence> adapterCategoryItems;
+    private AdapterAddressItem adapterAddressItem;
 
     boolean isAvailableMon = false;
     boolean isAvailableTue = false;
@@ -97,6 +114,8 @@ public class add_project_page extends AppCompatActivity {
         setContentView(R.layout.add_project_page);
 
 
+
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
         projectStorage = FirebaseStorage.getInstance().getReference("Projects");
@@ -110,7 +129,6 @@ public class add_project_page extends AppCompatActivity {
         spinnerCategory();
 
     }
-
 
     private void initPlaces() {
 
@@ -230,6 +248,99 @@ public class add_project_page extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        auto_category.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                category = adapterView.getItemAtPosition(i).toString();
+                Toast.makeText(add_project_page.this, category, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        iv_pickAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(add_project_page.this);
+                builderSingle.setIcon(R.drawable.logo);
+                builderSingle.setTitle("Select Address:");
+
+                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(add_project_page.this, android.R.layout.select_dialog_singlechoice);
+
+                DatabaseReference myAddressDatabase = FirebaseDatabase.getInstance().getReference("Address");
+
+                myAddressDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                            MyAddress myAddress = dataSnapshot.getValue(MyAddress.class);
+                            String addrses = myAddress.getAddressValue();
+                            latString = myAddress.getLatString();
+                            longString = myAddress.getLongString();
+                            arrayAdapter.add(addrses);
+                        }
+
+                        arrayAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                builderSingle.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String addressFromDialog = arrayAdapter.getItem(which);
+                        tv_address.setText(addressFromDialog);
+                        dialog.dismiss();
+                    }
+                });
+
+                builderSingle.show();
+
+            }
+        });
+
+        et_price.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText inputEditTextField= new EditText(add_project_page.this);
+                inputEditTextField.setInputType(InputType.TYPE_CLASS_NUMBER
+                        | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(add_project_page.this);
+                builderSingle.setIcon(R.drawable.logo);
+                builderSingle.setTitle("Enter Price:");
+                builderSingle.setView(inputEditTextField);
+                builderSingle.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String editTextInput = inputEditTextField.getText().toString();
+                        double servicePrice = Double.parseDouble(editTextInput);
+                        double percentageFee = servicePrice * .15;
+                        double totalPrice = percentageFee + servicePrice;
+
+                        et_price.setText(String.valueOf(servicePrice));
+                        tv_percentageFee.setText( String.valueOf(percentageFee));
+                        tv_totalPrice.setText(String.valueOf(totalPrice));
+                    }
+                });
+
+                builderSingle.show();
+            }
+        });
+
     }
 
     private void inputValidation() {
@@ -263,24 +374,24 @@ public class add_project_page extends AppCompatActivity {
         }
         else{
             new AlertDialog.Builder(add_project_page.this)
-                    .setIcon(R.drawable.logo)
-                    .setTitle("ServiceHUB")
-                    .setMessage("Please make sure all information entered are correct")
-                    .setCancelable(true)
-                    .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                .setIcon(R.drawable.logo)
+                .setTitle("ServiceHUB")
+                .setMessage("Please make sure all information entered are correct")
+                .setCancelable(true)
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                            addProj();
+                        addProj();
 
-                        }
-                    })
-                    .setNegativeButton("Back", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int i) {
-                        }
-                    })
-                    .show();
+                    }
+                })
+                .setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                    }
+                })
+                .show();
         }
 
     }
@@ -292,6 +403,7 @@ public class add_project_page extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
+        iv_pickAddress = findViewById(R.id.iv_pickAddress);
 //        iv_decreaseSlot = findViewById(R.id.iv_decreaseSlot);
 //        iv_increaseSlot = findViewById(R.id.iv_increaseSlot);
         iv_projectImage = findViewById(R.id.iv_projPhotoSummary);
@@ -304,9 +416,11 @@ public class add_project_page extends AppCompatActivity {
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
         tv_endTime = findViewById(R.id.tv_endTime);
         tv_back = findViewById(R.id.tv_back);
+        tv_percentageFee = findViewById(R.id.tv_percentageFee);
+        tv_totalPrice = findViewById(R.id.tv_totalPrice);
 
         btn_save = findViewById(R.id.btn_update);
-        spinner_projCategory = findViewById(R.id.spinner_projCategory);
+        auto_category = findViewById(R.id.auto_category);
 
         chip_Mon = findViewById(R.id.chip_Mon);
         chip_Tue = findViewById(R.id.chip_Tue);
@@ -328,14 +442,14 @@ public class add_project_page extends AppCompatActivity {
 
         String projName = et_projectName.getText().toString();
         String projAddress = tv_address.getText().toString();
-        String price = et_price.getText().toString();
+        String price = tv_totalPrice.getText().toString();
+        String percentageFee = tv_percentageFee.getText().toString();
         String sp_projStartTime = tv_startTime.getText().toString();
         String sp_projEndTime = tv_endTime.getText().toString();
         String projInstruction = et_specialInstruction.getText().toString();
         String imageName = imageUri.getLastPathSegment();
         int ratings = 0;
         String ratingsText = String.valueOf(ratings);
-        String category = spinner_projCategory.getSelectedItem().toString();
 
         addTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -347,7 +461,7 @@ public class add_project_page extends AppCompatActivity {
 
                         chipsValidation();
 
-                        Projects projects = new Projects(userID, category, downloadUrl, imageName, projName, latLng, projAddress, price,
+                        Projects projects = new Projects(userID, category, downloadUrl, imageName, projName, latString, longString, projAddress, price, percentageFee,
                                 sp_projStartTime, sp_projEndTime, projInstruction, ratingsText, isAvailableMon, isAvailableTue, isAvailableWed, isAvailableThu,
                                 isAvailableFri, isAvailableSat, isAvailableSun);
 
@@ -409,10 +523,11 @@ public class add_project_page extends AppCompatActivity {
             try {
                 address = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
 
-                String latString = String.valueOf(address.get(0).getLatitude());
-                String longString = String.valueOf(address.get(0).getLongitude());
+                latString = String.valueOf(address.get(0).getLatitude());
+                longString = String.valueOf(address.get(0).getLongitude());
                 String latLngText = latString + "," + longString;
                 String addressText =  place.getAddress().toString();
+
 
                latLng = latLngText;
                tv_address.setText(addressText);
@@ -462,9 +577,8 @@ public class add_project_page extends AppCompatActivity {
     }
 
     private void spinnerCategory() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.project_category, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_projCategory.setAdapter(adapter);
+        adapterCategoryItems = new ArrayAdapter<CharSequence>(this, R.layout.list_property, categoryList);
+        auto_category.setAdapter(adapterCategoryItems);
     }
 
     private void chipsValidation() {

@@ -34,15 +34,18 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
 
-            <ImageView
+            <TextView
                 android:id="@+id/iv_deleteOrderBtn"
-                android:layout_width="30dp"
+                android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:elevation="10dp"
-                android:src="@drawable/delete_btn"
-                android:text="Delete"
+                android:drawableRight="@drawable/delete_btn"
+                android:drawableTint="@color/red_delete_btn"
+                android:text="Cancel Order"
+                android:textColor="@color/red_delete_btn"
+                android:gravity="center_vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -56,7 +59,7 @@
         android:layout_height="0dp"
         android:fadingEdge="none"
         android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@+id/cardView6"
+        app:layout_constraintBottom_toTopOf="@+id/cv_finishOrderBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView">
@@ -79,6 +82,7 @@
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textSize="16dp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/iv_orderPhoto"
                 app:layout_constraintTop_toTopOf="@+id/iv_orderPhoto" />
@@ -169,18 +173,18 @@
                         android:id="@+id/textView26"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Payment"
+                        android:text="Payment Method"
                         android:textSize="16sp"
-                        app:layout_constraintBottom_toBottomOf="@+id/imageView8"
+                        android:maxHeight="43dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_paymentMethod"
                         app:layout_constraintStart_toStartOf="@+id/textView7"
-                        app:layout_constraintTop_toTopOf="@+id/imageView8" />
+                        app:layout_constraintTop_toTopOf="@+id/tv_paymentMethod" />
 
                     <ImageView
-                        android:id="@+id/imageView8"
+                        android:id="@+id/tv_paymentMethod"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:src="@drawable/gcash"
+                        android:layout_marginTop="16dp"
                         app:layout_constraintEnd_toEndOf="@+id/tv_orderQuantity"
                         app:layout_constraintTop_toBottomOf="@+id/tv_orderQuantity" />
 
@@ -275,13 +279,36 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
+            <TextView
+                android:id="@+id/tv_totalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView5" />
+
+            <TextView
+                android:id="@+id/textView30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:inputType=""
+                android:text="Total amount: "
+                android:textColor="@color/black"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_totalAmount"
+                app:layout_constraintEnd_toStartOf="@+id/tv_totalAmount" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView6"
+        android:id="@+id/cv_finishOrderBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -298,34 +325,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/light_blue"
-            android:padding="8dp">
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+           >
 
             <TextView
-                android:id="@+id/textView30"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:inputType=""
-                android:text="Total amount: "
+                android:text="Finish Order"
                 android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_totalAmount"
-                app:layout_constraintEnd_toStartOf="@+id/tv_totalAmount" />
-
-            <TextView
-                android:id="@+id/tv_totalAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:text="₱ 9,999"
-                android:textColor="@color/white"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

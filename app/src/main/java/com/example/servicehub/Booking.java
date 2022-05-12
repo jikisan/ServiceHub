@@ -2,12 +2,12 @@ package com.example.servicehub;
 
 public class Booking {
 
-
-
     String imageUrl;
     String custID;
     String projName;
     String custAddress;
+    String latitude;
+    String longitude;
     String propertyType;
     String airconBrand;
     String airconType;
@@ -25,7 +25,7 @@ public class Booking {
 
     }
 
-    public Booking(String imageUrl, String custID, String projName, String custAddress, String propertyType, String airconBrand, String airconType, String unitType,
+    public Booking(String imageUrl, String custID, String projName, String custAddress, String latitude, String longitude, String propertyType, String airconBrand, String airconType, String unitType,
                    String bookingDate, String bookingTime, String custContactNum, String addInfo, String totalPrice, String paymentMethod,
                    String techID, String bookingCreated)
     {
@@ -33,6 +33,8 @@ public class Booking {
         this.custID = custID;
         this.projName = projName;
         this.custAddress = custAddress;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.propertyType = propertyType;
         this.airconBrand = airconBrand;
         this.airconType = airconType;
@@ -77,6 +79,22 @@ public class Booking {
 
     public void setCustAddress(String custAddress) {
         this.custAddress = custAddress;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 
     public String getPropertyType() {
