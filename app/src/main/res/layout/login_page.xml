@@ -119,7 +119,6 @@
         android:layout_marginRight="32dp"
         android:background="@drawable/rounded"
         android:backgroundTint="#3592BA"
-        android:visibility="gone"
         android:text="Continue as guest"
         app:backgroundTint="@color/gray"
         app:layout_constraintEnd_toEndOf="parent"
@@ -158,8 +157,6 @@
 
 
     </LinearLayout>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

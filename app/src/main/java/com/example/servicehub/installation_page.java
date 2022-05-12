@@ -31,15 +31,12 @@ public class installation_page extends AppCompatActivity {
         setContentView(R.layout.installation_page);
 
         currentTab = getIntent().getIntExtra("tabNum", 0);
-        System.out.println(currentTab);
-
 
         setRef();
         //selectPage();
         generateTabLayout();
         bottomNavTaskbar();
     }
-
 
     private void generateTabLayout() {
 
@@ -53,7 +50,6 @@ public class installation_page extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("Cleaning"));
         tabLayout.addTab(tabLayout.newTab().setText("Marketplace"));
 
-        
         tabLayout.setScrollPosition(currentTab,0f,true);
         vp_viewPager2.setCurrentItem(currentTab);
 

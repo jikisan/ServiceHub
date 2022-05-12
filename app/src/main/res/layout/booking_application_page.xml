@@ -76,11 +76,11 @@
 
                     <EditText
                         android:id="@+id/et_address"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_marginEnd="8dp"
                         android:background="@drawable/rounded_black"
                         android:drawableLeft="@drawable/ic_baseline_location"
                         android:drawablePadding="8dp"
@@ -88,9 +88,21 @@
                         android:hint="Search Address"
                         android:padding="12dp"
                         android:textSize="16sp"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_pickAddress"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"></EditText>
+
+                    <ImageView
+                        android:id="@+id/iv_pickAddress"
+                        android:layout_width="35dp"
+                        android:layout_height="70dp"
+                        android:layout_marginEnd="16dp"
+                        android:src="@drawable/add_location"
+                        app:layout_constraintBottom_toBottomOf="@+id/et_address"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/et_address"
+                        app:tint="@color/red" />
+
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/textInputLayout"
@@ -219,9 +231,9 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="8dp"
                         android:background="@drawable/rounded_blue"
-                        android:padding="2dp"
                         android:drawableLeft="@drawable/back"
                         android:drawableTint="@color/white"
+                        android:padding="2dp"
                         android:text="back"
                         app:backgroundTint="@color/light_blue"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -237,9 +249,9 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
                         android:background="@drawable/rounded_blue"
-                        android:padding="2dp"
                         android:drawableRight="@drawable/forward"
                         android:drawableTint="@color/white"
+                        android:padding="2dp"
                         android:text="Next"
                         app:backgroundTint="@color/light_blue"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -318,9 +330,9 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="8dp"
                         android:background="@drawable/rounded_blue"
-                        android:padding="2dp"
                         android:drawableLeft="@drawable/back"
                         android:drawableTint="@color/white"
+                        android:padding="2dp"
                         android:text="back"
                         app:backgroundTint="@color/light_blue"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -336,9 +348,9 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
                         android:background="@drawable/rounded_blue"
-                        android:padding="2dp"
                         android:drawableRight="@drawable/forward"
                         android:drawableTint="@color/white"
+                        android:padding="2dp"
                         android:text="Next"
                         app:backgroundTint="@color/light_blue"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -381,21 +393,21 @@
                         android:layout_margin="16dp"
                         android:layout_marginStart="16dp"
                         android:hint="Enter Phone"
-                        app:prefixText="+63"
-                        app:counterMaxLength="10"
                         app:counterEnabled="true"
+                        app:counterMaxLength="10"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:prefixText="+63"
                         app:startIconDrawable="@drawable/contact_us">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/et_phoneNum"
-                            android:paddingLeft="8dp"
-                            android:maxLength="10"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:inputType="number" />
+                            android:inputType="number"
+                            android:maxLength="10"
+                            android:paddingLeft="8dp" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -407,9 +419,9 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="8dp"
                         android:background="@drawable/rounded_blue"
-                        android:padding="2dp"
                         android:drawableLeft="@drawable/back"
                         android:drawableTint="@color/white"
+                        android:padding="2dp"
                         android:text="back"
                         app:backgroundTint="@color/light_blue"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -425,9 +437,9 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginBottom="8dp"
                         android:background="@drawable/rounded_blue"
-                        android:padding="2dp"
                         android:drawableRight="@drawable/forward"
                         android:drawableTint="@color/white"
+                        android:padding="2dp"
                         android:text="Next"
                         app:backgroundTint="@color/light_blue"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -458,60 +470,60 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView19">
 
-               <androidx.constraintlayout.widget.ConstraintLayout
-                   android:layout_width="match_parent"
-                   android:layout_height="match_parent">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                   <EditText
-                       android:id="@+id/et_addInfo"
-                       android:layout_width="match_parent"
-                       android:layout_height="wrap_content"
-                       android:layout_marginLeft="16dp"
-                       android:layout_marginTop="8dp"
-                       android:layout_marginRight="16dp"
-                       android:background="@drawable/rounded_black"
-                       android:drawablePadding="8dp"
-                       android:drawableTint="@color/black"
-                       android:hint="ex. Needs ladder especially on unit located abover 10ft"
-                       android:padding="12dp"
-                       android:textSize="16sp"
-                       app:layout_constraintEnd_toEndOf="parent"
-                       app:layout_constraintStart_toStartOf="parent"
-                       app:layout_constraintTop_toTopOf="parent" />
+                    <EditText
+                        android:id="@+id/et_addInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="16dp"
+                        android:background="@drawable/rounded_black"
+                        android:drawablePadding="8dp"
+                        android:drawableTint="@color/black"
+                        android:hint="ex. Needs ladder especially on unit located abover 10ft"
+                        android:padding="12dp"
+                        android:textSize="16sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                   <Button
-                       android:id="@+id/btn_back5"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_marginStart="16dp"
-                       android:layout_marginTop="16dp"
-                       android:layout_marginBottom="8dp"
-                       android:background="@drawable/rounded_blue"
-                       android:padding="2dp"
-                       android:drawableLeft="@drawable/back"
-                       android:drawableTint="@color/white"
-                       android:text="back"
-                       app:backgroundTint="@color/light_blue"
-                       app:layout_constraintBottom_toBottomOf="parent"
-                       app:layout_constraintStart_toStartOf="parent"
-                       app:layout_constraintTop_toBottomOf="@+id/et_addInfo"
-                       app:layout_constraintVertical_bias="0.0" />
+                    <Button
+                        android:id="@+id/btn_back5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/rounded_blue"
+                        android:drawableLeft="@drawable/back"
+                        android:drawableTint="@color/white"
+                        android:padding="2dp"
+                        android:text="back"
+                        app:backgroundTint="@color/light_blue"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/et_addInfo"
+                        app:layout_constraintVertical_bias="0.0" />
 
-                   <Button
-                       android:id="@+id/btn_submit"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_marginTop="16dp"
-                       android:layout_marginEnd="16dp"
-                       android:layout_marginBottom="16dp"
-                       android:background="@drawable/rounded_blue"
-                       android:text="Submit"
-                       app:backgroundTint="@color/light_blue"
-                       app:layout_constraintBottom_toBottomOf="parent"
-                       app:layout_constraintEnd_toEndOf="parent"
-                       app:layout_constraintTop_toBottomOf="@+id/et_addInfo" />
+                    <Button
+                        android:id="@+id/btn_submit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/rounded_blue"
+                        android:text="Submit"
+                        app:backgroundTint="@color/light_blue"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/et_addInfo" />
 
-               </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

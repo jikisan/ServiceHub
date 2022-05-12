@@ -59,6 +59,7 @@
         android:fillViewport="true"
         app:layout_constraintBottom_toTopOf="@+id/cardViewBottom"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView">
 
@@ -79,9 +80,9 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout
-                    android:background="@drawable/rounded_blue"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/rounded_blue"
                     android:gravity="center">
 
                     <ImageView
@@ -93,9 +94,7 @@
                 </LinearLayout>
 
 
-
             </androidx.cardview.widget.CardView>
-
 
 
             <TextView
@@ -127,16 +126,25 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_uploadPhoto" />
 
-            <Spinner
-                android:id="@+id/spinner_projCategory"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
-                android:padding="8dp"
+                android:background="@color/white"
+                android:hint="Choose Category"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView53" />
+                app:layout_constraintTop_toBottomOf="@+id/textView53">
+
+                <AutoCompleteTextView
+                    android:id="@+id/auto_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/tv_uploadSelfie"
@@ -149,7 +157,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_projCategory" />
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
 
             <EditText
@@ -161,13 +169,13 @@
                 android:paddingLeft="15dp"
                 android:paddingTop="5dp"
                 android:paddingRight="10dp"
-                android:paddingBottom="16dp"
+                android:paddingBottom="8dp"
+                android:gravity="center_vertical"
+                android:background="@drawable/rounded_blue"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_uploadSelfie"
                 tools:ignore="TouchTargetSizeCheck" />
-
-
 
 
             <TextView
@@ -185,18 +193,30 @@
 
             <EditText
                 android:id="@+id/et_address"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:drawableLeft="@drawable/ic_baseline_location"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/rounded_blue"
+                android:drawableLeft="@drawable/search_icon"
+                android:drawablePadding="8dp"
                 android:drawableTint="@color/black"
                 android:hint="Search Address"
-                android:padding="10dp"
-                android:paddingBottom="16dp"
+                android:padding="12dp"
                 android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/iv_pickAddress"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView34" />
+
+            <ImageView
+                android:id="@+id/iv_pickAddress"
+                android:layout_width="35dp"
+                android:layout_height="70dp"
+                android:src="@drawable/add_location"
+                app:layout_constraintBottom_toBottomOf="@+id/et_address"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/et_address"
+                app:tint="@color/red" />
 
             <TextView
                 android:id="@+id/textView35"
@@ -223,49 +243,49 @@
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mon"/>
+                    android:text="Mon" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_Tue"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tue"/>
+                    android:text="Tue" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_Wed"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Wed"/>
+                    android:text="Wed" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_Thu"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thu"/>
+                    android:text="Thu" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_Fri"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Fri"/>
+                    android:text="Fri" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_Sat"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sat"/>
+                    android:text="Sat" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_Sun"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sun"/>
+                    android:text="Sun" />
 
 
             </com.google.android.material.chip.ChipGroup>
@@ -275,8 +295,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="32dp"
                 android:text="Time Start: "
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -296,7 +315,6 @@
                 android:paddingRight="16dp"
                 android:paddingBottom="5dp"
                 android:textSize="20sp"
-                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="@+id/textView38"
                 app:layout_constraintStart_toEndOf="@+id/textView38"
                 app:layout_constraintTop_toTopOf="@+id/textView38" />
@@ -326,39 +344,108 @@
                 android:paddingRight="16dp"
                 android:paddingBottom="5dp"
                 android:textSize="20sp"
-                android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="@+id/textView39"
                 app:layout_constraintStart_toEndOf="@+id/textView39"
                 app:layout_constraintTop_toTopOf="@+id/textView39" />
-
-
 
             <TextView
                 android:id="@+id/textView40"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:text="Price"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView39" />
+                app:layout_constraintTop_toBottomOf="@+id/et_specialInstruction" />
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="*15% percentage fee is not included"
+                android:textColor="@color/red_btn_bg_color"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/textView36"
+                app:layout_constraintStart_toEndOf="@+id/textView36"
+                app:layout_constraintTop_toTopOf="@+id/textView36" />
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Percentage fee: ₱"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/tv_pesoSign"
+                app:layout_constraintTop_toBottomOf="@+id/et_price" />
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Total Price: ₱"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/textView20"
+                app:layout_constraintTop_toBottomOf="@+id/textView20" />
+
+            <TextView
+                android:id="@+id/tv_percentageFee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@+id/textView20"
+                app:layout_constraintStart_toEndOf="@+id/textView20"
+                app:layout_constraintTop_toTopOf="@+id/textView20" />
+
+            <TextView
+                android:id="@+id/tv_totalPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/textView21"
+                app:layout_constraintStart_toEndOf="@+id/textView21"
+                app:layout_constraintTop_toTopOf="@+id/textView21" />
+
+            <TextView
+                android:id="@+id/tv_pesoSign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="16dp"
+                android:gravity="center"
+                android:hint="₱"
+                android:inputType="number"
+                android:padding="10dp"
+                app:layout_constraintStart_toStartOf="@+id/textView40"
+                app:layout_constraintTop_toBottomOf="@+id/textView40" />
 
             <EditText
                 android:id="@+id/et_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="8dp"
-                android:drawableStart="@drawable/peso_two"
+                android:background="@drawable/rounded_blue"
+                android:drawablePadding="16dp"
                 android:gravity="center"
                 android:hint="Price"
                 android:inputType="number"
                 android:padding="10dp"
-                android:drawablePadding="16dp"
-                app:layout_constraintStart_toStartOf="@+id/textView40"
-                app:layout_constraintTop_toBottomOf="@+id/textView40" />
+                android:focusable="false"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_pesoSign"
+                app:layout_constraintStart_toEndOf="@+id/tv_pesoSign" />
 
             <TextView
                 android:id="@+id/textView36"
@@ -378,12 +465,12 @@
                 android:id="@+id/textView41"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:text="Special Instruction"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_price" />
+                app:layout_constraintTop_toBottomOf="@+id/textView39" />
 
             <EditText
                 android:id="@+id/et_specialInstruction"
@@ -402,22 +489,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/rounded"
                 android:drawableLeft="@drawable/save_1"
                 android:drawableTint="@color/white"
                 android:elevation="10dp"
-                android:text="Update"
+                android:text="Save"
                 app:backgroundTint="@color/light_blue"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_specialInstruction" />
+                app:layout_constraintTop_toBottomOf="@+id/textView21" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
 
     </ScrollView>
 
@@ -490,6 +575,5 @@
 
 
     </androidx.cardview.widget.CardView>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

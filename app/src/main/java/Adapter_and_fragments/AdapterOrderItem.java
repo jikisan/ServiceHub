@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.servicehub.Listings;
+import com.example.servicehub.Orders;
 import com.example.servicehub.R;
 import com.squareup.picasso.Picasso;
 
@@ -17,10 +17,10 @@ import java.util.List;
 
 public class AdapterOrderItem extends RecyclerView.Adapter<AdapterOrderItem.ItemViewHolder> {
 
-    List<Listings> arr;
+    List<Orders> arr;
     AdapterOrderItem.OnItemClickListener onItemClickListener;
 
-    public AdapterOrderItem(List<Listings> arr) {
+    public AdapterOrderItem(List<Orders> arr) {
         this.arr = arr;
     }
 
@@ -36,8 +36,8 @@ public class AdapterOrderItem extends RecyclerView.Adapter<AdapterOrderItem.Item
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         String imageUriText = null;
 
-        Listings listings = arr.get(position);
-        holder.orderName.setText(listings.getListName());
+        Orders listings = arr.get(position);
+        holder.orderName.setText(listings.getItemName());
 
         imageUriText = listings.getImageUrl();
         Picasso.get()

@@ -209,8 +209,7 @@ public class edit_listing_page extends AppCompatActivity {
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(edit_listing_page.this, tech_dashboard.class);
-                startActivity(intent);
+                onBackPressed();
             }
         });
 
@@ -449,6 +448,7 @@ public class edit_listing_page extends AppCompatActivity {
     private void updateListingNoImage() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Updating...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         String listName = et_listingName.getText().toString();

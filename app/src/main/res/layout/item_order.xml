@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="8dp"
-    android:padding="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white">
@@ -55,33 +54,6 @@
         android:textSize="8dp"
         app:layout_constraintStart_toEndOf="@+id/tv_orderedTimeDifferece"
         app:layout_constraintTop_toTopOf="@+id/tv_orderedTimeDifferece" />
-
-<!--    <TextView-->
-<!--        android:id="@+id/tv_orderDay"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="8dp"-->
-<!--        android:layout_marginEnd="16dp"-->
-<!--        android:layout_marginRight="16dp"-->
-<!--        android:text="Day"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:textSize="12sp"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/tv_orderDate"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="10"-->
-<!--        android:textAllCaps="true"-->
-<!--        android:textColor="@color/light_blue"-->
-<!--        android:textSize="34sp"-->
-<!--        android:textStyle="bold"-->
-<!--        app:layout_constraintEnd_toEndOf="@+id/tv_orderDay"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/tv_orderDay"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/tv_orderDay" />-->
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

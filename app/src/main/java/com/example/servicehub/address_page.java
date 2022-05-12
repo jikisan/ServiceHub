@@ -288,7 +288,7 @@ public class address_page extends AppCompatActivity {
 
         String size = String.valueOf(arrMyAddress.size() + 1);
         String addressLabel = "Address " + size;
-        MyAddress address = new MyAddress(addressLabel, addressText, userID);
+        MyAddress address = new MyAddress(addressLabel, addressText, userID, String.valueOf(longDouble), String.valueOf(latDouble));
 
         myAddressDatabase.push().setValue(address).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

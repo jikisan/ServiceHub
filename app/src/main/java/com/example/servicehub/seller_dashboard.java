@@ -40,7 +40,7 @@ public class seller_dashboard extends AppCompatActivity {
     private TextView tv_bannerName;
     private Button btn_addListing;
     private ProgressBar progressBar;
-
+    private int currentTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +82,16 @@ public class seller_dashboard extends AppCompatActivity {
 
     private void generateTabLayout() {
 
-        tabLayout.addTab(tabLayout.newTab().setText("My Listings"));
-        tabLayout.addTab(tabLayout.newTab().setText("Active Orders"));
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         adapter = new fragmentAdapterListings(fragmentManager, getLifecycle());
         vp_viewPager2.setAdapter(adapter);
+
+        tabLayout.addTab(tabLayout.newTab().setText("My Listings"));
+        tabLayout.addTab(tabLayout.newTab().setText("Active Orders"));
+
+        currentTab = getIntent().getIntExtra("currentTab", 0);
+        tabLayout.setScrollPosition(currentTab,0f,true);
+        vp_viewPager2.setCurrentItem(currentTab);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -104,6 +108,7 @@ public class seller_dashboard extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
 
             }
+
         });
 
         vp_viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {

@@ -121,7 +121,7 @@ public class place_order_page extends AppCompatActivity {
                             .setContentText("Go to cart?")
                             .show();
                 } else {
-                    //Project ID doesn't exists.
+
                     Date currentTime = Calendar.getInstance().getTime();
                     String cartCreated = currentTime.toString();
                     Cart cart = new Cart(userID, listingIdFromIntent, cartCreated, imageUrlText, tempListName, listPrice, listRatings);

@@ -7,9 +7,11 @@ public class Projects {
     String imageUrl;
     String imageName;
     String projName;
-    String projLatLng;
+    String latitude;
+    String longitude;
     String projAddress;
     String price;
+    String percentageFee;
     String startTime;
     String endTime;
     String projInstruction;
@@ -27,8 +29,8 @@ public class Projects {
 
     }
 
-    public Projects(String userID, String category, String imageUrl, String imageName, String projName, String projLatLng, String projAddress, String price,
-                    String startTime, String endTime, String projInstruction, String ratings, boolean isAvailableMon, boolean isAvailableTue,
+    public Projects(String userID, String category, String imageUrl, String imageName, String projName, String latitude, String longitude, String projAddress, String price,
+                    String percentageFee, String startTime, String endTime, String projInstruction, String ratings, boolean isAvailableMon, boolean isAvailableTue,
                     boolean isAvailableWed, boolean isAvailableThu, boolean isAvailableFri, boolean isAvailableSat, boolean isAvailableSun)
     {
         this.userID = userID;
@@ -36,9 +38,11 @@ public class Projects {
         this.imageUrl = imageUrl;
         this.imageName = imageName;
         this.projName = projName;
-        this.projLatLng = projLatLng;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.projAddress = projAddress;
         this.price = price;
+        this.percentageFee = percentageFee;
         this.startTime = startTime;
         this.endTime = endTime;
         this.projInstruction = projInstruction;
@@ -96,12 +100,20 @@ public class Projects {
         this.projName = projName;
     }
 
-    public String getProjLatLng() {
-        return projLatLng;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public void setProjLatLng(String projLatLng) {
-        this.projLatLng = projLatLng;
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 
     public String getProjAddress() {
@@ -118,6 +130,14 @@ public class Projects {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    public String getPercentageFee() {
+        return percentageFee;
+    }
+
+    public void setPercentageFee(String percentageFee) {
+        this.percentageFee = percentageFee;
     }
 
     public String getStartTime() {
