@@ -411,13 +411,13 @@
                     <ImageView
                         android:id="@+id/iv_viewInMapBtn"
                         android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_height="35dp"
                         android:layout_marginStart="16dp"
-                        android:src="@drawable/ic_baseline_location"
+                        android:src="@drawable/map"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_messageCustomer"
                         app:layout_constraintStart_toEndOf="@+id/iv_messageCustomer"
                         app:layout_constraintTop_toTopOf="@+id/iv_messageCustomer"
-                        app:tint="@color/red_delete_btn" />
+                         />
 
                     <ImageView
                         android:id="@+id/iv_messageCustomer"

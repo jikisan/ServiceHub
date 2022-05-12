@@ -180,11 +180,13 @@
                         app:layout_constraintStart_toStartOf="@+id/textView7"
                         app:layout_constraintTop_toTopOf="@+id/tv_paymentMethod" />
 
-                    <ImageView
+                    <TextView
                         android:id="@+id/tv_paymentMethod"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Payment Method"
+                        android:textColor="@color/black"
                         app:layout_constraintEnd_toEndOf="@+id/tv_orderQuantity"
                         app:layout_constraintTop_toBottomOf="@+id/tv_orderQuantity" />
 
@@ -222,24 +224,27 @@
 
                     <TextView
                         android:id="@+id/tv_customerName"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:layout_marginLeft="16dp"
                         android:layout_marginTop="24dp"
+                        android:layout_marginEnd="8dp"
                         android:text="Name"
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_custLocation"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/tv_custContactNum"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
                         android:text="Contact Number"
                         android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_custLocation"
                         app:layout_constraintStart_toStartOf="@+id/tv_customerName"
                         app:layout_constraintTop_toBottomOf="@+id/tv_customerName" />
 
@@ -249,11 +254,11 @@
                         android:layout_height="27dp"
                         android:layout_marginEnd="16dp"
                         android:layout_marginRight="16dp"
-                        android:src="@drawable/ic_baseline_location"
+                        android:src="@drawable/map"
                         app:layout_constraintBottom_toBottomOf="@+id/iv_messageCust"
                         app:layout_constraintEnd_toStartOf="@+id/iv_messageCust"
                         app:layout_constraintTop_toTopOf="@+id/iv_messageCust"
-                        app:tint="@color/red" />
+                      />
 
                     <ImageView
                         android:id="@+id/iv_messageCust"
@@ -269,10 +274,12 @@
 
                     <TextView
                         android:id="@+id/tv_customerAddress"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
                         android:text="Address"
                         android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_custLocation"
                         app:layout_constraintStart_toStartOf="@+id/tv_custContactNum"
                         app:layout_constraintTop_toBottomOf="@+id/tv_custContactNum" />
 
@@ -285,7 +292,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="0"
-                android:textColor="@color/black"
+                android:textColor="@color/red"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"

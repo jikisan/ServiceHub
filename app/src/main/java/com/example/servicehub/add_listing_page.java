@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -40,8 +41,11 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
@@ -58,7 +62,7 @@ public class add_listing_page extends AppCompatActivity {
 
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, iv_listingImage, iv_decreaseBtn, iv_increaseBtn;
+            iv_moreBtn, iv_listingImage, iv_decreaseBtn, iv_increaseBtn, iv_pickAddress;
     private TextView tv_uploadPhoto, tv_address, tv_quantity, tv_back;
     private EditText et_listingName, et_price, et_listDesc;
     private Button btn_save;
@@ -67,7 +71,7 @@ public class add_listing_page extends AppCompatActivity {
     private Geocoder geocoder;
 
     private int quantity = 1;
-    private String quantityText, latLng;
+    private String quantityText, latLng, latString, longString;
 
     private FirebaseAuth fAuth;
     private FirebaseUser user;
@@ -163,6 +167,64 @@ public class add_listing_page extends AppCompatActivity {
             }
         });
 
+        iv_pickAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(add_listing_page.this);
+                builderSingle.setIcon(R.drawable.logo);
+                builderSingle.setTitle("Select Address:");
+
+                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(add_listing_page.this, android.R.layout.select_dialog_singlechoice);
+
+                DatabaseReference myAddressDatabase = FirebaseDatabase.getInstance().getReference("Address");
+
+                myAddressDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                            MyAddress myAddress = dataSnapshot.getValue(MyAddress.class);
+                            String addrses = myAddress.getAddressValue();
+                            latString = myAddress.getLatString();
+                            longString = myAddress.getLongString();
+
+                            String latLngText = latString + "," + longString;
+
+                            latLng = latLngText;
+                            arrayAdapter.add(addrses);
+                        }
+
+                        arrayAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                builderSingle.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String addressFromDialog = arrayAdapter.getItem(which);
+                        tv_address.setText(addressFromDialog);
+                        dialog.dismiss();
+                    }
+                });
+
+                builderSingle.show();
+
+            }
+        });
 
     }
 
@@ -176,6 +238,7 @@ public class add_listing_page extends AppCompatActivity {
         iv_decreaseBtn = findViewById(R.id.iv_decreaseBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
         iv_increaseBtn = findViewById(R.id.iv_increaseBtn);
+        iv_pickAddress = findViewById(R.id.iv_pickAddress);
 
         tv_uploadPhoto = findViewById(R.id.tv_uploadPhoto);
         tv_quantity = findViewById(R.id.tv_quantity);
@@ -268,8 +331,8 @@ public class add_listing_page extends AppCompatActivity {
             try {
                 address = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
 
-                String latString = String.valueOf(address.get(0).getLatitude());
-                String longString = String.valueOf(address.get(0).getLongitude());
+                latString = String.valueOf(address.get(0).getLatitude());
+                longString = String.valueOf(address.get(0).getLongitude());
                 String latLngText = latString + "," + longString;
                 String addressText =  place.getAddress().toString();
 
