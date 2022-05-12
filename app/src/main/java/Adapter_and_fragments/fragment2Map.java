@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -39,6 +40,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -196,7 +198,7 @@ public class fragment2Map extends Fragment {
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(location);
                 markerOptions.title("My Location");
-                markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.user_pic));
+                markerOptions.icon(BitmapFromVector(getContext(), R.drawable.map_pin96));
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 13));
 
                 googleMap.addMarker(markerOptions);
@@ -224,6 +226,28 @@ public class fragment2Map extends Fragment {
         });
     }
 
+    private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
+        // below line is use to generate a drawable.
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+
+        // below line is use to set bounds to our vector drawable.
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+
+        // below line is use to create a bitmap for our
+        // drawable which we have added.
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+
+        // below line is use to add bitmap in our canvas.
+        Canvas canvas = new Canvas(bitmap);
+
+        // below line is use to draw our
+        // vector drawable in canvas.
+        vectorDrawable.draw(canvas);
+
+        // after generating our bitmap we are returning our bitmap.
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
     private void generateOrderFromFireBase(GoogleMap googleMap) {
         String latString = getActivity().getIntent().getStringExtra("latString");
         String longString = getActivity().getIntent().getStringExtra("longString");
@@ -232,6 +256,7 @@ public class fragment2Map extends Fragment {
         double latitude = Double.parseDouble(latString);
 
         LatLng latLng = new LatLng(latitude, longitude);
+
 
         googleMap.addMarker(new MarkerOptions()
                 .position(latLng)

@@ -30,7 +30,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/iv_sort"
             app:layout_constraintEnd_toStartOf="@+id/iv_sort"
             app:layout_constraintTop_toTopOf="@+id/iv_sort"
-            app:tint="@color/quantum_googgreen500" />
+           />
 
         <ImageView
             android:id="@+id/iv_sort"

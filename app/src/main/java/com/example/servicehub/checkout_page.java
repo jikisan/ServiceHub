@@ -4,13 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -47,14 +50,17 @@ public class checkout_page extends AppCompatActivity {
     private String listingIdFromIntent, userID, sellerID, latLng, latString, longString, imageUrl,
                 prodSubTotal, shipFee, totalPayment;
     private TextView tv_custName, tv_productSub, tv_shippinSub, tv_listName,
-            tv_totalPriceSub, tv_totalPrice, tv_placeOrderBtn, tv_back;
+            tv_totalPriceSub, tv_totalPrice, tv_placeOrderBtn, tv_back, tv_quantity, tv_quantityLimit;
     private EditText et_contactNum, et_address, et_message;
-    private ImageView iv_listPhoto;
+    private ImageView iv_listPhoto, iv_pickAddress, iv_decreaseBtn, iv_increaseBtn;
     private ProgressBar progressBar;
     private Geocoder geocoder;
 
     private FirebaseUser user;
     private DatabaseReference listingDatabase,  userDatabase, ordersDatabase;
+
+    private int quantity = 1, itemQuantity;
+    private String quantityText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +76,7 @@ public class checkout_page extends AppCompatActivity {
 
         setRef();
         initPlaces();
+        adjustQuantity();
         generateData();
         clickListeners();
 
@@ -87,12 +94,17 @@ public class checkout_page extends AppCompatActivity {
         tv_placeOrderBtn = findViewById(R.id.tv_placeOrderBtn);
         tv_listName = findViewById(R.id.tv_listName);
         tv_back = findViewById(R.id.tv_back);
+        tv_quantity = findViewById(R.id.tv_quantity);
+        tv_quantityLimit = findViewById(R.id.tv_quantityLimit);
 
         et_contactNum = findViewById(R.id.et_contactNum);
         et_address = findViewById(R.id.et_address);
         et_message = findViewById(R.id.et_message);
 
         iv_listPhoto = findViewById(R.id.iv_listPhoto);
+        iv_pickAddress = findViewById(R.id.iv_pickAddress);
+        iv_decreaseBtn = findViewById(R.id.iv_decreaseBtn);
+        iv_increaseBtn = findViewById(R.id.iv_increaseBtn);
 
         progressBar = findViewById(R.id.progressBar);
     }
@@ -107,6 +119,7 @@ public class checkout_page extends AppCompatActivity {
     }
 
     private void clickListeners() {
+
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,6 +174,110 @@ public class checkout_page extends AppCompatActivity {
                 }
             }
         });
+
+        iv_pickAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(checkout_page.this);
+                builderSingle.setIcon(R.drawable.logo);
+                builderSingle.setTitle("Select Address:");
+
+                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(checkout_page.this, android.R.layout.select_dialog_singlechoice);
+
+                DatabaseReference myAddressDatabase = FirebaseDatabase.getInstance().getReference("Address");
+
+                myAddressDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                            MyAddress myAddress = dataSnapshot.getValue(MyAddress.class);
+                            String addrses = myAddress.getAddressValue();
+                            latString = myAddress.getLatString();
+                            longString = myAddress.getLongString();
+                            arrayAdapter.add(addrses);
+                        }
+
+                        arrayAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                builderSingle.setNegativeButton("Back", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String addressFromDialog = arrayAdapter.getItem(which);
+                        et_address.setText(addressFromDialog);
+                        dialog.dismiss();
+                    }
+                });
+
+                builderSingle.show();
+
+            }
+        });
+    }
+
+    private void adjustQuantity() {
+        quantityText = String.valueOf(quantity);
+        tv_quantity.setText(quantityText);
+
+        iv_decreaseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String quantityText;
+
+                if (quantity == 1){
+                    quantity = 1;
+                    Toast.makeText(checkout_page.this, "Cannot be empty", Toast.LENGTH_SHORT).show();
+                    quantityText = String.valueOf(quantity);
+                    tv_quantity.setText(quantityText);
+                }
+                else
+                {
+                    quantity = quantity - 1;
+                    quantityText = String.valueOf(quantity);
+                    tv_quantity.setText(quantityText);
+                }
+            }
+        });
+
+        iv_increaseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if( quantity == itemQuantity){
+
+                    Toast.makeText(checkout_page.this, "Limit reached", Toast.LENGTH_SHORT).show();
+                    quantityText = String.valueOf(quantity);
+                    tv_quantity.setText(quantityText);
+
+                }
+                else
+                {
+                    quantity = quantity + 1;
+                    quantityText = String.valueOf(quantity);
+                    tv_quantity.setText(quantityText);
+                }
+
+
+
+            }
+        });
     }
 
     private void generateData() {
@@ -202,6 +319,11 @@ public class checkout_page extends AppCompatActivity {
                 imageUrl = listings.imageUrl;
                 String sp_listName = listings.listName;
                 String sp_listPrice = listings.listPrice;
+                quantityText = listings.listQuantity;
+
+                itemQuantity = Integer.parseInt(quantityText);
+
+                tv_quantityLimit.setText(quantityText + " Pieces Available");
 
                 double price = Double.parseDouble(sp_listPrice);
                 DecimalFormat twoPlaces = new DecimalFormat("0.00");
@@ -240,16 +362,18 @@ public class checkout_page extends AppCompatActivity {
         String sp_custName = tv_custName.getText().toString();
         String sp_custContactNum = et_contactNum.getText().toString();
         String sp_custDeliveryAddress = et_address.getText().toString();
+
 //        String sp_latlng = latLng;
 //        String sp_imageUrl = imageUrl;
         String sp_itemName = tv_listName.getText().toString();
+        String sp_orderQuantity = tv_quantity.getText().toString();
         String sp_message = et_message.getText().toString();
 //        String sp_prodSubTotal = tv_productSub.getText().toString();
 //        String sp_shipFee = tv_shippinSub.getText().toString();
 //        String sp_totalPayment = tv_totalPrice.getText().toString();
 
         Orders orders = new Orders(userID, listingIdFromIntent, sellerID, sp_custName, sp_custContactNum, sp_custDeliveryAddress,
-                latString, longString, imageUrl, sp_itemName, sp_message, prodSubTotal, shipFee, totalPayment);
+                latString, longString, imageUrl, sp_itemName, sp_orderQuantity, sp_message, prodSubTotal, shipFee, totalPayment);
 
         ordersDatabase.push().setValue(orders).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

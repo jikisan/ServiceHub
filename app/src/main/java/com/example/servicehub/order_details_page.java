@@ -222,6 +222,7 @@ public class order_details_page extends AppCompatActivity {
                         imageUriText = orders.getImageUrl();
                         orderName = orders.getItemName();
                         String sp_ordersPrice = orders.getProdSubTotal();
+                        String sp_orderQuantity = orders.getItemQuantity();
 
                         String sp_custName = orders.getCustName();
                         String sp_custContactNum = orders.getCustContactNum();
@@ -231,13 +232,16 @@ public class order_details_page extends AppCompatActivity {
                         Picasso.get().load(imageUriText).into(iv_orderPhoto);
                         tv_orderName.setText(orderName);
 
+
                         //customer details
                         tv_customerName.setText(sp_custName);
                         tv_custContactNum.setText(sp_custContactNum);
                         tv_customerAddress.setText(sp_custAddress);
-
+                        tv_orderQuantity.setText(sp_orderQuantity);
                         tv_orderPrice.setText("₱ " + sp_ordersPrice);
-                        tv_totalAmount.setText("₱ " + sp_ordersPrice);
+
+                        double totalAmount = Double.parseDouble(sp_ordersPrice) * Double.parseDouble(sp_orderQuantity);
+                        tv_totalAmount.setText("₱ " + totalAmount);
 
                         String[] pos = custLatLng.split(",");
                         latString = pos[0];

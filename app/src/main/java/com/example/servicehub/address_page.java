@@ -95,7 +95,7 @@ public class address_page extends AppCompatActivity {
 
 
     private String userID;
-    private  LatLng newLocationFromMarker , latLngFromPlaceApi;
+    private LatLng newLocationFromMarker , latLngFromPlaceApi;
     private GoogleMap mGoogleMap;
 
 
@@ -308,7 +308,7 @@ public class address_page extends AppCompatActivity {
                             })
                             .show();
 
-                    Toast.makeText(address_page.this, "Adderss Added", Toast.LENGTH_LONG).show();
+                    Toast.makeText(address_page.this, "Address Added", Toast.LENGTH_LONG).show();
 
                 } else {
                     Toast.makeText(address_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -353,9 +353,9 @@ public class address_page extends AppCompatActivity {
                     if (location != null) {
                         // When location result is not
                         // null set latitude
-                        latDouble = location.getLatitude();
-                        longDouble = location.getLongitude();
-                        asyncMap(latDouble, longDouble, mMapView);
+                        double myLat = location.getLatitude();
+                        double myLong = location.getLongitude();
+                        asyncMap(myLat, myLong, mMapView);
 
 
                     } else {
@@ -394,7 +394,7 @@ public class address_page extends AppCompatActivity {
         }
     }
 
-    private void asyncMap(Double latDouble, Double longDouble, MapView mMapView) {
+    private void asyncMap(Double myLat, Double myLong, MapView mMapView) {
         // Async map
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -409,8 +409,10 @@ public class address_page extends AppCompatActivity {
 //                }
 //                googleMap.setMyLocationEnabled(true);
 
-                LatLng location = new LatLng(latDouble, longDouble);
+                LatLng location = new LatLng(myLat, myLong);
                 newLocationFromMarker = location;
+                latDouble = newLocationFromMarker.latitude;
+                longDouble = newLocationFromMarker.longitude;
 
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(location);
@@ -429,6 +431,9 @@ public class address_page extends AppCompatActivity {
                     public void onMarkerDragEnd(@NonNull Marker marker) {
 
                         newLocationFromMarker = marker.getPosition();
+                        latDouble = newLocationFromMarker.latitude;
+                        longDouble = newLocationFromMarker.longitude;
+
                         MarkerOptions markerOptions = new MarkerOptions();
                         markerOptions.position(newLocationFromMarker);
                         markerOptions.draggable(true);
@@ -446,6 +451,8 @@ public class address_page extends AppCompatActivity {
                     public void onMapClick(@NonNull LatLng latLng) {
                         googleMap.clear();
                         newLocationFromMarker = latLng;
+                        latDouble = newLocationFromMarker.latitude;
+                        longDouble = newLocationFromMarker.longitude;
 
                         MarkerOptions markerOptions = new MarkerOptions();
                         markerOptions.position(latLng);
@@ -454,8 +461,6 @@ public class address_page extends AppCompatActivity {
                         googleMap.addMarker(markerOptions);
                     }
                 });
-
-
 
             }
         });
@@ -480,10 +485,10 @@ public class address_page extends AppCompatActivity {
                 String latLngText = latString + "," + longString;
 
                 String[] latlong =  latLngText.split(",");
-                double latitude = Double.parseDouble(latlong[0]);
-                double longitude = Double.parseDouble(latlong[1]);
+                latDouble = Double.parseDouble(latlong[0]);
+                longDouble = Double.parseDouble(latlong[1]);
 
-                latLngFromPlaceApi = new LatLng(latitude, longitude);
+                latLngFromPlaceApi = new LatLng(latDouble, longDouble);
                 newLocationFromMarker = latLngFromPlaceApi;
 
                 mGoogleMap.clear();

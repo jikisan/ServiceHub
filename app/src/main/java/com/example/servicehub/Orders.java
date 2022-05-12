@@ -12,6 +12,7 @@ public class Orders {
     String longitude;
     String imageUrl;
     String itemName;
+    String itemQuantity;
     String message;
     String prodSubTotal;
     String shipFeeSubTotal;
@@ -21,7 +22,7 @@ public class Orders {
     }
 
     public Orders(String custID, String listingID, String sellerID, String custName, String custContactNum, String custDeliveryAddress,
-                  String latitude, String longitude, String imageUrl, String itemName, String message, String prodSubTotal,
+                  String latitude, String longitude, String imageUrl, String itemName, String itemQuantity, String message, String prodSubTotal,
                   String shipFeeSubTotal, String totalPayment) {
         this.custID = custID;
         this.listingID = listingID;
@@ -33,6 +34,7 @@ public class Orders {
         this.longitude = longitude;
         this.imageUrl = imageUrl;
         this.itemName = itemName;
+        this.itemQuantity = itemQuantity;
         this.message = message;
         this.prodSubTotal = prodSubTotal;
         this.shipFeeSubTotal = shipFeeSubTotal;
@@ -113,6 +115,14 @@ public class Orders {
 
     public String getItemName() {
         return itemName;
+    }
+
+    public String getItemQuantity() {
+        return itemQuantity;
+    }
+
+    public void setItemQuantity(String itemQuantity) {
+        this.itemQuantity = itemQuantity;
     }
 
     public void setItemName(String itemName) {
