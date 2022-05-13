@@ -57,6 +57,7 @@ public class cart_page extends AppCompatActivity {
         generateRecyclerLayout();
         clickListeners();
         bottomNavTaskbar();
+
     }
 
     private void clickListeners() {
@@ -127,7 +128,7 @@ public class cart_page extends AppCompatActivity {
 
         Query query = cartDatabase
                 .orderByChild("custID")
-                .equalTo(userID);
+                .startAt(userID).endAt(userID);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

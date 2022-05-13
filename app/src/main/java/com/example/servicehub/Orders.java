@@ -18,12 +18,16 @@ public class Orders {
     String shipFeeSubTotal;
     String totalPayment;
 
+
+    String paymentMethod;
+
     public Orders() {
     }
 
     public Orders(String custID, String listingID, String sellerID, String custName, String custContactNum, String custDeliveryAddress,
                   String latitude, String longitude, String imageUrl, String itemName, String itemQuantity, String message, String prodSubTotal,
-                  String shipFeeSubTotal, String totalPayment) {
+                  String shipFeeSubTotal, String totalPayment, String paymentMethod)
+    {
         this.custID = custID;
         this.listingID = listingID;
         this.sellerID = sellerID;
@@ -39,6 +43,7 @@ public class Orders {
         this.prodSubTotal = prodSubTotal;
         this.shipFeeSubTotal = shipFeeSubTotal;
         this.totalPayment = totalPayment;
+        this.paymentMethod = paymentMethod;
     }
 
     public String getCustID() {
@@ -159,5 +164,12 @@ public class Orders {
 
     public void setTotalPayment(String totalPayment) {
         this.totalPayment = totalPayment;
+    }
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

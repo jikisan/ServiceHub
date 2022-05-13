@@ -44,7 +44,7 @@ public class order_details_page extends AppCompatActivity {
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn, iv_moreBtn,
              iv_orderPhoto, iv_custLocation, iv_messageCust ;
     private TextView tv_orderName, tv_customerName, tv_orderPrice, tv_orderQuantity, iv_deleteOrderBtn,
-            tv_customerAddress, tv_custContactNum, tv_back, tv_totalAmount;
+            tv_customerAddress, tv_custContactNum, tv_back, tv_totalAmount, tv_paymentMethod;
 
     private String userID, imageUriText, orderIdFromIntent, custLatLng, custID, orderName, latString, longString;
     private CardView cv_finishOrderBtn;
@@ -94,6 +94,7 @@ public class order_details_page extends AppCompatActivity {
         tv_custContactNum = findViewById(R.id.tv_custContactNum);
         tv_totalAmount = findViewById(R.id.tv_totalAmount);
         tv_back = findViewById(R.id.tv_back);
+        tv_paymentMethod = findViewById(R.id.tv_paymentMethod);
 
         cv_finishOrderBtn = findViewById(R.id.cv_finishOrderBtn);
     }
@@ -223,10 +224,12 @@ public class order_details_page extends AppCompatActivity {
                         orderName = orders.getItemName();
                         String sp_ordersPrice = orders.getProdSubTotal();
                         String sp_orderQuantity = orders.getItemQuantity();
+                        String sp_paymentMethod = orders.getPaymentMethod();
 
                         String sp_custName = orders.getCustName();
                         String sp_custContactNum = orders.getCustContactNum();
                         String sp_custAddress = orders.getCustDeliveryAddress();
+
 
                         //Order details
                         Picasso.get().load(imageUriText).into(iv_orderPhoto);
@@ -239,6 +242,7 @@ public class order_details_page extends AppCompatActivity {
                         tv_customerAddress.setText(sp_custAddress);
                         tv_orderQuantity.setText(sp_orderQuantity);
                         tv_orderPrice.setText("₱ " + sp_ordersPrice);
+                        tv_paymentMethod.setText( sp_paymentMethod);
 
                         double totalAmount = Double.parseDouble(sp_ordersPrice) * Double.parseDouble(sp_orderQuantity);
                         tv_totalAmount.setText("₱ " + totalAmount);

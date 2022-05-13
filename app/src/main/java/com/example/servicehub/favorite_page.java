@@ -70,6 +70,8 @@ public class favorite_page extends AppCompatActivity {
         favoriteItem.setOnItemClickListener(new AdapterFavoriteItem.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
+
+
                 final ProgressDialog progressDialog = new ProgressDialog(favorite_page.this);
                 progressDialog.setTitle("Loading...");
                 progressDialog.show();
@@ -130,7 +132,7 @@ public class favorite_page extends AppCompatActivity {
 
         Query query = favoriteDatabase
                 .orderByChild("custID")
-                .equalTo(userID);
+                .startAt(userID).endAt(userID);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
