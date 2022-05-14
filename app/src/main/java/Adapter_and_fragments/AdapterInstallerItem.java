@@ -20,6 +20,9 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
     List<Projects> arr;
     OnItemClickListener onItemClickListener;
 
+    public AdapterInstallerItem() {
+    }
+
     public AdapterInstallerItem(List<Projects> arr) {
         this.arr = arr;
     }

@@ -15,6 +15,7 @@ import com.example.servicehub.Cart;
 import com.example.servicehub.Favorites;
 import com.example.servicehub.R;
 import com.example.servicehub.cart_page;
+import com.example.servicehub.favorite_page;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -91,7 +92,7 @@ public class AdapterFavoriteItem extends RecyclerView.Adapter<AdapterFavoriteIte
                                             {
                                                 dataSnapshot.getRef().removeValue();
                                                 Toast.makeText(view.getContext(), "Service Removed", Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(view.getContext(), cart_page.class);
+                                                Intent intent = new Intent(view.getContext(), favorite_page.class);
                                                 view.getContext().startActivity(intent);
                                             }
                                         }

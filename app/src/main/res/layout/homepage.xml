@@ -7,8 +7,8 @@
     android:background="@color/bg_color"
     tools:context=".homepage">
 
-
     <ScrollView
+        android:id="@+id/scrollView4"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/cardViewBottom"
@@ -18,8 +18,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="match_parent">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_userPic"
@@ -32,7 +31,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <TextView
                 android:id="@+id/textView56"
                 android:layout_width="wrap_content"
@@ -43,7 +41,6 @@
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_userPic" />
-
 
             <TextView
                 android:id="@+id/tv_bannerName"
@@ -117,7 +114,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-
             <TextView
                 android:id="@+id/cardView_blueBackground"
                 android:layout_width="match_parent"
@@ -135,8 +131,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:background="@drawable/rounded_black"
-                android:text="Book Now"
                 android:elevation="8dp"
+                android:text="Book Now"
                 android:textColor="@color/white"
                 app:backgroundTint="#D2000000"
                 app:layout_constraintBottom_toBottomOf="@+id/cardView_blueBackground"
@@ -308,12 +304,24 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </HorizontalScrollView>
 
+            <TextView
+                android:id="@+id/textView60"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:text="Recommended"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/scrollView_widgets"
+                app:layout_constraintTop_toBottomOf="@+id/scrollView_widgets" />
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView8"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/rounded_blue"
                 android:backgroundTint="@color/white"
@@ -321,7 +329,7 @@
                 app:cardElevation="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/scrollView_widgets">
+                app:layout_constraintTop_toBottomOf="@+id/textView60">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -379,8 +387,8 @@
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/rounded_blue"
                 android:backgroundTint="@color/white"
-                app:cardElevation="15dp"
                 app:cardCornerRadius="10dp"
+                app:cardElevation="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardView8">
@@ -418,12 +426,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginBottom="16dp"
+                        android:drawableLeft="@drawable/back"
+                        android:gravity="center"
                         android:text="Find Repairman"
                         android:textColor="@color/light_blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:drawableLeft="@drawable/back"
-                        android:gravity="center"
                         app:drawableTint="@color/light_blue"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -442,8 +450,8 @@
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/rounded_blue"
                 android:backgroundTint="@color/white"
-                app:cardElevation="15dp"
                 app:cardCornerRadius="10dp"
+                app:cardElevation="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardView9">
@@ -486,10 +494,10 @@
                         android:textColor="@color/light_blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:drawableRightCompat="@drawable/forward"
                         app:drawableTint="@color/light_blue"
-                        app:drawableRightCompat="@drawable/forward" />
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -502,9 +510,9 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_blue"
                 android:backgroundTint="@color/white"
-                android:layout_marginBottom="16dp"
                 app:cardCornerRadius="10dp"
                 app:cardElevation="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -544,12 +552,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginBottom="16dp"
+                        android:drawableLeft="@drawable/back"
+                        android:gravity="center"
                         android:text="Go to Marketplace"
                         android:textColor="@color/light_blue"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        android:drawableLeft="@drawable/back"
-                        android:gravity="center"
                         app:drawableTint="@color/light_blue"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -559,23 +567,26 @@
 
             </androidx.cardview.widget.CardView>
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="45dp"
-                android:layout_height="53dp"
-                android:layout_marginStart="6dp"
-                android:layout_marginEnd="9dp"
-                android:layout_marginBottom="7dp"
-                android:indeterminate="true"
-                android:indeterminateTint="@color/light_blue"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_userPic"
-                app:layout_constraintEnd_toEndOf="@+id/iv_userPic"
-                app:layout_constraintStart_toStartOf="@+id/iv_userPic"
-                app:layout_constraintTop_toTopOf="@+id/iv_userPic" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/light_blue"
+        android:max="100"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView4"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewBottom"

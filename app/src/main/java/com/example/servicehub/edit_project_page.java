@@ -79,7 +79,7 @@ public class edit_project_page extends AppCompatActivity {
     private Geocoder geocoder;
     private AutoCompleteTextView auto_category;
     private ArrayAdapter<CharSequence> adapterCategoryItems;
-    private String[] categoryList = {"Installation", "Repair", "Cleaning", "Others"};
+    private String[] categoryList = {"Installation","Repair","Cleaning","Heating","Ventilation","Others"};
 
 
     private int PLACE_PICKER_REQUEST = 1;
@@ -484,6 +484,7 @@ public class edit_project_page extends AppCompatActivity {
     private void updateProject() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Updating Project...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         StorageReference fileReference = projectStorage.child(imageUri.getLastPathSegment());

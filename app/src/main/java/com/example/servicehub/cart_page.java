@@ -61,12 +61,6 @@ public class cart_page extends AppCompatActivity {
     }
 
     private void clickListeners() {
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
 
         adapterCartItem.setOnItemClickListener(new AdapterCartItem.OnItemClickListener() {
             @Override

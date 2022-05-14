@@ -410,7 +410,7 @@ public class checkout_page extends AppCompatActivity {
                             .show();
 
 
-                    Intent intent = new Intent(checkout_page.this, homepage.class);
+                    Intent intent = new Intent(checkout_page.this, my_orders_page.class);
                     startActivity(intent);
 
 

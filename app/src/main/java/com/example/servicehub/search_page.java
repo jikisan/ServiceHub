@@ -58,10 +58,21 @@ public class search_page extends AppCompatActivity {
         projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
         setRef();
-        bottomNavTaskbar();
-        clickListeners();
         generateRecyclerLayout();
         generateListOfCategory();
+        generateDataValue();
+        clickListeners();
+        bottomNavTaskbar();
+    }
+
+    private void generateRecyclerLayout() {
+        recyclerView_searches.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView_searches.setLayoutManager(linearLayoutManager);
+
+        adapterInstallerItem = new AdapterInstallerItem(arrProj);
+        recyclerView_searches.setAdapter(adapterInstallerItem);
+
     }
 
     private void generateListOfCategory() {
@@ -87,45 +98,6 @@ public class search_page extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    private void dropDownMenuTextView() {
-
-        String[] categoryArray = listOfCategory.split(",");
-        adapterCategoryItems = new ArrayAdapter<CharSequence>(search_page.this, R.layout.list_property, categoryArrayFix);
-        auto_complete_txt.setAdapter(adapterCategoryItems);
-    }
-
-    private void clickListeners() {
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-
-        auto_complete_txt.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                arrProj.clear();
-
-
-                String category = adapterView.getItemAtPosition(i).toString();
-                tv_headerTitle.setText(category);
-
-                if(category == "All services")
-                {
-                    generateAllProjects();
-                }
-                else
-                {
-                    generateRecyclerLayoutByCategory(category);
-                }
-
-
 
             }
         });
@@ -162,24 +134,10 @@ public class search_page extends AppCompatActivity {
         });
     }
 
-    private void generateRecyclerLayout() {
-        recyclerView_searches.setHasFixedSize(true);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView_searches.setLayoutManager(linearLayoutManager);
-
-        adapterInstallerItem = new AdapterInstallerItem(arrProj);
-        recyclerView_searches.setAdapter(adapterInstallerItem);
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
+    private void generateDataValue() {
         if(projDatabase != null)
         {
             generateAllProjects();
-
 
         }
         if(sv_search != null)
@@ -222,6 +180,51 @@ public class search_page extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(search_page.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void dropDownMenuTextView() {
+
+        String[] categoryArray = listOfCategory.split(",");
+        adapterCategoryItems = new ArrayAdapter<CharSequence>(search_page.this, R.layout.list_property, categoryArrayFix);
+        auto_complete_txt.setAdapter(adapterCategoryItems);
+    }
+
+    private void clickListeners() {
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+        auto_complete_txt.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                arrProj.clear();
+
+
+                String category = adapterView.getItemAtPosition(i).toString();
+                tv_headerTitle.setText(category);
+
+                if(category == "All services")
+                {
+                    generateAllProjects();
+                }
+                else
+                {
+                    generateRecyclerLayoutByCategory(category);
+                }
+
+            }
+        });
+
+        adapterInstallerItem.setOnItemClickListener(new AdapterInstallerItem.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Toast.makeText(getApplicationContext(), "Position: " + position, Toast.LENGTH_SHORT).show();
+
             }
         });
     }

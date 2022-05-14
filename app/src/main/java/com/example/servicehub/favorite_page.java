@@ -60,12 +60,6 @@ public class favorite_page extends AppCompatActivity {
     }
 
     private void clickListeners() {
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
 
         favoriteItem.setOnItemClickListener(new AdapterFavoriteItem.OnItemClickListener() {
             @Override

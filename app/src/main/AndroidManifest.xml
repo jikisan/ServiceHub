@@ -19,6 +19,12 @@
         android:theme="@style/Theme.ServiceHub"
         tools:replace="android:icon">
         <activity
+            android:name=".client_order_details"
+            android:exported="false" />
+        <activity
+            android:name=".client_booking_details"
+            android:exported="false" />
+        <activity
             android:name=".address_page"
             android:exported="false" />
         <activity

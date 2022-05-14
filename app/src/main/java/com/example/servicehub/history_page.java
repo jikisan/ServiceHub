@@ -23,7 +23,7 @@ public class history_page extends AppCompatActivity {
 
         setRef();
         bottomNavTaskbar();
-        clickListeners();
+        //clickListeners();
 
     }
 

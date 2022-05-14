@@ -59,12 +59,6 @@ public class my_booking_page extends AppCompatActivity {
     }
 
     private void clickListeners() {
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
 
         adapterMyBookings.setOnItemClickListener(new AdapterMyBookings.OnItemClickListener() {
             @Override
@@ -85,7 +79,11 @@ public class my_booking_page extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            Toast.makeText(my_booking_page.this, "Coming soon!", Toast.LENGTH_SHORT).show();
+
+                            bookingID = dataSnapshot.getKey().toString();
+                            Intent intent = new Intent(my_booking_page.this, client_booking_details.class);
+                            intent.putExtra("Booking ID", bookingID);
+                            startActivity(intent);
 
                             progressDialog.dismiss();
                         }

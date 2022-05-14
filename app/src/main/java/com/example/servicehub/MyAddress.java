@@ -8,8 +8,6 @@ public class MyAddress {
     String longString;
     String latString;
 
-
-
     public MyAddress() {
     }
 

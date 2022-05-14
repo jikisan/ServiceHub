@@ -21,7 +21,7 @@ public class promo_page extends AppCompatActivity {
 
         setRef();
         bottomNavTaskbar();
-        clickListeners();
+       // clickListeners();
     }
 
     private void clickListeners() {

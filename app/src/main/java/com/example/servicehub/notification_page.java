@@ -53,12 +53,6 @@ public class notification_page extends AppCompatActivity {
     }
 
     private void clickListeners() {
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
     }
 
     private void generateRecyclerLayout() {

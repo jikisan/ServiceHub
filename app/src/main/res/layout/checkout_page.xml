@@ -109,6 +109,7 @@
                         android:paddingLeft="16dp"
                         android:paddingRight="16dp"
                         android:textSize="14sp"
+                        android:inputType="number"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/tv_custName"
                         app:layout_constraintTop_toBottomOf="@+id/tv_custName" />

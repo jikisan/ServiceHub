@@ -138,13 +138,17 @@ public class address_page extends AppCompatActivity {
 
     private void getViewHolderValues() {
 
-        myAddressDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query = myAddressDatabase.orderByChild("custID")
+                .startAt(userID).endAt(userID);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
 
                     MyAddress myAddress = dataSnapshot.getValue(MyAddress.class);
+
                     arrMyAddress.add(myAddress);
                 }
 
@@ -234,7 +238,11 @@ public class address_page extends AppCompatActivity {
                         Geocoder geocoder = new Geocoder(address_page.this, Locale.getDefault());
 
                         try {
-                            List<Address> newMarkerLocation = geocoder.getFromLocation(newLocationFromMarker.latitude, newLocationFromMarker.longitude, 1);
+
+                            longDouble = newLocationFromMarker.longitude;
+                            latDouble = newLocationFromMarker.latitude;
+
+                            List<Address> newMarkerLocation = geocoder.getFromLocation(latDouble, longDouble, 1);
 
                             addressText =  newMarkerLocation.get(0).getAddressLine(0);
 
@@ -401,14 +409,16 @@ public class address_page extends AppCompatActivity {
             public void onMapReady(GoogleMap googleMap) {
                 mGoogleMap = googleMap;
 
-//                if (ActivityCompat.checkSelfPermission(address_page.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-//                        && ActivityCompat.checkSelfPermission(address_page.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                    // TODO: Consider calling
-//                    //    ActivityCompat#requestPermissions
-//                    return;
-//                }
-//                googleMap.setMyLocationEnabled(true);
+                if (ActivityCompat.checkSelfPermission(address_page.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(address_page.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    return;
+                }
+                googleMap.setMyLocationEnabled(true);
 
+
+                //Marking current location
                 LatLng location = new LatLng(myLat, myLong);
                 newLocationFromMarker = location;
                 latDouble = newLocationFromMarker.latitude;
@@ -480,13 +490,8 @@ public class address_page extends AppCompatActivity {
                 address = geocoder.getFromLocation(place.getLatLng().latitude, place.getLatLng().longitude, 1);
 
 
-                String latString = String.valueOf(address.get(0).getLatitude());
-                String longString = String.valueOf(address.get(0).getLongitude());
-                String latLngText = latString + "," + longString;
-
-                String[] latlong =  latLngText.split(",");
-                latDouble = Double.parseDouble(latlong[0]);
-                longDouble = Double.parseDouble(latlong[1]);
+                latDouble = address.get(0).getLatitude();
+                longDouble = address.get(0).getLongitude();
 
                 latLngFromPlaceApi = new LatLng(latDouble, longDouble);
                 newLocationFromMarker = latLngFromPlaceApi;

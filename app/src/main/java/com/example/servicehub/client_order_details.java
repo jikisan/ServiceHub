@@ -4,16 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
+import android.location.Address;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,43 +32,153 @@ import com.squareup.picasso.Picasso;
 import java.util.Calendar;
 import java.util.Date;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import dev.shreyaspatil.MaterialDialog.MaterialDialog;
 
-public class order_details_page extends AppCompatActivity {
+public class client_order_details extends AppCompatActivity {
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn, iv_moreBtn,
-             iv_orderPhoto, iv_custLocation, iv_messageCust ;
+            iv_orderPhoto, iv_custLocation, iv_messageCust,iv_custPhoto ;
     private TextView tv_orderName, tv_customerName, tv_orderPrice, tv_orderQuantity, iv_deleteOrderBtn,
             tv_customerAddress, tv_custContactNum, tv_back, tv_totalAmount, tv_paymentMethod;
 
-    private String userID, imageUriText, orderIdFromIntent, custLatLng, custID, orderName, latString, longString;
+    private String userID, imageUriText, orderIdFromIntent, custLatLng, custID,
+            orderName, latString, longString, sellerID;
     private CardView cv_finishOrderBtn;
 
     private FirebaseUser user;
-    private DatabaseReference userDatabase;
-    private DatabaseReference orderDatabase;
+    private DatabaseReference orderDatabase, listDatabase, userDatabase;
     private StorageReference listingStorage;
     private StorageTask addTask;
     private ProgressDialog progressDialog;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.order_details_page);
+        setContentView(R.layout.client_order_details);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
         listingStorage = FirebaseStorage.getInstance().getReference("Listings");
         orderDatabase = FirebaseDatabase.getInstance().getReference("Orders");
         userDatabase = FirebaseDatabase.getInstance().getReference("Users");
+        listDatabase = FirebaseDatabase.getInstance().getReference("Listings");
 
         setRef();
-        clickListeners();
         bottomNavTaskbar();
         generateDataValue();
-       // generateProfile();
+        clickListeners();
+    }
+
+    private void clickListeners() {
+
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(client_order_details.this, my_orders_page.class);
+                startActivity(intent);
+            }
+        });
+
+        iv_deleteOrderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                cancelOrder();
+            }
+        });
+
+        iv_custLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String markerTitle = "Seller Location";
+                Intent intentProject = new Intent(client_order_details.this, view_in_map.class);
+                intentProject.putExtra("Category", "orders");
+                intentProject.putExtra("latString", latString);
+                intentProject.putExtra("longString", longString);
+                intentProject.putExtra("Marker Title", markerTitle);
+                startActivity(intentProject);
+            }
+        });
+
+    }
+
+    private void cancelOrder() {
+        BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(client_order_details.this)
+                .setTitle("Cancel Order for" + orderName)
+                .setMessage("Are you sure you want to cancel this order?")
+                .setCancelable(true)
+                .setPositiveButton("Cancel", R.drawable.delete_btn, new MaterialDialog.OnClickListener() {
+                    @Override
+                    public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
+                        progressDialog = new ProgressDialog(client_order_details.this);
+                        progressDialog.setTitle("Cancelling order...");
+                        progressDialog.show();
+
+                        orderIdFromIntent = getIntent().getStringExtra("Order ID");
+                        orderDatabase.child(orderIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    dataSnapshot.getRef().removeValue();
+
+                                }
+                                generateNotification();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton("Back", R.drawable.back_arrow, new MaterialDialog.OnClickListener() {
+                    @Override
+                    public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
+                        dialogInterface.dismiss();
+                    }
+
+
+                })
+                .build();
+
+        // Show Dialog
+        mBottomSheetDialog.show();
+
+
+    }
+
+    private void generateNotification() {
+
+        DatabaseReference notificationDB = FirebaseDatabase.getInstance().getReference("Notifications");
+
+        String sp_orderName = tv_orderName.getText().toString();
+        String sp_notifTitle = "Order cancelled";
+        String sp_notifMessage = "Order " + sp_orderName + " has been cancelled by the customer.";
+
+        Date currentTime = Calendar.getInstance().getTime();
+        String notifCreated = currentTime.toString();
+
+        Notification notification = new Notification(imageUriText, sp_notifTitle, sp_notifMessage, notifCreated, custID);
+
+        notificationDB.push().setValue(notification).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    progressDialog.dismiss();
+                    Intent intent = new Intent(client_order_details.this, seller_dashboard.class);
+                    intent.putExtra("currentTab", 1);
+                    startActivity(intent);
+
+                    Toast.makeText(client_order_details.this, "Order Cancelled", Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+        });
 
     }
 
@@ -85,6 +192,7 @@ public class order_details_page extends AppCompatActivity {
         iv_orderPhoto = findViewById(R.id.iv_orderPhoto);
         iv_custLocation = findViewById(R.id.iv_custLocation);
         iv_messageCust = findViewById(R.id.iv_messageCust);
+        iv_custPhoto = findViewById(R.id.iv_custPhoto);
 
         tv_orderName = findViewById(R.id.tv_orderName);
         tv_orderPrice = findViewById(R.id.tv_orderPrice);
@@ -97,112 +205,8 @@ public class order_details_page extends AppCompatActivity {
         tv_paymentMethod = findViewById(R.id.tv_paymentMethod);
 
         cv_finishOrderBtn = findViewById(R.id.cv_finishOrderBtn);
-    }
 
-    private void clickListeners() {
-
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-
-        iv_deleteOrderBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deleteOrder();
-            }
-        });
-
-        iv_custLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intentProject = new Intent(order_details_page.this, view_in_map.class);
-                intentProject.putExtra("Category", "orders");
-                intentProject.putExtra("latString", latString);
-                intentProject.putExtra("longString", longString);
-                startActivity(intentProject);
-            }
-        });
-    }
-
-    private void deleteOrder() {
-
-        BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(order_details_page.this)
-                .setTitle("Cancel Order?")
-                .setMessage("Are you sure you want to cancel this order?")
-                .setCancelable(true)
-                .setPositiveButton("Cancel Order", R.drawable.delete_btn, new MaterialDialog.OnClickListener() {
-                    @Override
-                    public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
-                        progressDialog = new ProgressDialog(order_details_page.this);
-                        progressDialog.setTitle("Cancelling order");
-                        progressDialog.show();
-
-                        orderDatabase.child(orderIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-
-                                    dataSnapshot.getRef().removeValue();
-
-                                }
-
-                                generateNotification();
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
-                })
-                .setNegativeButton("Back", R.drawable.back, new MaterialDialog.OnClickListener() {
-                    @Override
-                    public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
-                        dialogInterface.dismiss();
-                    }
-
-
-                })
-                .build();
-
-        // Show Dialog
-        mBottomSheetDialog.show();
-    }
-
-    private void generateNotification() {
-
-        DatabaseReference notificationDB = FirebaseDatabase.getInstance().getReference("Notifications");
-
-        String sp_orderName = tv_orderName.getText().toString();
-        String sp_notifTitle = "Order cancelled";
-        String sp_notifMessage = "Order " + sp_orderName + " has been cancelled by the seller.";
-
-        Date currentTime = Calendar.getInstance().getTime();
-        String cartCreated = currentTime.toString();
-
-        Notification notification = new Notification(imageUriText, sp_notifTitle, sp_notifMessage, cartCreated, custID);
-
-        notificationDB.push().setValue(notification).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task.isSuccessful()){
-                    progressDialog.dismiss();
-                    Intent intent = new Intent(order_details_page.this, seller_dashboard.class);
-                    intent.putExtra("currentTab", 1);
-                    startActivity(intent);
-
-                    Toast.makeText(order_details_page.this, "Order Cancelled", Toast.LENGTH_SHORT).show();
-
-                }
-
-            }
-        });
-
+        progressBar = findViewById(R.id.progressBar);
     }
 
     private void generateDataValue() {
@@ -216,41 +220,29 @@ public class order_details_page extends AppCompatActivity {
 
                 if (orders != null){
                     try {
-
                         custID = orders.getCustID();
-                        latString = orders.getLatitude();
-                        longString = orders.getLongitude();
+                        sellerID = orders.getSellerID();
                         imageUriText = orders.getImageUrl();
                         orderName = orders.getItemName();
-                        String sp_ordersPrice = orders.getProdSubTotal();
+                        String sp_ordersPrice = orders.getTotalPayment();
                         String sp_orderQuantity = orders.getItemQuantity();
                         String sp_paymentMethod = orders.getPaymentMethod();
-
-                        String sp_custName = orders.getCustName();
-                        String sp_custContactNum = orders.getCustContactNum();
-                        String sp_custAddress = orders.getCustDeliveryAddress();
-
 
                         //Order details
                         Picasso.get().load(imageUriText).into(iv_orderPhoto);
                         tv_orderName.setText(orderName);
 
-
                         //customer details
-                        tv_customerName.setText(sp_custName);
-                        tv_custContactNum.setText(sp_custContactNum);
-                        tv_customerAddress.setText(sp_custAddress);
                         tv_orderQuantity.setText(sp_orderQuantity);
                         tv_orderPrice.setText("₱ " + sp_ordersPrice);
                         tv_paymentMethod.setText( sp_paymentMethod);
 
-                        double totalAmount = Double.parseDouble(sp_ordersPrice) * Double.parseDouble(sp_orderQuantity);
+                        double totalAmount = Double.parseDouble(sp_ordersPrice)
+                                * Double.parseDouble(sp_orderQuantity);
                         tv_totalAmount.setText("₱ " + totalAmount);
 
-                        String[] pos = custLatLng.split(",");
-                        latString = pos[0];
-                        longString = pos[1];
 
+                        generateProfile();
                     } catch (Exception e) {
                         e.printStackTrace();
 
@@ -258,41 +250,86 @@ public class order_details_page extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(order_details_page.this, "Empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(client_order_details.this, "Empty", Toast.LENGTH_SHORT).show();
 
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(order_details_page.this, "Empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(client_order_details.this, "Empty", Toast.LENGTH_SHORT).show();
 
             }
         });
     }
 
     private void generateProfile() {
-        userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+
+        Query query = listDatabase
+                .orderByChild("listName")
+                .startAt(orderName).endAt(orderName);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Users userProfile = snapshot.getValue(Users.class);
+                for(DataSnapshot dataSnapshot : snapshot.getChildren())
+                {
+                    Listings listings = dataSnapshot.getValue(Listings.class);
 
-                if(userProfile != null){
-                    String sp_fName = userProfile.firstName;
-                    String sp_lName = userProfile.lastName;
-                    String sp_num = userProfile.contactNum;
+                    if(listings.getUserID().equals(sellerID))
+                    {
+                        tv_customerAddress.setText(listings.getListAddress());
+                        latString = listings.getLatitude();
+                        longString = listings.getLongitude();
 
-                    tv_customerName.setText(sp_fName + " " + sp_lName);
-                    tv_custContactNum.setText(sp_num);
+                    }
 
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        userDatabase.child(sellerID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users users = snapshot.getValue(Users.class);
+                if (snapshot.exists())
+                {
+
+                    String sp_fName = users.firstName;
+                    String sp_lName = users.lastName;
+                    String sp_imageUrl = users.imageUrl;
+                    String sp_fullName = sp_fName.substring(0, 1).toUpperCase()+ sp_fName.substring(1).toLowerCase()
+                            + " " + sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();
+
+                    if (!sp_imageUrl.isEmpty()) {
+                        Picasso.get()
+                                .load(sp_imageUrl)
+                                .into(iv_custPhoto);
+
+                    tv_customerName.setText(sp_fullName);
+                    tv_custContactNum.setText(users.contactNum);
+
+
+                    }
+
+                    progressBar.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(order_details_page.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+
             }
+
+
         });
+
     }
 
     private void bottomNavTaskbar() {
@@ -300,7 +337,7 @@ public class order_details_page extends AppCompatActivity {
         iv_messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentMessageBtn = new Intent(order_details_page.this, message_page.class);
+                Intent intentMessageBtn = new Intent(client_order_details.this, message_page.class);
                 startActivity(intentMessageBtn);
             }
         }); // end of message button
@@ -308,7 +345,7 @@ public class order_details_page extends AppCompatActivity {
         iv_notificationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentNotification = new Intent(order_details_page.this, notification_page.class);
+                Intent intentNotification = new Intent(client_order_details.this, notification_page.class);
                 startActivity(intentNotification);
             }
         }); // end of notification button
@@ -316,7 +353,7 @@ public class order_details_page extends AppCompatActivity {
         iv_homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentHomeBtn = new Intent(order_details_page.this, homepage.class);
+                Intent intentHomeBtn = new Intent(client_order_details.this, homepage.class);
                 startActivity(intentHomeBtn);
             }
         }); // end of home button
@@ -324,7 +361,7 @@ public class order_details_page extends AppCompatActivity {
         iv_accountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentAccount = new Intent(order_details_page.this, switch_account_page.class);
+                Intent intentAccount = new Intent(client_order_details.this, switch_account_page.class);
                 startActivity(intentAccount);
             }
         }); // end of account button
@@ -332,10 +369,9 @@ public class order_details_page extends AppCompatActivity {
         iv_moreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentMoreBtn = new Intent(order_details_page.this, more_page.class);
+                Intent intentMoreBtn = new Intent(client_order_details.this, more_page.class);
                 startActivity(intentMoreBtn);
             }
         }); // end of more button
     }
-
 }
