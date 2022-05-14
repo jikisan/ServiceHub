@@ -101,26 +101,36 @@ public class place_order_page extends AppCompatActivity {
 
     private void addToCart() {
 
-        cartDatabase
-                .orderByChild("listingID")
-                .equalTo(listingIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
+        cartDatabase.orderByChild("listName")
+                .startAt(tempListName).endAt(tempListName)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
+                if(snapshot.exists())
+                {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren())
+                    {
+                        Cart c = dataSnapshot.getValue(Cart.class);
+                        if( c.getCustID().equals(userID) )
+                        {
+                            new SweetAlertDialog(place_order_page.this, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("Item is already in Cart")
+                                    .setCancelText("Back")
+                                    .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            Intent intent = new Intent(place_order_page.this, cart_page.class);
+                                            startActivity(intent);
+                                        }
+                                    })
+                                    .setContentText("Go to cart?")
+                                    .show();
+                        }
+                    }
 
-                    new SweetAlertDialog(place_order_page.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Item is already in Cart")
-                            .setCancelText("Back")
-                            .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    Intent intent = new Intent(place_order_page.this, cart_page.class);
-                                    startActivity(intent);
-                                }
-                            })
-                            .setContentText("Go to cart?")
-                            .show();
-                } else {
+                }
+                else
+                {
 
                     Date currentTime = Calendar.getInstance().getTime();
                     String cartCreated = currentTime.toString();
@@ -184,6 +194,7 @@ public class place_order_page extends AppCompatActivity {
     private void generateListDataValue() {
 
         listingDatabase.child(listingIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Listings listingsData = snapshot.getValue(Listings.class);
@@ -192,8 +203,7 @@ public class place_order_page extends AppCompatActivity {
                     try{
                         imageUrlText = listingsData.getImageUrl();
                         listRatings= listingsData.getRatings();
-                        tempListName = listingsData.getListName().substring(0, 1).toUpperCase()
-                                + listingsData.getListName().substring(1).toLowerCase();
+                        tempListName = listingsData.getListName();
                         String sp_projPrice = listingsData.getListPrice();
                         String sp_quantity = listingsData.getListQuantity();
                         String sp_projSpecialInstruction = listingsData.getListDesc();

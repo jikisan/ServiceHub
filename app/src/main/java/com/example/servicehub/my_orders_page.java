@@ -58,13 +58,6 @@ public class my_orders_page extends AppCompatActivity {
     }
 
     private void clickListeners() {
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-
 
         adapterMyOrderItem.setOnItemClickListener(new AdapterMyOrderItem.OnItemClickListener() {
             @Override
@@ -85,8 +78,11 @@ public class my_orders_page extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            Toast.makeText(my_orders_page.this, "Coming soon! " + position, Toast.LENGTH_SHORT).show();
 
+                            orderID = dataSnapshot.getKey().toString();
+                            Intent intent = new Intent(my_orders_page.this, client_order_details.class);
+                            intent.putExtra("Order ID", orderID);
+                            startActivity(intent);
                             progressDialog.dismiss();
                         }
                     }
@@ -116,19 +112,19 @@ public class my_orders_page extends AppCompatActivity {
         adapterMyOrderItem = new AdapterMyOrderItem(arr);
         recyclerView_myOrders.setAdapter(adapterMyOrderItem);
 
-        Query query = orderDatabase
-                .orderByChild("custID")
-                .equalTo(userID);
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        orderDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
                     Orders orders = dataSnapshot.getValue(Orders.class);
-                    arr.add(orders);
 
+                    if(orders.getCustID().equals(userID))
+                    {
+                        arr.add(orders);
+                    }
                 }
 
                 progressBar.setVisibility(View.GONE);

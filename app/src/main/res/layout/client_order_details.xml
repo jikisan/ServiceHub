@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".order_details_page">
+    tools:context=".client_order_details">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -59,7 +59,6 @@
         android:layout_height="0dp"
         android:fadingEdge="none"
         android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@+id/cv_finishOrderBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView">
@@ -67,7 +66,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_margin="16dp"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingBottom="35dp">
@@ -82,6 +81,7 @@
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textSize="16dp"
+                android:maxHeight="43dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/iv_orderPhoto"
@@ -200,7 +200,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:text="Customer Details"
+                android:text="Seller Details"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
@@ -222,29 +222,43 @@
                     android:background="@drawable/rounded_blue"
                     android:paddingBottom="16dp">
 
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/iv_custPhoto"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="24dp"
+                        android:src="@color/white"
+                        app:civ_border_color="@color/black"
+                        app:civ_border_width="1dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
                     <TextView
                         android:id="@+id/tv_customerName"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="24dp"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:maxHeight="23dp"
                         android:text="Name"
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@+id/iv_custLocation"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/iv_custPhoto"
+                        app:layout_constraintTop_toBottomOf="@+id/iv_custPhoto" />
 
                     <TextView
                         android:id="@+id/tv_custContactNum"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
                         android:text="Contact Number"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toStartOf="@+id/iv_custLocation"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/tv_customerName"
                         app:layout_constraintTop_toBottomOf="@+id/tv_customerName" />
 
@@ -252,34 +266,32 @@
                         android:id="@+id/iv_custLocation"
                         android:layout_width="27dp"
                         android:layout_height="27dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_marginStart="16dp"
                         android:src="@drawable/map"
-                        app:layout_constraintBottom_toBottomOf="@+id/iv_messageCust"
-                        app:layout_constraintEnd_toStartOf="@+id/iv_messageCust"
-                        app:layout_constraintTop_toTopOf="@+id/iv_messageCust"
-                      />
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_custPhoto"
+                        app:layout_constraintStart_toEndOf="@+id/iv_custPhoto"
+                        app:layout_constraintTop_toTopOf="@+id/iv_custPhoto" />
 
                     <ImageView
                         android:id="@+id/iv_messageCust"
                         android:layout_width="27dp"
                         android:layout_height="27dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp"
+                        android:layout_marginStart="16dp"
                         android:src="@drawable/message"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_customerAddress"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/tv_customerName"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_custLocation"
+                        app:layout_constraintStart_toEndOf="@+id/iv_custLocation"
+                        app:layout_constraintTop_toTopOf="@+id/iv_custLocation"
                         app:tint="@color/quantum_googgreen" />
 
                     <TextView
                         android:id="@+id/tv_customerAddress"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
                         android:text="Address"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toStartOf="@+id/iv_custLocation"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/tv_custContactNum"
                         app:layout_constraintTop_toBottomOf="@+id/tv_custContactNum" />
 
@@ -314,43 +326,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_finishOrderBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginRight="24dp"
-        android:layout_marginBottom="16dp"
-        app:cardCornerRadius="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/cardViewBottom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/light_blue"
-            android:paddingBottom="12dp"
-            android:paddingTop="12dp"
-           >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Finish Order"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewBottom"
@@ -420,5 +395,22 @@
 
 
     </androidx.cardview.widget.CardView>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/light_blue"
+        android:max="100"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

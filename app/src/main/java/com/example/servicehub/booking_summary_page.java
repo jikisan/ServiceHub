@@ -241,8 +241,6 @@ public class booking_summary_page extends AppCompatActivity {
                 airconTypeFromIntent, unitTypeFromIntent, bookingDateFromIntent, bookingTimeFromIntent,
                 contactNumberFromIntent, addInfoFromIntent, totalPrice, paymentMethod, sp_techId, bookingCreated);
 
-
-
         bookingDatabase.push().setValue(booking).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -256,7 +254,7 @@ public class booking_summary_page extends AppCompatActivity {
                             .show();
 
 
-                    Intent intent = new Intent(booking_summary_page.this, homepage.class);
+                    Intent intent = new Intent(booking_summary_page.this, my_booking_page.class);
                     startActivity(intent);
 
 

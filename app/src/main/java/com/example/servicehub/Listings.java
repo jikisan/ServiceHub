@@ -8,7 +8,8 @@ public class Listings {
     String imageUrl;
     String imageName;
     String listName;
-    String listLatLng;
+    String latitude;
+    String longitude;
     String listAddress;
     String listPrice;
     String listQuantity;
@@ -17,14 +18,15 @@ public class Listings {
 
     public Listings(){ }
 
-    public Listings(String userID, String imageUrl, String imageName, String listName, String listLatLng, String listAddress, String listPrice,
+    public Listings(String userID, String imageUrl, String imageName, String listName, String latitude, String longitude, String listAddress, String listPrice,
                     String listQuantity, String listDesc, String ratings) {
 
         this.userID = userID;
         this.imageUrl = imageUrl;
         this.imageName = imageName;
         this.listName = listName;
-        this.listLatLng = listLatLng;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.listAddress = listAddress;
         this.listPrice = listPrice;
         this.listQuantity = listQuantity;
@@ -65,12 +67,20 @@ public class Listings {
         this.listName = listName;
     }
 
-    public String getListLatLng() {
-        return listLatLng;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public void setListLatLng(String listLatLng) {
-        this.listLatLng = listLatLng;
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 
 

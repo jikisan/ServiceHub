@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,12 +57,14 @@ public class checkout_page extends AppCompatActivity {
     private ImageView iv_listPhoto, iv_pickAddress, iv_decreaseBtn, iv_increaseBtn;
     private ProgressBar progressBar;
     private Geocoder geocoder;
+    private RadioGroup radioGroup;
+    private RadioButton rb_gcash, rb_cod;
 
     private FirebaseUser user;
     private DatabaseReference listingDatabase,  userDatabase, ordersDatabase;
 
     private int quantity = 1, itemQuantity;
-    private String quantityText;
+    private String quantityText, paymentMethod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +104,10 @@ public class checkout_page extends AppCompatActivity {
         et_contactNum = findViewById(R.id.et_contactNum);
         et_address = findViewById(R.id.et_address);
         et_message = findViewById(R.id.et_message);
+
+        rb_gcash = findViewById(R.id.rb_gcash);
+        rb_cod = findViewById(R.id.rb_cod);
+        radioGroup = findViewById(R.id.radioGroup);
 
         iv_listPhoto = findViewById(R.id.iv_listPhoto);
         iv_pickAddress = findViewById(R.id.iv_pickAddress);
@@ -227,6 +235,22 @@ public class checkout_page extends AppCompatActivity {
 
                 builderSingle.show();
 
+            }
+        });
+
+        rb_cod.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                radioGroup.check(R.id.rb_cod);
+                paymentMethod = "COD";
+            }
+        });
+
+        rb_gcash.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                radioGroup.check(R.id.rb_gcash);
+                paymentMethod = "Gcash";
             }
         });
     }
@@ -368,12 +392,9 @@ public class checkout_page extends AppCompatActivity {
         String sp_itemName = tv_listName.getText().toString();
         String sp_orderQuantity = tv_quantity.getText().toString();
         String sp_message = et_message.getText().toString();
-//        String sp_prodSubTotal = tv_productSub.getText().toString();
-//        String sp_shipFee = tv_shippinSub.getText().toString();
-//        String sp_totalPayment = tv_totalPrice.getText().toString();
 
         Orders orders = new Orders(userID, listingIdFromIntent, sellerID, sp_custName, sp_custContactNum, sp_custDeliveryAddress,
-                latString, longString, imageUrl, sp_itemName, sp_orderQuantity, sp_message, prodSubTotal, shipFee, totalPayment);
+                latString, longString, imageUrl, sp_itemName, sp_orderQuantity, sp_message, prodSubTotal, shipFee, totalPayment, paymentMethod);
 
         ordersDatabase.push().setValue(orders).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -389,7 +410,7 @@ public class checkout_page extends AppCompatActivity {
                             .show();
 
 
-                    Intent intent = new Intent(checkout_page.this, homepage.class);
+                    Intent intent = new Intent(checkout_page.this, my_orders_page.class);
                     startActivity(intent);
 
 

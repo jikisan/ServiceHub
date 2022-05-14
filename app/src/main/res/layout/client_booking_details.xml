@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".tech_booking_details">
-
+    tools:context=".client_booking_details">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -26,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/back_arrow"
                 android:gravity="center"
-                android:text="View Booking"
+                android:text="My Booking"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -36,7 +35,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/iv_deleteBtn"
+                android:id="@+id/tv_deleteBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:layout_marginEnd="16dp"
@@ -62,7 +61,8 @@
         android:layout_height="0dp"
         android:fadingEdge="none"
         android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@+id/cardView17"
+
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cardView">
@@ -70,33 +70,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_marginBottom="24dp"
             android:gravity="center"
             android:orientation="vertical">
-
-            <ImageView
-                android:id="@+id/iv_bookingPhoto"
-                android:layout_width="105dp"
-                android:layout_height="74dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/common_google_signin_btn_icon_dark_focused"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_bookingName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:text="name"
-                android:textAllCaps="true"
-                android:textColor="@color/black"
-                android:textSize="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_bookingPhoto"
-                app:layout_constraintTop_toTopOf="@+id/iv_bookingPhoto" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView3"
@@ -110,7 +85,7 @@
                 app:cardElevation="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_bookingPhoto">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -133,6 +108,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:paddingLeft="16dp"
+                            android:textColor="@color/white"
                             android:text="Time"
                             android:textSize="12sp" />
 
@@ -145,23 +121,6 @@
                             android:text="00:00 AM"
                             android:textColor="@color/white"
                             android:textSize="48sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:paddingLeft="16dp"
-                            android:text="Additional Instruction"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/tv_specialInstruction"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:paddingLeft="32dp"
-                            android:textColor="@color/white"
-                            android:textSize="20sp" />
 
                     </LinearLayout>
 
@@ -225,11 +184,9 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginBottom="24dp"
                 android:elevation="10dp"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="10dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardView3">
@@ -257,14 +214,227 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="24dp"
-                        android:text="Customer Details"
+                        android:text="Booking Details"
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/iv_custPhoto" />
 
                     <TextView
+                        android:id="@+id/textView1211"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Service Name"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="@+id/textView11"
+                        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+                    <TextView
                         android:id="@+id/textView12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Contact Number"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="@+id/textView1211"
+                        app:layout_constraintTop_toBottomOf="@+id/textView1211" />
+
+                    <TextView
+                        android:id="@+id/textView46"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Address"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="@+id/textView12"
+                        app:layout_constraintTop_toTopOf="@+id/tv_addressSummary" />
+
+                    <TextView
+                        android:id="@+id/textView47"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Additional Info"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="@+id/textView12"
+                        app:layout_constraintTop_toTopOf="@+id/tv_bookingDesc" />
+
+                    <TextView
+                        android:id="@+id/textView38"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Payment Method"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="@+id/textView47"
+                        app:layout_constraintTop_toTopOf="@+id/tv_paymentMethod" />
+
+                    <TextView
+                        android:id="@+id/textView39"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Price"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="@+id/textView38"
+                        app:layout_constraintTop_toTopOf="@+id/tv_bookPriceSummary" />
+
+                    <!--            Textview with value-->
+
+                    <ImageView
+                        android:id="@+id/iv_viewInMapBtn"
+                        android:layout_width="30dp"
+                        android:layout_height="35dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/map"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_messageCustomer"
+                        app:layout_constraintStart_toEndOf="@+id/iv_messageCustomer"
+                        app:layout_constraintTop_toTopOf="@+id/iv_messageCustomer" />
+
+                    <ImageView
+                        android:id="@+id/iv_messageCustomer"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="4dp"
+                        android:src="@drawable/message"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_custPhoto"
+                        app:layout_constraintStart_toEndOf="@+id/iv_custPhoto"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_customerName"
+                        app:tint="@color/quantum_googgreen" />
+
+                    <TextView
+                        android:id="@+id/tv_customerName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="Text"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toEndOf="@+id/iv_custPhoto"
+                        app:layout_constraintTop_toTopOf="@+id/iv_custPhoto" />
+
+                    <TextView
+                        android:id="@+id/tv_bookingName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="Text"
+                        android:textAlignment="viewEnd"
+                        android:textAllCaps="true"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView1211"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/tv_addressSummary"
+                        app:layout_constraintTop_toTopOf="@+id/textView1211" />
+
+                    <TextView
+                        android:id="@+id/tv_techContactNumSummary"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="Text"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/textView12"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/textView12" />
+
+                    <TextView
+                        android:id="@+id/tv_addressSummary"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="Text"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/tv_bookingDesc"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_techContactNumSummary" />
+
+                    <TextView
+                        android:id="@+id/tv_bookingDesc"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:text="Text"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/textView38"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_addressSummary" />
+
+                    <TextView
+                        android:id="@+id/tv_paymentMethod"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Text"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_bookingDesc"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_bookingDesc" />
+
+                    <TextView
+                        android:id="@+id/tv_bookPriceSummary"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Text"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/red"
+                        android:textSize="20sp"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_paymentMethod"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_paymentMethod" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="16dp"
+                android:elevation="10dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView4"
+                app:layout_constraintVertical_bias="0.0">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="16dp">
+
+                    <TextView
+                        android:id="@+id/textView111"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="16dp"
+                        android:text="My Details"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView121"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
@@ -272,15 +442,15 @@
                         android:text="Address"
                         android:textSize="14sp"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+                        app:layout_constraintTop_toBottomOf="@+id/textView111" />
 
                     <TextView
-                        android:id="@+id/textView46"
+                        android:id="@+id/textView461"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Contact Number"
                         android:textSize="14sp"
-                        app:layout_constraintStart_toStartOf="@+id/textView12"
+                        app:layout_constraintStart_toStartOf="@+id/textView121"
                         app:layout_constraintTop_toTopOf="@+id/tv_contactNumSummary" />
 
                     <TextView
@@ -289,7 +459,7 @@
                         android:layout_height="wrap_content"
                         android:text="Property Type"
                         android:textSize="14sp"
-                        app:layout_constraintStart_toStartOf="@+id/textView46"
+                        app:layout_constraintStart_toStartOf="@+id/textView461"
                         app:layout_constraintTop_toTopOf="@+id/tv_propertyTypeSummary" />
 
                     <TextView
@@ -319,22 +489,11 @@
                         app:layout_constraintStart_toStartOf="@+id/textView33"
                         app:layout_constraintTop_toTopOf="@+id/tv_unitTypeSummary" />
 
+
                     <!--            Textview with value-->
 
                     <TextView
-                        android:id="@+id/tv_customerName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:text="Text"
-                        android:textAlignment="viewEnd"
-                        android:textColor="@color/black"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toEndOf="@+id/iv_custPhoto"
-                        app:layout_constraintTop_toTopOf="@+id/iv_custPhoto" />
-
-                    <TextView
-                        android:id="@+id/tv_addressSummary"
+                        android:id="@+id/tv_custAddressSummary"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -344,8 +503,20 @@
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/textView46"
-                        app:layout_constraintTop_toTopOf="@+id/textView12" />
+                        app:layout_constraintStart_toEndOf="@+id/textView461"
+                        app:layout_constraintTop_toTopOf="@+id/textView121" />
+
+                    <TextView
+                        android:id="@+id/tv_contactNumSummary"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Text"
+                        android:textAlignment="viewEnd"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="@+id/tv_custAddressSummary"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_custAddressSummary" />
 
                     <TextView
                         android:id="@+id/tv_propertyTypeSummary"
@@ -395,43 +566,11 @@
                         app:layout_constraintEnd_toEndOf="@+id/tv_acTypeSummary"
                         app:layout_constraintTop_toBottomOf="@+id/tv_acTypeSummary" />
 
-                    <TextView
-                        android:id="@+id/tv_contactNumSummary"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Text"
-                        android:textAlignment="viewEnd"
-                        android:textColor="@color/black"
-                        android:textSize="14sp"
-                        app:layout_constraintEnd_toEndOf="@+id/tv_addressSummary"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_addressSummary" />
-
-                    <ImageView
-                        android:id="@+id/iv_viewInMapBtn"
-                        android:layout_width="30dp"
-                        android:layout_height="35dp"
-                        android:layout_marginStart="16dp"
-                        android:src="@drawable/map"
-                        app:layout_constraintBottom_toBottomOf="@+id/iv_messageCustomer"
-                        app:layout_constraintStart_toEndOf="@+id/iv_messageCustomer"
-                        app:layout_constraintTop_toTopOf="@+id/iv_messageCustomer"
-                         />
-
-                    <ImageView
-                        android:id="@+id/iv_messageCustomer"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="4dp"
-                        android:src="@drawable/message"
-                        app:layout_constraintBottom_toBottomOf="@+id/iv_custPhoto"
-                        app:layout_constraintStart_toEndOf="@+id/iv_custPhoto"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_customerName"
-                        app:tint="@color/quantum_googgreen" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
+
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -439,52 +578,20 @@
 
     </ScrollView>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView17"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="50dp"
-        app:cardElevation="50dp"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal"
-            android:background="@color/white"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            >
-
-            <Button
-                android:id="@+id/btn_completeBooking"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:layout_marginRight="24dp"
-                android:background="@drawable/rounded"
-                android:text="Complete Booking"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                app:backgroundTint="@color/light_blue"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.cardview.widget.CardView>
-
     <ProgressBar
         android:id="@+id/progressBar"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         android:indeterminate="true"
-        android:visibility="gone"
         android:indeterminateTint="@color/light_blue"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:max="100"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

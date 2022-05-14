@@ -115,25 +115,38 @@ public class booking_page extends AppCompatActivity {
     private void addToFavorite() {
 
         favoriteDatabase
-                .orderByChild("projID")
-                .equalTo(projectIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
+                .orderByChild("projName")
+                .startAt(tempProjName).endAt(tempProjName)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    new SweetAlertDialog(booking_page.this, SweetAlertDialog.ERROR_TYPE)
-                            .setTitleText("Project already in Favorites")
-                            .setCancelText("Back")
-                            .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    Intent intent = new Intent(booking_page.this, favorite_page.class);
-                                    startActivity(intent);
+                if(snapshot.exists())
+                {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren())
+                    {
+                        Favorites f = dataSnapshot.getValue(Favorites.class);
+                        if( f.getCustID().equals(userID) )
+                        {
+                            new SweetAlertDialog(booking_page.this, SweetAlertDialog.ERROR_TYPE)
+                                    .setTitleText("Service already in Favorites")
+                                    .setCancelText("Back")
+                                    .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                            Intent intent = new Intent(booking_page.this, favorite_page.class);
+                                            startActivity(intent);
 
-                                }
-                            })
-                            .setContentText("Go to favorite?")
-                            .show();
-                } else {
+                                        }
+                                    })
+                                    .setContentText("Go to favorite?")
+                                    .show();
+                        }
+                    }
+
+
+                }
+                else
+                {
                     //Project ID doesn't exists.
                     Date currentTime = Calendar.getInstance().getTime();
                     String favoriteCreated = currentTime.toString();
@@ -226,8 +239,7 @@ public class booking_page extends AppCompatActivity {
                         imageUrlText = projectData.getImageUrl();
                         String sp_category = projectData.getCategory();
                         String sp_ratings = projectData.getRatings();
-                        tempProjName = projectData.getProjName().substring(0, 1).toUpperCase()
-                                            + projectData.getProjName().substring(1).toLowerCase();
+                        tempProjName = projectData.getProjName();
                         String sp_projPrice = projectData.getPrice();
                         String sp_projSpecialInstruction = projectData.getProjInstruction();
                         String sp_startTime = projectData.getStartTime();

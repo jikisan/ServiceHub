@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +32,7 @@ public class notification_page extends AppCompatActivity {
     private List<Notification> arr;
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn;
+    private TextView tv_back;
     private RecyclerView recyclerView_notif;
     private AdapterNotificationItem adapterNotificationItem;
     private String userID;
@@ -45,8 +47,12 @@ public class notification_page extends AppCompatActivity {
         userID = user.getUid();
 
         setRef();
+        clickListeners();
         bottomNavTaskbar();
         generateRecyclerLayout();
+    }
+
+    private void clickListeners() {
     }
 
     private void generateRecyclerLayout() {
@@ -142,6 +148,8 @@ public class notification_page extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
+
+        tv_back = findViewById(R.id.tv_back);
 
         recyclerView_notif = findViewById(R.id.recyclerView_notif);
 

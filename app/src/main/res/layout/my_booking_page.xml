@@ -22,7 +22,7 @@
                 android:id="@+id/tv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/back_arrow"
+                android:layout_marginStart="16dp"
                 android:gravity="center"
                 android:text="My Bookings"
                 android:textColor="@color/black"

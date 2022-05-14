@@ -2,15 +2,9 @@ package com.example.servicehub;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.graphics.drawable.DrawableCompat;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -40,29 +35,31 @@ import java.util.Date;
 import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import dev.shreyaspatil.MaterialDialog.MaterialDialog;
 
-public class tech_booking_details extends AppCompatActivity {
+public class client_booking_details extends AppCompatActivity {
 
-    private ImageView iv_bookingPhoto, iv_messageCustomer, btn_viewInMap, iv_custPhoto, iv_viewInMapBtn;
+
+
+    private ImageView iv_messageCustomer, iv_custPhoto, iv_viewInMapBtn;
     private TextView tv_addressSummary,tv_propertyTypeSummary,tv_brandSummary,tv_acTypeSummary,tv_unitTypeSummary,tv_prefDateSummary,
-            tv_prefTimeSummary,tv_contactNumSummary, tv_back, tv_customerName, tv_bookingName,
-            tv_time, tv_specialInstruction, tv_month, tv_date, tv_day, iv_deleteBtn;
+            tv_prefTimeSummary,tv_contactNumSummary, tv_back, tv_customerName, tv_bookingName, tv_deleteBtn, tv_paymentMethod,
+            tv_time, tv_bookingDesc, tv_month, tv_date, tv_day, tv_techContactNumSummary, tv_custAddressSummary, tv_bookPriceSummary;
     private ProgressBar progressBar;
     private Button btn_completeBooking;
 
-    String imageUrl, custID, bookingIdFromIntent, latString, longString;
+    String imageUrl, custID, bookingIdFromIntent, latString, longString, bookingName;
 
     private FirebaseUser user;
     private FirebaseStorage mStorage;
     private StorageReference projectStorage;
     private DatabaseReference userDatabase, projectDatabase, bookingDatabase;
     private StorageTask addTask;
-    private String userID;
+    private String userID, techID, projName;
     private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tech_booking_details);
+        setContentView(R.layout.client_booking_details);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
@@ -72,21 +69,21 @@ public class tech_booking_details extends AppCompatActivity {
         projectDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
         setRef();
-        clickListener();
         generateBookingData();
-
+        clickListeners();
     }
 
-    private void clickListener() {
+    private void clickListeners() {
 
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent = new Intent(client_booking_details.this, my_booking_page.class);
+                startActivity(intent);
             }
         });
 
-        iv_deleteBtn.setOnClickListener(new View.OnClickListener() {
+        tv_deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -97,8 +94,8 @@ public class tech_booking_details extends AppCompatActivity {
         iv_viewInMapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String markerTitle = "Client Location";
-                Intent intentProject = new Intent(tech_booking_details.this, view_in_map.class);
+                String markerTitle = "Technician Location";
+                Intent intentProject = new Intent(client_booking_details.this, view_in_map.class);
                 intentProject.putExtra("Category", "booking");
                 intentProject.putExtra("latString", latString);
                 intentProject.putExtra("longString", longString);
@@ -106,18 +103,17 @@ public class tech_booking_details extends AppCompatActivity {
                 startActivity(intentProject);
             }
         });
-
     }
 
     private void cancelBooking() {
-        BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(tech_booking_details.this)
+        BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(client_booking_details.this)
                 .setTitle("Cancel Booking?")
                 .setMessage("Are you sure you want to cancel this booking?")
                 .setCancelable(true)
                 .setPositiveButton("Cancel Booking", R.drawable.delete_btn, new MaterialDialog.OnClickListener() {
                     @Override
                     public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
-                        progressDialog = new ProgressDialog(tech_booking_details.this);
+                        progressDialog = new ProgressDialog(client_booking_details.this);
                         progressDialog.setTitle("Cancelling...");
                         progressDialog.show();
 
@@ -153,38 +149,20 @@ public class tech_booking_details extends AppCompatActivity {
         // Show Dialog
         mBottomSheetDialog.show();
 
-//                new AlertDialog.Builder(tech_booking_details.this)
-//                        .setIcon(R.drawable.warning)
-//                        .setTitle("Delete Booking")
-//                        .setMessage("Are you sure that you want to permanently delete this booking?")
-//                        .setCancelable(true)
-//                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//
-//
-//                            }
-//                        })
-//                        .setNegativeButton("Back", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int i) {
-//                            }
-//                        })
-//                        .show();
+
     }
 
     private void generateNotification() {
 
         DatabaseReference notificationDB = FirebaseDatabase.getInstance().getReference("Notifications");
 
-        String sp_bookingName = tv_bookingName.getText().toString();
         String sp_notifTitle = "Booking cancelled";
-        String sp_notifMessage = "Booking: " + sp_bookingName + " has been cancelled by the technician.";
+        String sp_notifMessage = "Booking: " + bookingName + " has been cancelled by the customer.";
 
         Date currentTime = Calendar.getInstance().getTime();
         String cartCreated = currentTime.toString();
 
-        Notification notification = new Notification(imageUrl, sp_notifTitle, sp_notifMessage, cartCreated, custID);
+        Notification notification = new Notification(imageUrl, sp_notifTitle, sp_notifMessage, cartCreated, techID);
 
         notificationDB.push().setValue(notification).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -192,10 +170,10 @@ public class tech_booking_details extends AppCompatActivity {
                 if(task.isSuccessful()){
                     progressDialog.dismiss();
 
-                    Intent intent = new Intent(tech_booking_details.this, tech_dashboard.class);
+                    Intent intent = new Intent(client_booking_details.this, my_booking_page.class);
                     startActivity(intent);
 
-                    Toast.makeText(tech_booking_details.this, "Booking Cancelled", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(client_booking_details.this, "Booking Cancelled", Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -217,12 +195,13 @@ public class tech_booking_details extends AppCompatActivity {
 
                 if(bookingData != null) {
                     try {
-                        latString = bookingData.getLatitude();
-                        longString = bookingData.getLongitude();
 
+
+                        projName = bookingData.getProjName();
+                        techID = bookingData.getTechID();
                         custID  = bookingData.custID;
                         imageUrl = bookingData.imageUrl;
-                        String sp_bookingName = bookingData.projName;
+                        bookingName = bookingData.projName;
                         String sp_bookingtime = bookingData.bookingTime;
                         String sp_bookingDate = bookingData.bookingDate;
                         String sp_addInfo = bookingData.addInfo;
@@ -232,6 +211,7 @@ public class tech_booking_details extends AppCompatActivity {
                         String sp_airconBrand = bookingData.airconBrand;
                         String sp_airconType = bookingData.airconType;
                         String sp_unitType = bookingData.unitType;
+                        String sp_paymentMethod = bookingData.paymentMethod;
                         String sp_price = bookingData.totalPrice;
 
                         String[] parts = sp_bookingDate.split("/");
@@ -239,21 +219,22 @@ public class tech_booking_details extends AppCompatActivity {
                         double price = Double.parseDouble(sp_price);
                         DecimalFormat twoPlaces = new DecimalFormat("0.00");
 
-                        Picasso.get().load(imageUrl).into(iv_bookingPhoto);
-                        tv_bookingName.setText(sp_bookingName);
                         tv_time.setText(sp_bookingtime);
                         tv_month.setText(parts[0]);
                         tv_date.setText(parts[1]);
                         tv_day.setText(parts[3]);
-                        tv_specialInstruction.setText(sp_addInfo);
 
-                        tv_addressSummary.setText(sp_address);
+                        tv_bookingName.setText(projName);
+                        tv_custAddressSummary.setText(sp_address);
                         tv_contactNumSummary.setText(sp_contactNum);
                         tv_propertyTypeSummary.setText(sp_propType);
                         tv_brandSummary.setText(sp_airconBrand);
                         tv_acTypeSummary.setText(sp_airconType);
                         tv_unitTypeSummary.setText(sp_unitType);
-                        btn_completeBooking.setText("Total Price: ₱ " + twoPlaces.format(price) + " · " + "Complete Booking");
+
+                        tv_bookingDesc.setText(sp_addInfo);
+                        tv_paymentMethod.setText(sp_paymentMethod);
+                        tv_bookPriceSummary.setText("₱ " + twoPlaces.format(price));
 
                         generateProfile();
                         progressBar.setVisibility(View.GONE);
@@ -273,15 +254,50 @@ public class tech_booking_details extends AppCompatActivity {
     }
 
     private void generateProfile() {
-        userDatabase.child(custID).addListenerForSingleValueEvent(new ValueEventListener() {
+
+
+        Query query = projectDatabase
+                .orderByChild("projName")
+                .startAt(projName).endAt(projName);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Users custData = snapshot.getValue(Users.class);
-                if(snapshot.exists()){
+                for(DataSnapshot dataSnapshot : snapshot.getChildren())
+                {
 
-                    String sp_fName = custData.firstName;
-                    String sp_lName = custData.lastName;
-                    String sp_imageUrl = custData.imageUrl;
+                    Projects projects = dataSnapshot.getValue(Projects.class);
+
+                    if(projects.getUserID().equals(techID))
+                    {
+                        tv_addressSummary.setText(projects.getProjAddress());
+                        latString = projects.getLatitude();
+                        longString = projects.getLongitude();
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        userDatabase.child(techID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users users = snapshot.getValue(Users.class);
+                if (snapshot.exists())
+                {
+
+                    tv_techContactNumSummary.setText(users.contactNum);
+                    progressBar.setVisibility(View.GONE);
+
+                    String sp_fName = users.firstName;
+                    String sp_lName = users.lastName;
+                    String sp_imageUrl = users.imageUrl;
                     String sp_fullName = sp_fName.substring(0, 1).toUpperCase()+ sp_fName.substring(1).toLowerCase()
                             + " " + sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();
 
@@ -292,29 +308,31 @@ public class tech_booking_details extends AppCompatActivity {
                                 .load(sp_imageUrl)
                                 .into(iv_custPhoto);
                     }
-
                 }
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(tech_booking_details.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+
             }
+
+
         });
+
     }
 
     private void setRef() {
-        iv_bookingPhoto = findViewById(R.id.iv_bookingPhoto);
         iv_messageCustomer = findViewById(R.id.iv_messageCustomer);
         iv_custPhoto = findViewById(R.id.iv_custPhoto);
-        iv_deleteBtn = findViewById(R.id.iv_deleteBtn);
         iv_viewInMapBtn = findViewById(R.id.iv_viewInMapBtn);
+        tv_paymentMethod = findViewById(R.id.tv_paymentMethod);
+        tv_bookPriceSummary = findViewById(R.id.tv_bookPriceSummary);
 
+        tv_deleteBtn = findViewById(R.id.tv_deleteBtn);
         tv_month = findViewById(R.id.tv_month);
         tv_date = findViewById(R.id.tv_date);
         tv_day = findViewById(R.id.tv_day);
-        tv_specialInstruction = findViewById(R.id.tv_specialInstruction);
+        tv_bookingDesc = findViewById(R.id.tv_bookingDesc);
         tv_time = findViewById(R.id.tv_time);
         tv_back = findViewById(R.id.tv_back);
         tv_bookingName = findViewById(R.id.tv_bookingName);
@@ -327,6 +345,8 @@ public class tech_booking_details extends AppCompatActivity {
         tv_unitTypeSummary = findViewById(R.id.tv_unitTypeSummary);
         tv_prefDateSummary = findViewById(R.id.tv_prefDateSummary);
         tv_prefTimeSummary = findViewById(R.id.tv_prefTimeSummary);
+        tv_techContactNumSummary = findViewById(R.id.tv_techContactNumSummary);
+        tv_custAddressSummary = findViewById(R.id.tv_custAddressSummary);
 
         progressBar = findViewById(R.id.progressBar);
 
@@ -334,5 +354,4 @@ public class tech_booking_details extends AppCompatActivity {
 
 
     }
-
 }

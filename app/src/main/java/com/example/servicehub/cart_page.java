@@ -57,15 +57,10 @@ public class cart_page extends AppCompatActivity {
         generateRecyclerLayout();
         clickListeners();
         bottomNavTaskbar();
+
     }
 
     private void clickListeners() {
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
 
         adapterCartItem.setOnItemClickListener(new AdapterCartItem.OnItemClickListener() {
             @Override
@@ -127,7 +122,7 @@ public class cart_page extends AppCompatActivity {
 
         Query query = cartDatabase
                 .orderByChild("custID")
-                .equalTo(userID);
+                .startAt(userID).endAt(userID);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

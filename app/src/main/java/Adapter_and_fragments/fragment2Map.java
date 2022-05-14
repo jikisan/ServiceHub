@@ -267,6 +267,7 @@ public class fragment2Map extends Fragment {
 
         String latString = getActivity().getIntent().getStringExtra("latString");
         String longString = getActivity().getIntent().getStringExtra("longString");
+        String title = getActivity().getIntent().getStringExtra("Marker Title");
 
         double longitude = Double.parseDouble(longString);
         double latitude = Double.parseDouble(latString);
@@ -275,7 +276,7 @@ public class fragment2Map extends Fragment {
 
         googleMap.addMarker(new MarkerOptions()
                 .position(latLng)
-                .title("Client Location"));
+                .title(title));
     }
 
     private void generateListingDataFromFirebase(GoogleMap googleMap) {
@@ -293,18 +294,14 @@ public class fragment2Map extends Fragment {
                         Listings listings = dataSnapshot.getValue(Listings.class);
 
                         String imageUrl = listings.getImageUrl().toString();
-                        String listLatLng = listings.getListLatLng().toString();
+                        String latString = listings.getLatitude();
+                        String longString = listings.getLongitude();
                         String listName = listings.getListName().toString().toUpperCase(Locale.ROOT);
                         String listPrice = listings.getListPrice().toString();
 
-                        String[] pos = listLatLng.split(",");
-                        latitude = Double.parseDouble(pos[0]);
-                        longitude = Double.parseDouble(pos[1]);
+                        latitude = Double.parseDouble(latString);
+                        longitude = Double.parseDouble(longString);
                         location = new LatLng(latitude, longitude);
-
-                        System.out.println("location");
-                        System.out.println("latitude");
-                        System.out.println("longitude");
 
                         arrLoc.add(location);
                         arrName.add(listName);

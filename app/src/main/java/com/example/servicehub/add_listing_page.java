@@ -15,6 +15,7 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -190,9 +191,6 @@ public class add_listing_page extends AppCompatActivity {
                             latString = myAddress.getLatString();
                             longString = myAddress.getLongString();
 
-                            String latLngText = latString + "," + longString;
-
-                            latLng = latLngText;
                             arrayAdapter.add(addrses);
                         }
 
@@ -225,6 +223,33 @@ public class add_listing_page extends AppCompatActivity {
 
             }
         });
+
+        et_price.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText inputEditTextField= new EditText(add_listing_page.this);
+                inputEditTextField.setInputType(InputType.TYPE_CLASS_NUMBER
+                        | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(add_listing_page.this);
+                builderSingle.setIcon(R.drawable.logo);
+                builderSingle.setTitle("Enter Price:");
+                builderSingle.setView(inputEditTextField);
+                builderSingle.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String editTextInput = inputEditTextField.getText().toString();
+                        double servicePrice = Double.parseDouble(editTextInput);
+                        double percentageFee = servicePrice * .15;
+
+                        et_price.setText(String.valueOf(servicePrice));
+                    }
+                });
+
+                builderSingle.show();
+            }
+        });
+
 
     }
 
@@ -333,10 +358,9 @@ public class add_listing_page extends AppCompatActivity {
 
                 latString = String.valueOf(address.get(0).getLatitude());
                 longString = String.valueOf(address.get(0).getLongitude());
-                String latLngText = latString + "," + longString;
+
                 String addressText =  place.getAddress().toString();
 
-                latLng = latLngText;
                 tv_address.setText(addressText);
 
             } catch (IOException e) {
@@ -413,7 +437,7 @@ public class add_listing_page extends AppCompatActivity {
                     public void onSuccess(Uri uri) {
                         final String downloadUrl = uri.toString();
 
-                        Listings listings = new Listings(userID, downloadUrl, imageName, listName, latLng, listAddress, listPrice, listQuantity, listDesc, ratingsText);
+                        Listings listings = new Listings(userID, downloadUrl, imageName, listName, latString, longString, listAddress, listPrice, listQuantity, listDesc, ratingsText);
 
                         listingDatabase.push().setValue(listings).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override

@@ -24,7 +24,7 @@
                 android:id="@+id/iv_listingImage"
                 android:layout_width="match_parent"
                 android:layout_height="116dp"
-                android:background="@drawable/common_google_signin_btn_icon_dark_focused"
+                android:src="@drawable/sh_logo"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -90,7 +90,8 @@ public class add_project_page extends AppCompatActivity {
     private int PLACE_PICKER_REQUEST = 1;
     private int hour, minute;
     private String latLng, latString, longString, category;
-    private String[] categoryList = {"Installation", "Repair", "Cleaning", "Others"};
+    private String[] categoryList = {"Installation","Repair","Cleaning","Heating","Ventilation","Others"};
+
     private ArrayAdapter<CharSequence> adapterCategoryItems;
     private AdapterAddressItem adapterAddressItem;
 
@@ -436,6 +437,7 @@ public class add_project_page extends AppCompatActivity {
     private void addProj() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Adding Project...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         StorageReference fileReference = projectStorage.child(imageUri.getLastPathSegment());
