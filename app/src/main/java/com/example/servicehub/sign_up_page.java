@@ -25,6 +25,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class sign_up_page extends AppCompatActivity {
 
     private EditText et_firstName, et_lastName, et_contactNumber, et_username, et_password_signup,
@@ -32,7 +34,6 @@ public class sign_up_page extends AppCompatActivity {
     private TextView tv_signIn;
     private Button btn_signUp;
     private FirebaseAuth fAuth;
-    private FirebaseUser user;
     private DatabaseReference userDatabase;
 
     @Override
@@ -40,7 +41,6 @@ public class sign_up_page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up_page);
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
         userDatabase = FirebaseDatabase.getInstance().getReference(Users.class.getSimpleName());
         setRef();
         ClickListener();
@@ -72,7 +72,6 @@ public class sign_up_page extends AppCompatActivity {
 
     private void signUpUser() {
 
-
         String firstName = et_firstName.getText().toString();
         String lastName = et_lastName.getText().toString();
         String username = et_username.getText().toString();
@@ -82,9 +81,6 @@ public class sign_up_page extends AppCompatActivity {
         String imageName = "";
         String imageUrl = "";
         String ratings = "0";
-
-
-
 
 
         if (TextUtils.isEmpty(firstName))
@@ -122,8 +118,12 @@ public class sign_up_page extends AppCompatActivity {
         }
         else if (!isValidPassword(password))
         {
-            Toast.makeText(this, "Passwords should contain atleast one: " +
-                    "uppercase letters: A-Z. One lowercase letters: a-z. One number: 0-9. ", Toast.LENGTH_LONG).show();
+            new SweetAlertDialog(sign_up_page.this, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Error!.")
+                    .setContentText("Password should contain \natleast one: uppercase letters,\n one Special Character,  \nand one number")
+                    .show();
+
+            Toast.makeText(this, "Passwords should contain atleast one: uppercase letters: A-Z. One Special Characters. One number: 0-9. ", Toast.LENGTH_LONG).show();
         }
         else if (TextUtils.isEmpty(confirmPass))
         {
@@ -145,8 +145,10 @@ public class sign_up_page extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                String id = user.getUid();
-                                Users users = new Users(id, firstName, lastName, contactNum, username, password, imageName, imageUrl, ratings);
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                String userID = user.getUid().toString();
+
+                                Users users = new Users(userID, firstName, lastName, contactNum, username, password, imageName, imageUrl, ratings);
 
                                 userDatabase.child(user.getUid())
                                         .setValue(users).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -180,9 +182,14 @@ public class sign_up_page extends AppCompatActivity {
 
     private static boolean isValidPassword(String password) {
 
+//        String regex = "^(?=.*[0-9])"
+//                + "(?=.*[a-z])(?=.*[A-Z])"
+//                + "(?=.*:;<=>?@!\"#$%&()*+,-./)"
+//                + "(?=\\S+$).{8,15}$";
+
         String regex = "^(?=.*[0-9])"
                 + "(?=.*[a-z])(?=.*[A-Z])"
-                + "(?=.*:;<=>?@!\"#$%&()*+,-./)"
+                + "(?=.*[@#$%^&+=?!#$%&()*+,./])"
                 + "(?=\\S+$).{8,15}$";
 
 

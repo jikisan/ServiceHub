@@ -426,35 +426,10 @@ public class address_page extends AppCompatActivity {
 
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(location);
-                markerOptions.draggable(true);
+
 
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 19));
                 googleMap.addMarker(markerOptions);
-
-                googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-                    @Override
-                    public void onMarkerDrag(@NonNull Marker marker) {
-
-                    }
-
-                    @Override
-                    public void onMarkerDragEnd(@NonNull Marker marker) {
-
-                        newLocationFromMarker = marker.getPosition();
-                        latDouble = newLocationFromMarker.latitude;
-                        longDouble = newLocationFromMarker.longitude;
-
-                        MarkerOptions markerOptions = new MarkerOptions();
-                        markerOptions.position(newLocationFromMarker);
-                        markerOptions.draggable(true);
-
-                    }
-
-                    @Override
-                    public void onMarkerDragStart(@NonNull Marker marker) {
-
-                    }
-                });
 
                 googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                     @Override
@@ -466,8 +441,6 @@ public class address_page extends AppCompatActivity {
 
                         MarkerOptions markerOptions = new MarkerOptions();
                         markerOptions.position(latLng);
-                        markerOptions.draggable(true);
-
                         googleMap.addMarker(markerOptions);
                     }
                 });
@@ -499,8 +472,6 @@ public class address_page extends AppCompatActivity {
                 mGoogleMap.clear();
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(latLngFromPlaceApi);
-                markerOptions.draggable(true);
-
                 mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLngFromPlaceApi, 19));
                 mGoogleMap.addMarker(markerOptions);
 

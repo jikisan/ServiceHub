@@ -106,6 +106,7 @@
                         android:drawablePadding="8dp"
                         android:hint="Search"
                         android:paddingLeft="16dp"
+                        android:focusable="false"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
