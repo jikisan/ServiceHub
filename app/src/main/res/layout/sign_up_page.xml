@@ -153,8 +153,7 @@
                     android:hint="Contact Number"
                     android:maxLength="10"
                     android:paddingLeft="8sp"
-                    android:inputType="number"
-
+                    android:inputType="phone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 

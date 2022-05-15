@@ -198,10 +198,9 @@ public class fragment2Map extends Fragment {
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(location);
                 markerOptions.title("My Location");
-                markerOptions.icon(BitmapFromVector(getContext(), R.drawable.map_pin96));
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 13));
 
-                googleMap.addMarker(markerOptions);
+                //googleMap.addMarker(markerOptions);
 
                 projCategory = getActivity().getIntent().getStringExtra("Category");
                 if(projCategory.equals("Marketplace"))

@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 public class login_page extends AppCompatActivity {
 
     private EditText et_username, et_password;
@@ -104,7 +106,13 @@ public class login_page extends AppCompatActivity {
                                     startActivity(new Intent(getApplicationContext(), homepage.class));
                                 }else{
                                     user.sendEmailVerification();
+
                                     Toast.makeText(login_page.this, "Please check your email to verify your account.", Toast.LENGTH_SHORT).show();
+                                    new SweetAlertDialog(login_page.this, SweetAlertDialog.ERROR_TYPE)
+                                            .setTitleText("Account not verified.")
+                                            .setContentText("Please check your email " +
+                                                            "\nto verify your account.")
+                                            .show();
                                 }
 
                             } else {
@@ -210,7 +218,7 @@ public class login_page extends AppCompatActivity {
     private boolean isValidPassword(String password) {
         String regex = "^(?=.*[0-9])"
                 + "(?=.*[a-z])(?=.*[A-Z])"
-                + "(?=.*[@#$%^&+=?!])"
+                + "(?=.*[@#$%^&+=?!#$%&()*+,./])"
                 + "(?=\\S+$).{8,15}$";
 
         Pattern p = Pattern.compile(regex);

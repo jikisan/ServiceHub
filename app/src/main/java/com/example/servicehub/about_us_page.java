@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class about_us_page extends AppCompatActivity {
 
-    ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn;
+    private TextView tv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,13 @@ public class about_us_page extends AppCompatActivity {
     }
 
     private void bottomNavTaskbar() {
+
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
         iv_messageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,5 +79,7 @@ public class about_us_page extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
+
+        tv_back = findViewById(R.id.tv_back);
     }
 }
