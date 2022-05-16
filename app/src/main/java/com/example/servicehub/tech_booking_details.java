@@ -49,7 +49,7 @@ public class tech_booking_details extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button btn_completeBooking;
 
-    String imageUrl, custID, bookingIdFromIntent, latString, longString;
+    private String imageUrl, custID, bookingIdFromIntent, latString, longString, tempProjName, projectIdFromIntent;
 
     private FirebaseUser user;
     private FirebaseStorage mStorage;
@@ -78,6 +78,25 @@ public class tech_booking_details extends AppCompatActivity {
     }
 
     private void clickListener() {
+
+        iv_messageCustomer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String sender = userID;
+                String receiver = custID;
+                String chatName = tempProjName;
+
+                String chatUid = sender + "_" + receiver + "_" + chatName;
+
+                Intent intent = new Intent(tech_booking_details.this, chat_activity.class);
+                intent.putExtra("project id", projectIdFromIntent);
+                intent.putExtra("tech id", custID);
+                intent.putExtra("sender id", userID);
+                intent.putExtra("chat id", chatUid);
+                startActivity(intent);
+            }
+        });
 
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,9 +238,11 @@ public class tech_booking_details extends AppCompatActivity {
                     try {
                         latString = bookingData.getLatitude();
                         longString = bookingData.getLongitude();
+                        projectIdFromIntent = bookingData.getProjId();
 
                         custID  = bookingData.custID;
                         imageUrl = bookingData.imageUrl;
+                        tempProjName = bookingData.projName;
                         String sp_bookingName = bookingData.projName;
                         String sp_bookingtime = bookingData.bookingTime;
                         String sp_bookingDate = bookingData.bookingDate;

@@ -20,6 +20,7 @@ public class Booking {
     String paymentMethod;
     String techID;
     String bookingCreated;
+    String projId;
 
     public Booking(){
 
@@ -27,7 +28,7 @@ public class Booking {
 
     public Booking(String imageUrl, String custID, String projName, String custAddress, String latitude, String longitude, String propertyType, String airconBrand, String airconType, String unitType,
                    String bookingDate, String bookingTime, String custContactNum, String addInfo, String totalPrice, String paymentMethod,
-                   String techID, String bookingCreated)
+                   String techID, String bookingCreated, String projId)
     {
         this.imageUrl = imageUrl;
         this.custID = custID;
@@ -47,6 +48,7 @@ public class Booking {
         this.paymentMethod = paymentMethod;
         this.techID = techID;
         this.bookingCreated = bookingCreated;
+        this.projId = projId;
     }
 
     public String getImageUrl() {
@@ -191,6 +193,14 @@ public class Booking {
 
     public void setBookingCreated(String bookingCreated) {
         this.bookingCreated = bookingCreated;
+    }
+
+    public String getProjId() {
+        return projId;
+    }
+
+    public void setProjId(String projId) {
+        this.projId = projId;
     }
 }
 

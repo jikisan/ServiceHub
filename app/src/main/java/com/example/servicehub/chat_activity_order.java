@@ -37,8 +37,8 @@ public class chat_activity_order extends AppCompatActivity {
     private ScrollView scrollView;
     private Firebase reference1, reference2;
     private DatabaseReference messageDatabase, chatDatabase, userDatabase, listDatabase;
-    private String chatUid, userID, senderUid, senderPhotoUrl, listingID, receiverUid, receiverPhotoUrl, receiverName,
-            tempChatUid;
+    private String chatUid, userID, senderUid, senderPhotoUrl, listingID, receiverUid, receiverPhotoUrl,
+            receiverName, tempChatUid, chatType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +53,11 @@ public class chat_activity_order extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
 
+        chatType = "listing";
         listingID = getIntent().getStringExtra("listing id");
         tempChatUid = getIntent().getStringExtra("chat id");
 
         String[] chatUidSplit = tempChatUid.split("_");
-
         receiverUid = chatUidSplit[1];
         senderUid = chatUidSplit[0];
 
@@ -146,7 +146,7 @@ public class chat_activity_order extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Chat chat = new Chat(senderUid, senderPhotoUrl, receiverUid,
+                Chat chat = new Chat(chatType, senderUid, senderPhotoUrl, receiverUid,
                         receiverPhotoUrl, receiverName);
 
                 String tempSenderUid;

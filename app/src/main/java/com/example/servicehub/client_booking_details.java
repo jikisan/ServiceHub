@@ -53,7 +53,7 @@ public class client_booking_details extends AppCompatActivity {
     private StorageReference projectStorage;
     private DatabaseReference userDatabase, projectDatabase, bookingDatabase;
     private StorageTask addTask;
-    private String userID, techID, projName;
+    private String userID, techID, projName, projectIdFromIntent;
     private ProgressDialog progressDialog;
 
     @Override
@@ -74,6 +74,24 @@ public class client_booking_details extends AppCompatActivity {
     }
 
     private void clickListeners() {
+
+        iv_messageCustomer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String sender = userID;
+                String receiver = custID;
+                String chatName = projName;
+
+                String chatUid = sender + "_" + receiver + "_" + chatName;
+
+                Intent intent = new Intent(client_booking_details.this, chat_activity.class);
+                intent.putExtra("project id", projectIdFromIntent);
+                intent.putExtra("tech id", custID);
+                intent.putExtra("sender id", userID);
+                intent.putExtra("chat id", chatUid);
+                startActivity(intent);
+            }
+        });
 
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,7 +213,7 @@ public class client_booking_details extends AppCompatActivity {
 
                 if(bookingData != null) {
                     try {
-
+                        projectIdFromIntent = bookingData.getProjId();
 
                         projName = bookingData.getProjName();
                         techID = bookingData.getTechID();
