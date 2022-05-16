@@ -234,6 +234,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/fnameLayout4" />
 
             <TextView
+                android:id="@+id/tv_terms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" Terms &amp; Conditions"

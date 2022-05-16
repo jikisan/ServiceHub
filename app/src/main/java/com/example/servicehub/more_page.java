@@ -56,6 +56,14 @@ public class more_page extends AppCompatActivity {
 
     private void clickListeners() {
 
+        tv_privacyPolicy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(more_page.this, privacy_and_policy_page.class);
+                startActivity(intent);
+            }
+        });
+
         tv_editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

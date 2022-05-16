@@ -30,7 +30,6 @@ import Adapter_and_fragments.AdapterBookingItem;
 import Adapter_and_fragments.AdapterCartItem;
 
 public class cart_page extends AppCompatActivity {
-
     private List<Cart> arr;
     private AdapterCartItem adapterCartItem;
     private DatabaseReference cartDatabase, listingDatbase, userDatabase;
