@@ -19,6 +19,9 @@
         android:theme="@style/Theme.ServiceHub"
         tools:replace="android:icon">
         <activity
+            android:name=".privacy_and_policy_page"
+            android:exported="false" />
+        <activity
             android:name=".chat_activity_order"
             android:exported="false" />
         <activity

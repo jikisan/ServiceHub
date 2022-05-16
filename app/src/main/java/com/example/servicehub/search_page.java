@@ -45,9 +45,9 @@ public class search_page extends AppCompatActivity {
     private String[] categoryArrayFix = {"All services", "Installation","Repair","Cleaning","Heating","Ventilation","Others"};
 
     private ArrayAdapter<CharSequence> adapterCategoryItems;
-    private AdapterInstallerItem adapterInstallerItem;
+    private AdapterInstallerItem adapterInstallerItem, adapter;
     private DatabaseReference projDatabase;
-    private ArrayList<Projects> arrProj;
+    private ArrayList<Projects> arrProj, arr;
     private ArrayList<String> arrCategory;
 
     @Override
@@ -65,12 +65,81 @@ public class search_page extends AppCompatActivity {
         bottomNavTaskbar();
     }
 
+    private void clickListeners() {
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+
+        auto_complete_txt.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                arrProj.clear();
+
+
+                String category = adapterView.getItemAtPosition(i).toString();
+                tv_headerTitle.setText(category);
+
+                if(category == "All services")
+                {
+                    generateAllProjects();
+                }
+                else
+                {
+                    generateRecyclerLayoutByCategory(category);
+                }
+
+            }
+        });
+
+        adapterInstallerItem.setOnItemClickListener(new AdapterInstallerItem.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+                Toast.makeText(getApplicationContext(), "Position: " + position, Toast.LENGTH_SHORT).show();
+
+                arrProj.get(position);
+
+                Query query = projDatabase
+                        .orderByChild("projName")
+                        .equalTo(arrProj.get(position).getProjName());
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                            String projectID = dataSnapshot.getKey().toString();
+                            Intent intentProject = new Intent(search_page.this, booking_page.class);
+                            intentProject.putExtra("Project ID", projectID);
+                            startActivity(intentProject);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                adapterInstallerItem.notifyItemChanged(position);
+            }
+        });
+
+
+    }
+
     private void generateRecyclerLayout() {
+
         recyclerView_searches.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView_searches.setLayoutManager(linearLayoutManager);
 
         adapterInstallerItem = new AdapterInstallerItem(arrProj);
+        adapter = new AdapterInstallerItem(arr);
         recyclerView_searches.setAdapter(adapterInstallerItem);
 
     }
@@ -119,10 +188,12 @@ public class search_page extends AppCompatActivity {
                         arrProj.add(projects);
 
                     }
+                    adapterInstallerItem.notifyDataSetChanged();
                 }
 
-                AdapterInstallerItem adapter = new AdapterInstallerItem(arrProj);
-                recyclerView_searches.setAdapter(adapter);
+
+//                AdapterInstallerItem adapter = new AdapterInstallerItem(arrProj);
+//                recyclerView_searches.setAdapter(adapter);
 
 
             }
@@ -154,8 +225,11 @@ public class search_page extends AppCompatActivity {
                     return false;
                 }
             });
+
         }
     }
+
+
 
     private void generateAllProjects() {
 
@@ -173,8 +247,6 @@ public class search_page extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     adapterInstallerItem.notifyDataSetChanged();
                 }
-                AdapterInstallerItem adapter = new AdapterInstallerItem(arrProj);
-                recyclerView_searches.setAdapter(adapter);
             }
 
             @Override
@@ -191,55 +263,53 @@ public class search_page extends AppCompatActivity {
         auto_complete_txt.setAdapter(adapterCategoryItems);
     }
 
-    private void clickListeners() {
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-
-        auto_complete_txt.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                arrProj.clear();
-
-
-                String category = adapterView.getItemAtPosition(i).toString();
-                tv_headerTitle.setText(category);
-
-                if(category == "All services")
-                {
-                    generateAllProjects();
-                }
-                else
-                {
-                    generateRecyclerLayoutByCategory(category);
-                }
-
-            }
-        });
-
-        adapterInstallerItem.setOnItemClickListener(new AdapterInstallerItem.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Toast.makeText(getApplicationContext(), "Position: " + position, Toast.LENGTH_SHORT).show();
-
-            }
-        });
-    }
-
     private void search(String s) {
-        ArrayList<Projects> arr = new ArrayList<>();
+        arr = new ArrayList<>();
         for(Projects object : arrProj)
         {
             if(object.getProjName().toLowerCase().contains(s.toLowerCase()))
             {
                 arr.add(object);
             }
-            AdapterInstallerItem adapter = new AdapterInstallerItem(arr);
+
+            adapter = new AdapterInstallerItem(arr);
             recyclerView_searches.setAdapter(adapter);
         }
+
+        adapter.setOnItemClickListener(new AdapterInstallerItem.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+
+                Toast.makeText(getApplicationContext(), "Position: " + position, Toast.LENGTH_SHORT).show();
+                arr.get(position);
+
+                Query query = projDatabase
+                        .orderByChild("projName")
+                        .equalTo(arr.get(position).getProjName());
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                            String projectID = dataSnapshot.getKey().toString();
+                            Intent intentProject = new Intent(search_page.this, booking_page.class);
+                            intentProject.putExtra("Project ID", projectID);
+                            startActivity(intentProject);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+                adapterInstallerItem.notifyItemChanged(position);
+            }
+        });
+
     }
 
     private void bottomNavTaskbar() {

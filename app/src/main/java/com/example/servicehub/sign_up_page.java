@@ -3,13 +3,18 @@ package com.example.servicehub;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,10 +36,14 @@ public class sign_up_page extends AppCompatActivity {
 
     private EditText et_firstName, et_lastName, et_contactNumber, et_username, et_password_signup,
             et_confirmPassword;
-    private TextView tv_signIn;
+    private TextView tv_signIn, tv_terms;
     private Button btn_signUp;
+    private CheckBox checkBox_terms;
+
     private FirebaseAuth fAuth;
     private DatabaseReference userDatabase;
+
+    private String termsHtml = "terms.html";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,11 +52,39 @@ public class sign_up_page extends AppCompatActivity {
 
         userDatabase = FirebaseDatabase.getInstance().getReference(Users.class.getSimpleName());
         setRef();
-        ClickListener();
+        clickListener();
 
     }
 
-    private void ClickListener() {
+    private void clickListener() {
+        tv_terms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(sign_up_page.this);
+                alert.setTitle("ServiceHub");
+
+                WebView webView = new WebView(sign_up_page.this);
+                webView.loadUrl("file:///android_asset/" + termsHtml);
+                webView.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        view.loadUrl(url);
+
+                        return true;
+                    }
+                });
+
+                alert.setView(webView);
+                alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                alert.show();
+            }
+        });
+
         tv_signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,9 +101,6 @@ public class sign_up_page extends AppCompatActivity {
 
             }
         });
-
-
-
 
     }
 
@@ -129,9 +163,15 @@ public class sign_up_page extends AppCompatActivity {
         {
             Toast.makeText(this, "Please confirm the password", Toast.LENGTH_SHORT).show();
         }
-        else if (!password.equals(confirmPass)) {
+        else if (!password.equals(confirmPass))
+        {
             Toast.makeText(this, "Password did not match", Toast.LENGTH_SHORT).show();
-        } else
+        }
+        else if(!checkBox_terms.isChecked())
+        {
+            Toast.makeText(this, "Must agree with the Terms and Conditions to proceed", Toast.LENGTH_SHORT).show();
+        }
+        else
         {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Creating account");
@@ -202,13 +242,19 @@ public class sign_up_page extends AppCompatActivity {
     private void setRef() {
 
         tv_signIn = findViewById(R.id.tv_signIn);
+        tv_terms = findViewById(R.id.tv_terms);
+
         et_firstName = findViewById(R.id.et_firstName);
         et_lastName = findViewById(R.id.et_lastName);
         et_contactNumber = findViewById(R.id.et_contactNumber);
         et_username = findViewById(R.id.et_username);
         et_password_signup = findViewById(R.id.et_password_signup);
         et_confirmPassword = findViewById(R.id.et_confirmPassword);
+
+        checkBox_terms = findViewById(R.id.checkBox_terms);
+
         btn_signUp = findViewById(R.id.btn_signUp);
+
         fAuth = FirebaseAuth.getInstance();
 
     }
