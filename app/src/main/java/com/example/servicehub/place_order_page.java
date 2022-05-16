@@ -74,7 +74,11 @@ public class place_order_page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String chatUid = userID.toString() + "_" + sellerID.toString() + "_" + tempListName;
+                String sender = userID;
+                String receiver = sellerID;
+                String chatName = tempListName;
+
+                String chatUid = sender + "_" + receiver + "_" + chatName;
 
                 Intent intent = new Intent(place_order_page.this, chat_activity_order.class);
                 intent.putExtra("listing id", listingIdFromIntent);

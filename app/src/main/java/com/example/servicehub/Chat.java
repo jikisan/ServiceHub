@@ -2,6 +2,7 @@ package com.example.servicehub;
 
 public class Chat {
 
+    String chatType;
     String senderUid;
     String senderPhotoUrl;
     String receiverUid;
@@ -11,13 +12,22 @@ public class Chat {
     public Chat() {
     }
 
-    public Chat(String senderUid, String senderPhotoUrl, String receiverUid,
+    public Chat(String chatType, String senderUid, String senderPhotoUrl, String receiverUid,
                 String receiverPhotoUrl, String receiverName) {
+        this.chatType = chatType;
         this.senderUid = senderUid;
         this.senderPhotoUrl = senderPhotoUrl;
         this.receiverUid = receiverUid;
         this.receiverPhotoUrl = receiverPhotoUrl;
         this.receiverName = receiverName;
+    }
+
+    public String getChatType() {
+        return chatType;
+    }
+
+    public void setChatType(String chatType) {
+        this.chatType = chatType;
     }
 
     public String getSenderUid() {

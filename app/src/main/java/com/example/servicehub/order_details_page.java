@@ -46,7 +46,8 @@ public class order_details_page extends AppCompatActivity {
     private TextView tv_orderName, tv_customerName, tv_orderPrice, tv_orderQuantity, iv_deleteOrderBtn,
             tv_customerAddress, tv_custContactNum, tv_back, tv_totalAmount, tv_paymentMethod;
 
-    private String userID, imageUriText, orderIdFromIntent, custLatLng, custID, orderName, latString, longString;
+    private String userID, imageUriText, orderIdFromIntent, custLatLng, custID,
+            orderName, latString, longString, listingIdFromIntent;
     private CardView cv_finishOrderBtn;
 
     private FirebaseUser user;
@@ -100,6 +101,26 @@ public class order_details_page extends AppCompatActivity {
     }
 
     private void clickListeners() {
+
+        iv_messageCust.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String sender = userID;
+                String receiver = custID;
+                String chatName = orderName;
+
+                String chatUid = sender + "_" + receiver + "_" + chatName;
+
+                Intent intent = new Intent(order_details_page.this, chat_activity_order.class);
+                intent.putExtra("listing id", listingIdFromIntent);
+                intent.putExtra("tech id", custID);
+                intent.putExtra("sender id", userID);
+                intent.putExtra("chat id", chatUid);
+                startActivity(intent);
+
+            }
+        });
 
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,6 +238,7 @@ public class order_details_page extends AppCompatActivity {
                 if (orders != null){
                     try {
 
+                        listingIdFromIntent = orders.listingID;
                         custID = orders.getCustID();
                         latString = orders.getLatitude();
                         longString = orders.getLongitude();
@@ -246,10 +268,6 @@ public class order_details_page extends AppCompatActivity {
 
                         double totalAmount = Double.parseDouble(sp_ordersPrice) * Double.parseDouble(sp_orderQuantity);
                         tv_totalAmount.setText("₱ " + totalAmount);
-
-                        String[] pos = custLatLng.split(",");
-                        latString = pos[0];
-                        longString = pos[1];
 
                     } catch (Exception e) {
                         e.printStackTrace();

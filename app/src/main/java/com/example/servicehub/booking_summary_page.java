@@ -239,7 +239,7 @@ public class booking_summary_page extends AppCompatActivity {
         bookingCreated = currentTime.toString();
         Booking booking = new Booking(imageUrl, custID, projName, addressFromIntent, latString, longString, propertyTypeFromIntent, airconBrandFromIntent,
                 airconTypeFromIntent, unitTypeFromIntent, bookingDateFromIntent, bookingTimeFromIntent,
-                contactNumberFromIntent, addInfoFromIntent, totalPrice, paymentMethod, sp_techId, bookingCreated);
+                contactNumberFromIntent, addInfoFromIntent, totalPrice, paymentMethod, sp_techId, bookingCreated, projectIdFromIntent);
 
         bookingDatabase.push().setValue(booking).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

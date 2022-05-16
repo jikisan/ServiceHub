@@ -43,7 +43,7 @@ public class client_order_details extends AppCompatActivity {
             tv_customerAddress, tv_custContactNum, tv_back, tv_totalAmount, tv_paymentMethod;
 
     private String userID, imageUriText, orderIdFromIntent, custLatLng, custID,
-            orderName, latString, longString, sellerID;
+            orderName, latString, longString, sellerID, listingIdFromIntent;
     private CardView cv_finishOrderBtn;
 
     private FirebaseUser user;
@@ -72,6 +72,24 @@ public class client_order_details extends AppCompatActivity {
     }
 
     private void clickListeners() {
+
+        iv_messageCust.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String sender = userID;
+                String receiver = custID;
+                String chatName = orderName;
+
+                String chatUid = sender + "_" + receiver + "_" + chatName;
+
+                Intent intent = new Intent(client_order_details.this, chat_activity_order.class);
+                intent.putExtra("listing id", listingIdFromIntent);
+                intent.putExtra("tech id", custID);
+                intent.putExtra("sender id", userID);
+                intent.putExtra("chat id", chatUid);
+                startActivity(intent);
+            }
+        });
 
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,6 +242,8 @@ public class client_order_details extends AppCompatActivity {
                         sellerID = orders.getSellerID();
                         imageUriText = orders.getImageUrl();
                         orderName = orders.getItemName();
+                        listingIdFromIntent = orders.getListingID();
+
                         String sp_ordersPrice = orders.getTotalPayment();
                         String sp_orderQuantity = orders.getItemQuantity();
                         String sp_paymentMethod = orders.getPaymentMethod();
