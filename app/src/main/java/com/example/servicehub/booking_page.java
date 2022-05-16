@@ -47,7 +47,7 @@ public class booking_page extends AppCompatActivity {
     private FirebaseUser user;
     private DatabaseReference projectDatabase, listingDatabase, favoriteDatabase, cartDatabase;
     private String userID, projectIdFromIntent, listingIdFromIntent, imageUrlText, latLng,  tempProjectID, tempProjName,
-            tempProjPrice, tempProjRatings, tempListName, listPrice, listRatings;
+            tempProjPrice, tempProjRatings, tempListName, listPrice, listRatings, techID;
     private Uri tempUri;
 
     private ProgressBar progressBar;
@@ -85,7 +85,13 @@ public class booking_page extends AppCompatActivity {
         iv_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(booking_page.this, message_page.class);
+                String chatUid = userID.toString() + "_" + techID.toString() + "_" + tempProjName;
+
+                Intent intent = new Intent(booking_page.this, chat_activity.class);
+                intent.putExtra("project id", projectIdFromIntent);
+                intent.putExtra("tech id", techID);
+                intent.putExtra("sender id", userID);
+                intent.putExtra("chat id", chatUid);
                 startActivity(intent);
 
             }
@@ -235,6 +241,7 @@ public class booking_page extends AppCompatActivity {
                 if(projectData != null){
                     try{
                         tempProjectID = projectIdFromIntent;
+                        techID = projectData.getUserID();
 
                         imageUrlText = projectData.getImageUrl();
                         String sp_category = projectData.getCategory();

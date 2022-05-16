@@ -47,11 +47,11 @@ public class homepage extends AppCompatActivity {
         setRef();
         generateProfile();
         bottomNavTaskbar();
-        buttonsActivity();
+        clickListeners();
 
     }
 
-    private void buttonsActivity() {
+    private void clickListeners() {
 
         et_search.setOnClickListener(new View.OnClickListener() {
             @Override

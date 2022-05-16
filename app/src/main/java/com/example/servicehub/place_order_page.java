@@ -41,7 +41,7 @@ public class place_order_page extends AppCompatActivity {
 
     private FirebaseUser user;
     private DatabaseReference listingDatabase, cartDatabase;
-    private String userID, listingIdFromIntent, imageUrlText, tempListName, listPrice, listRatings;
+    private String userID, sellerID, listingIdFromIntent, imageUrlText, tempListName, listPrice, listRatings;
     private Uri tempUri;
 
     private ProgressBar progressBar;
@@ -73,7 +73,14 @@ public class place_order_page extends AppCompatActivity {
         iv_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(place_order_page.this, message_page.class);
+
+                String chatUid = userID.toString() + "_" + sellerID.toString() + "_" + tempListName;
+
+                Intent intent = new Intent(place_order_page.this, chat_activity_order.class);
+                intent.putExtra("listing id", listingIdFromIntent);
+                intent.putExtra("tech id", sellerID);
+                intent.putExtra("sender id", userID);
+                intent.putExtra("chat id", chatUid);
                 startActivity(intent);
 
             }
@@ -201,6 +208,7 @@ public class place_order_page extends AppCompatActivity {
 
                 if(listingsData != null){
                     try{
+                        sellerID = listingsData.getUserID();
                         imageUrlText = listingsData.getImageUrl();
                         listRatings= listingsData.getRatings();
                         tempListName = listingsData.getListName();

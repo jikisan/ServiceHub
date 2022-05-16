@@ -39,75 +39,26 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewBottom"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView_chatProfiles"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:backgroundTint="@color/white"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:backgroundTint="@color/white"
-            android:gravity="center"
-            android:orientation="horizontal">
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="87dp"
+        android:layout_height="90dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/light_blue"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/iv_messageBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_margin="8dp"
-                android:layout_weight="20"
-                android:background="@color/white"
-                android:src="@drawable/message" />
-
-            <ImageView
-                android:id="@+id/iv_notificationBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_margin="8dp"
-                android:layout_weight="20"
-                android:background="@color/white"
-                android:src="@drawable/notification" />
-
-            <ImageView
-                android:id="@+id/iv_homeBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_margin="8dp"
-                android:layout_weight="20"
-                android:background="@color/white"
-                android:src="@drawable/home"
-                app:tint="@color/light_blue"
-                />
-
-            <ImageView
-                android:id="@+id/iv_accountBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_margin="8dp"
-                android:layout_weight="20"
-                android:background="@color/white"
-                android:src="@drawable/accounts"
-                />
-
-            <ImageView
-                android:id="@+id/iv_moreBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_margin="8dp"
-                android:layout_weight="20"
-                android:background="@color/white"
-                android:src="@drawable/settings" />
-
-        </LinearLayout>
-
-
-    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
