@@ -98,6 +98,19 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_bookingPhoto"
                 app:layout_constraintTop_toTopOf="@+id/iv_bookingPhoto" />
 
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="name"
+                android:textAllCaps="true"
+                android:textColor="@color/red"
+                android:textSize="20sp"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@+id/tv_bookingName"
+                app:layout_constraintTop_toBottomOf="@+id/tv_bookingName" />
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView3"
                 android:layout_width="match_parent"

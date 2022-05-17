@@ -3,6 +3,7 @@ package com.example.servicehub;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.drawable.DrawableCompat;
 
 import android.app.AlertDialog;
@@ -36,6 +37,7 @@ import com.squareup.picasso.Picasso;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import dev.shreyaspatil.MaterialDialog.MaterialDialog;
@@ -45,9 +47,10 @@ public class tech_booking_details extends AppCompatActivity {
     private ImageView iv_bookingPhoto, iv_messageCustomer, btn_viewInMap, iv_custPhoto, iv_viewInMapBtn;
     private TextView tv_addressSummary,tv_propertyTypeSummary,tv_brandSummary,tv_acTypeSummary,tv_unitTypeSummary,tv_prefDateSummary,
             tv_prefTimeSummary,tv_contactNumSummary, tv_back, tv_customerName, tv_bookingName,
-            tv_time, tv_specialInstruction, tv_month, tv_date, tv_day, iv_deleteBtn;
+            tv_time, tv_specialInstruction, tv_month, tv_date, tv_day, iv_deleteBtn, tv_status;
     private ProgressBar progressBar;
     private Button btn_completeBooking;
+    private CardView cardView17;
 
     private String imageUrl, custID, bookingIdFromIntent, latString, longString, tempProjName, projectIdFromIntent;
 
@@ -73,8 +76,36 @@ public class tech_booking_details extends AppCompatActivity {
 
         setRef();
         clickListener();
-        generateBookingData();
+        validateStatus();
 
+
+    }
+
+    private void validateStatus() {
+        String bookingStatus = getIntent().getStringExtra("status");
+
+        if(bookingStatus.equals("cancelled"))
+        {
+            tv_status.setVisibility(View.VISIBLE);
+            tv_status.setTextColor(Color.RED);
+            tv_status.setText("STATUS: " + bookingStatus);
+            iv_deleteBtn.setVisibility(View.INVISIBLE);
+            cardView17.setVisibility(View.INVISIBLE);
+            generateBookingData();
+        }
+        else if(bookingStatus.equals("complete"))
+        {
+            tv_status.setVisibility(View.VISIBLE);
+            tv_status.setTextColor(Color.GREEN);
+            tv_status.setText("STATUS: " + bookingStatus);
+            iv_deleteBtn.setVisibility(View.INVISIBLE);
+            cardView17.setVisibility(View.INVISIBLE);
+            generateBookingData();
+        }
+        else
+        {
+            generateBookingData();
+        }
     }
 
     private void clickListener() {
@@ -140,23 +171,26 @@ public class tech_booking_details extends AppCompatActivity {
                         progressDialog.setTitle("Cancelling...");
                         progressDialog.show();
 
+                        String bookingStatus = "cancelled";
+
                         bookingIdFromIntent = getIntent().getStringExtra("Booking ID");
-                        bookingDatabase.child(bookingIdFromIntent).addListenerForSingleValueEvent(new ValueEventListener() {
+                        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+                        hashMap.put("status", bookingStatus);
+
+                        bookingDatabase.child(bookingIdFromIntent).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            public void onComplete(@NonNull Task<Void> task) {
+                                progressDialog.dismiss();
 
-                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                    dataSnapshot.getRef().removeValue();
-
-                                }
                                 generateNotification();
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                                Intent intent = new Intent(tech_booking_details.this, tech_dashboard.class);
+                                startActivity(intent);
+                                Toast.makeText(tech_booking_details.this, "Booking is cancelled", Toast.LENGTH_SHORT).show();
 
                             }
                         });
+
+
                     }
                 })
                 .setNegativeButton("Back", R.drawable.back_arrow, new MaterialDialog.OnClickListener() {
@@ -278,9 +312,9 @@ public class tech_booking_details extends AppCompatActivity {
 
                         generateProfile();
                         progressBar.setVisibility(View.GONE);
-                    } catch (Exception e) {
+                    } catch (Exception e)
+                    {
                         e.printStackTrace();
-
                     }
                 }
 
@@ -332,6 +366,7 @@ public class tech_booking_details extends AppCompatActivity {
         iv_deleteBtn = findViewById(R.id.iv_deleteBtn);
         iv_viewInMapBtn = findViewById(R.id.iv_viewInMapBtn);
 
+        tv_status = findViewById(R.id.tv_status);
         tv_month = findViewById(R.id.tv_month);
         tv_date = findViewById(R.id.tv_date);
         tv_day = findViewById(R.id.tv_day);
@@ -353,6 +388,7 @@ public class tech_booking_details extends AppCompatActivity {
 
         btn_completeBooking = findViewById(R.id.btn_completeBooking);
 
+        cardView17 = findViewById(R.id.cardView17);
 
     }
 

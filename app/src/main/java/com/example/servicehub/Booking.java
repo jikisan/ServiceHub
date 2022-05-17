@@ -2,6 +2,7 @@ package com.example.servicehub;
 
 public class Booking {
 
+    String status;
     String imageUrl;
     String custID;
     String projName;
@@ -26,10 +27,11 @@ public class Booking {
 
     }
 
-    public Booking(String imageUrl, String custID, String projName, String custAddress, String latitude, String longitude, String propertyType, String airconBrand, String airconType, String unitType,
+    public Booking(String status, String imageUrl, String custID, String projName, String custAddress, String latitude, String longitude, String propertyType, String airconBrand, String airconType, String unitType,
                    String bookingDate, String bookingTime, String custContactNum, String addInfo, String totalPrice, String paymentMethod,
                    String techID, String bookingCreated, String projId)
     {
+        this.status = status;
         this.imageUrl = imageUrl;
         this.custID = custID;
         this.projName = projName;
@@ -49,6 +51,14 @@ public class Booking {
         this.techID = techID;
         this.bookingCreated = bookingCreated;
         this.projId = projId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getImageUrl() {
