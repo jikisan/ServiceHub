@@ -54,15 +54,16 @@ import java.util.ArrayList;
 public class tech_application_page extends AppCompatActivity{
 
     private static final int PICK_IMAGE_REQUEST = 60;
+    private static final int PICK_POW_REQUEST = 70;
 
-    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn, iv_proofOfWork,
             iv_moreBtn, iv_validIdImage, iv_selfieImage;
     private TextView tv_fileResult, tv_uploadSelfie, tv_uploadValidID, tv_back;
-    private Button btn_submit, btn_requestCode, btn_uploadFile;
+    private Button btn_submit, btn_requestCode;
     private TextInputEditText et_firstName, et_lastName, phoneEditText;
 
 
-    private Uri validIdUri, pdfUri, selfieUri;
+    private Uri validIdUri, proofOfWorkUri, selfieUri;
 
     private FirebaseUser user;
     private DatabaseReference techApplicationDatabase;
@@ -139,10 +140,23 @@ public class tech_application_page extends AppCompatActivity{
             }
         });
 
-        btn_uploadFile.setOnClickListener(new View.OnClickListener() {
+        iv_proofOfWork.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
-                selectPDF();
+                boolean pick = true;
+                if (pick == true){
+                    if(!checkCameraPermission()){
+                        requestCameraPermission();
+                    }else
+                        pickProofOfWork();
+
+                }else{
+                    if(!checkStoragePermission()){
+                        requestStoragePermission();
+                    }else
+                        pickProofOfWork();
+                }
             }
         });
 
@@ -170,15 +184,13 @@ public class tech_application_page extends AppCompatActivity{
         iv_validIdImage = findViewById(R.id.iv_validIdImage);
         iv_selfieImage = findViewById(R.id.iv_selfieImage);
 
-
-        tv_fileResult = findViewById(R.id.tv_fileResult);
         tv_uploadSelfie = findViewById(R.id.tv_uploadSelfie);
         tv_uploadValidID = findViewById(R.id.tv_uploadValidID);
         tv_back = findViewById(R.id.tv_back);
 
         btn_submit = findViewById(R.id.btn_submit);
         btn_requestCode = findViewById(R.id.btn_requestCode);
-        btn_uploadFile = findViewById(R.id.btn_uploadFile);
+        iv_proofOfWork = findViewById(R.id.iv_proofOfWork);
 
         et_firstName = findViewById(R.id.et_firstName);
         et_lastName = findViewById(R.id.et_lastName);
@@ -260,50 +272,34 @@ public class tech_application_page extends AppCompatActivity{
             }
         }
 
-        else if (requestCode == 12 && resultCode == RESULT_OK ) {
-            pdfUri = data.getData();
-            String fileName = pdfUri.getLastPathSegment();
-            tv_fileResult.setText("Files uploaded:\n" + fileName);
+        else if(requestCode == PICK_POW_REQUEST){
 
-        }
-
-        else if(requestCode == REQUEST_CODE_PICK_FILE){
-
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                ArrayList<NormalFile> list = data.getParcelableArrayListExtra(Constant.RESULT_PICK_FILE);
+                selfieUri = result.getUri();
 
-                String listPath= list.get(0).getName();
-                String listPath1= list.get(0).getMimeType();
-                String listPath2= list.get(0).getBucketName();
-                String listPath3= list.get(0).getPath();
-                String listPath4= list.get(0).getBucketId();
-                String  data1 = data.getData().toString();
+                try {
 
+                    Picasso.get().load(proofOfWorkUri)
+                            .placeholder(R.drawable.upload_photo)
+                            .error(R.drawable.upload_photo)
+                            .into(iv_proofOfWork);
 
-                StringBuilder builder = new StringBuilder();
-                for (NormalFile file : list) {
-                    String path = file.getPath();
-                    builder.append(path + "\n");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
-                tv_fileResult.setText(listPath + "\n"+ listPath1 +"\n"+ listPath2 +"\n"+ listPath3 +"\n"+ listPath4 + "\n" + data1);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
             }
         }
     }
 
 
 
-    private void selectPDF() {
-        Intent intent = new Intent();
-        intent.setType("document/pdf");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "PDF FILE SELECT"), 12);
-
-//        Intent intent4 = new Intent(this, NormalFilePickActivity.class);
-//        intent4.putExtra(Constant.MAX_NUMBER, 9);
-//        intent4.putExtra(NormalFilePickActivity.SUFFIX, new String[] {"xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf"});
-//        startActivityForResult(intent4, Constant.REQUEST_CODE_PICK_FILE);
-
+    private void pickProofOfWork() {
+        Intent intent = CropImage.activity(proofOfWorkUri).getIntent(getBaseContext());
+        startActivityForResult(intent, PICK_POW_REQUEST);
     }
 
     private void pickSelfieImage() {
@@ -333,6 +329,9 @@ public class tech_application_page extends AppCompatActivity{
         else if(hasImage(iv_selfieImage)){
             Toast.makeText(this, "Selfie is required", Toast.LENGTH_SHORT).show();
         }
+        else if(hasImage(iv_proofOfWork)){
+            Toast.makeText(this, "Proof of Work is required", Toast.LENGTH_SHORT).show();
+        }
         else if(TextUtils.isEmpty(phoneEditText.getText().toString())){
             Toast.makeText(this, "Please verify Phone Number", Toast.LENGTH_SHORT).show();
 
@@ -360,7 +359,7 @@ public class tech_application_page extends AppCompatActivity{
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
-                            uploadDataToFireBaseStorage(validIdUri, selfieUri, pdfUri);
+                            uploadDataToFireBaseStorage(validIdUri, selfieUri, proofOfWorkUri);
                         }
                     })
                     .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

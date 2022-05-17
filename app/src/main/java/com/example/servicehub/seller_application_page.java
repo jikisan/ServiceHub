@@ -164,7 +164,6 @@ public class seller_application_page extends AppCompatActivity {
 
         btn_submit = findViewById(R.id.btn_submit);
         btn_requestCode = findViewById(R.id.btn_requestCode);
-        btn_uploadFile = findViewById(R.id.btn_uploadFile);
 
         et_firstName = findViewById(R.id.et_firstName);
         et_lastName = findViewById(R.id.et_lastName);
