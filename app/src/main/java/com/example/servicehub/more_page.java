@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -27,13 +29,13 @@ public class more_page extends AppCompatActivity {
     private FirebaseUser user;
     private DatabaseReference userDatabase;
     private String userID;
-    private ProgressBar progressBar;
 
+    private ProgressBar progressBar;
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_userPhoto;
-
     private TextView tv_editProfile, tv_changePassword, tv_contactUs, tv_aboutUs, tv_logout,
-            tv_bannerName, tv_ratings, tv_privacyPolicy, tv_myAddress, tv_back;
+            tv_bannerName, tv_userRating, tv_privacyPolicy, tv_myAddress, tv_back;
+    private RatingBar rb_userRating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class more_page extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
         clickListeners();
         generateProfile();
+        generateRatings();
         bottomNavTaskbar();
 
     }
@@ -196,8 +199,11 @@ public class more_page extends AppCompatActivity {
         tv_myAddress = findViewById(R.id.tv_myAddress);
         tv_privacyPolicy = findViewById(R.id.tv_privacyPolicy);
         tv_back = findViewById(R.id.tv_back);
+        tv_userRating = findViewById(R.id.tv_userRating);
 
         progressBar = findViewById(R.id.progressBar);
+
+        rb_userRating = findViewById(R.id.rb_userRating);
     }
 
     private void generateProfile() {
@@ -235,6 +241,45 @@ public class more_page extends AppCompatActivity {
 
 
 
+    }
+
+    private void generateRatings() {
+        DatabaseReference ratingDatabase = FirebaseDatabase.getInstance().getReference("Ratings");
+
+        Query query = ratingDatabase
+                .orderByChild("ratingOfId")
+                .equalTo(userID);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                int counter = 0;
+                double totalRating = 0, tempRatingValue = 0, averageRating = 0;
+
+                for(DataSnapshot dataSnapshot : snapshot.getChildren())
+                {
+                    Ratings ratings = dataSnapshot.getValue(Ratings.class);
+                    tempRatingValue = ratings.ratingValue;
+                    totalRating = totalRating + tempRatingValue;
+                    counter++;
+
+                }
+
+                averageRating = totalRating / counter;
+                String ratingCounter = "(" + String.valueOf(counter) + ")";
+                tv_userRating.setText(ratingCounter);
+                rb_userRating.setRating((float) averageRating);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        progressBar.setVisibility(View.GONE);
     }
 
 }

@@ -23,7 +23,8 @@ public class Projects {
     boolean isAvailableFri;
     boolean isAvailableSat;
     boolean isAvailableSun;
-
+    int ratingCount;
+    double ratingAverage;
 
     Projects(){
 
@@ -31,7 +32,7 @@ public class Projects {
 
     public Projects(String userID, String category, String imageUrl, String imageName, String projName, String latitude, String longitude, String projAddress, String price,
                     String percentageFee, String startTime, String endTime, String projInstruction, String ratings, boolean isAvailableMon, boolean isAvailableTue,
-                    boolean isAvailableWed, boolean isAvailableThu, boolean isAvailableFri, boolean isAvailableSat, boolean isAvailableSun)
+                    boolean isAvailableWed, boolean isAvailableThu, boolean isAvailableFri, boolean isAvailableSat, boolean isAvailableSun, int ratingCount, double ratingAverage)
     {
         this.userID = userID;
         this.category = category;
@@ -54,6 +55,8 @@ public class Projects {
         this.isAvailableFri = isAvailableFri;
         this.isAvailableSat = isAvailableSat;
         this.isAvailableSun = isAvailableSun;
+        this.ratingCount = ratingCount;
+        this.ratingAverage = ratingAverage;
     }
 
     public String getUserID() {
@@ -228,6 +231,19 @@ public class Projects {
         isAvailableSun = availableSun;
     }
 
+    public int getRatingCount() {
+        return ratingCount;
+    }
 
+    public void setRatingCount(int ratingCount) {
+        this.ratingCount = ratingCount;
+    }
 
+    public double getRatingAverage() {
+        return ratingAverage;
+    }
+
+    public void setRatingAverage(double ratingAverage) {
+        this.ratingAverage = ratingAverage;
+    }
 }

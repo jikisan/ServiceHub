@@ -39,18 +39,39 @@ public class login_page extends AppCompatActivity {
     private Button btn_login, btn_guest;
     private FirebaseAuth fAuth;
     private DatabaseReference userDatabase;
+    private String userType, projId;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
 
+        userType = getIntent().getStringExtra("user");
+        projId = getIntent().getStringExtra("projectIdFromIntent");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
         setRef();
-
-
+        validateUserType();
         ClickListener();
 
+    }
 
+    private void validateUserType() {
+
+        if(!(user == null))
+        {
+            Intent intent = new Intent(login_page.this, homepage.class);
+            startActivity(intent);
+        }
+
+        if(!(userType == null))
+        {
+            if(userType.equals("guest"))
+            {
+                btn_guest.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
     private void ClickListener() {
@@ -59,6 +80,8 @@ public class login_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intentSignUp = new Intent(login_page.this, sign_up_page.class);
+                intentSignUp.putExtra("user", "guest");
+                intentSignUp.putExtra("projectIdFromIntent", projId);
                 startActivity(intentSignUp);
 
             }
@@ -67,10 +90,12 @@ public class login_page extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String email = et_username.getText().toString().trim();
                 String password = et_password.getText().toString().trim();
 
-                if (TextUtils.isEmpty(email)) {
+                if (TextUtils.isEmpty(email))
+                {
                     et_username.setError("Email is Required");
                     return;
                 }
@@ -78,20 +103,20 @@ public class login_page extends AppCompatActivity {
                 {
                     et_username.setError("Incorrect Email Format");
                 }
-                else if (TextUtils.isEmpty(password)) {
+                else if (TextUtils.isEmpty(password))
+                {
 
                     et_password.setError("Password is Required");
                     return;
                 }
-
-                else if (password.length() < 8) {
+                else if (password.length() < 8)
+                {
                     et_password.setError("Password must be 8 or more characters");
                     return;
                 }
                 else if (!isValidPassword(password))
                 {
-                    Toast.makeText(login_page.this, "Passwords should contain atleast one: uppercase letters: A-Z." +
-                            " One lowercase letters: a-z. One number: 0-9. ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(login_page.this, "Please choose a stronger password. Try a mix of letters, numbers, and symbols.", Toast.LENGTH_LONG).show();
                 }
                 else
                 {
@@ -101,10 +126,31 @@ public class login_page extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-                                if(user.isEmailVerified()){
+                                if(user.isEmailVerified())
+                                {
                                     Toast.makeText(login_page.this, "Login Successfully", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(getApplicationContext(), homepage.class));
-                                }else{
+
+                                    if(!(userType == null))
+                                    {
+                                        if(userType.equals("guest"))
+                                        {
+                                            Intent intent = new Intent(login_page.this, booking_application_page.class);
+                                            intent.putExtra("projectIdFromIntent", projId);
+                                            startActivity(intent);
+                                        }
+                                        else
+                                        {
+                                            startActivity(new Intent(getApplicationContext(), homepage.class));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        startActivity(new Intent(getApplicationContext(), homepage.class));
+                                    }
+
+                                }
+                                else
+                                {
                                     user.sendEmailVerification();
 
                                     Toast.makeText(login_page.this, "Please check your email to verify your account.", Toast.LENGTH_SHORT).show();
@@ -122,7 +168,6 @@ public class login_page extends AppCompatActivity {
                     });
 
                 }
-
 
             }
         });

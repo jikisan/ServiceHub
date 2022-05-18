@@ -138,10 +138,14 @@ public class fragment2complete extends Fragment {
 
                         for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
+                            Booking booking = dataSnapshot.getValue(Booking.class);
+
                             String bookingID = dataSnapshot.getKey().toString();
+                            String projID = booking.getProjId();
                             Intent intentProject = new Intent(getContext(), tech_booking_details.class);
                             intentProject.putExtra("status", status);
                             intentProject.putExtra("Booking ID", bookingID);
+                            intentProject.putExtra("project id", projID);
                             startActivity(intentProject);
 
                         }

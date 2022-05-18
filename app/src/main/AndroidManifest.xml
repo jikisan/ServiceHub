@@ -19,6 +19,9 @@
         android:theme="@style/Theme.ServiceHub"
         tools:replace="android:icon">
         <activity
+            android:name=".booking_page_for_guest"
+            android:exported="false" />
+        <activity
             android:name=".rating_and_review_client"
             android:exported="false" />
         <activity

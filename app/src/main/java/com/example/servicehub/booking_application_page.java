@@ -66,7 +66,7 @@ public class booking_application_page extends AppCompatActivity {
             "York","Other","I don't know"};
     private String[] airconType = {"Window","Split","Tower","Cassette","Suspended","Concealed","U-shaped Window"};
     private String[] unitType = {"Inverter","Non-Inverter","I don't know"};
-    private String latLng, latString, longString, propertyType, acBrand, acType, acUnitType;
+    private String latLng, latString, longString, propertyType, acBrand, acType, acUnitType, projectIdFromIntent;
     private int hour, minute, year, month, day;
     private final SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
@@ -74,6 +74,7 @@ public class booking_application_page extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.booking_application_page);
+        projectIdFromIntent = getIntent().getStringExtra("projectIdFromIntent");
 
         setRef();
         initPlaces();
@@ -182,7 +183,9 @@ public class booking_application_page extends AppCompatActivity {
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent = new Intent(booking_application_page.this, booking_page.class);
+                intent.putExtra("Project ID", projectIdFromIntent);
+                startActivity(intent);
             }
         });
 
@@ -428,7 +431,7 @@ public class booking_application_page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-               String projectIdFromIntent = getIntent().getStringExtra("projectIdFromIntent");
+
                Intent intent = new Intent(booking_application_page.this, booking_summary_page.class);
                 Bundle extras = new Bundle();
                 extras.putString("latitude", latString);

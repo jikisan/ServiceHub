@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -62,17 +63,18 @@ public class AdapterMarketPlaceItem extends RecyclerView.Adapter<AdapterMarketPl
     public class ItemViewHolder extends RecyclerView.ViewHolder {
 
 
-        TextView tv_itemName, tv_itemRatings, tv_price;
+        TextView tv_itemName, tv_itemRatings, tv_price, tv_userRating;
         ImageView iv_listingImage;
-
+        RatingBar rb_userRating;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tv_price = itemView.findViewById(R.id.tv_price);
             tv_itemName = itemView.findViewById(R.id.tv_itemName);
-            tv_itemRatings = itemView.findViewById(R.id.tv_itemRatings);
             iv_listingImage = itemView.findViewById(R.id.iv_listingImage);
+            tv_userRating = itemView.findViewById(R.id.tv_userRating);
+            rb_userRating = itemView.findViewById(R.id.rb_userRating);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

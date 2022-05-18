@@ -28,6 +28,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -49,15 +50,16 @@ public class tech_booking_details extends AppCompatActivity {
             tv_prefTimeSummary,tv_contactNumSummary, tv_back, tv_customerName, tv_bookingName,
             tv_time, tv_specialInstruction, tv_month, tv_date, tv_day, iv_deleteBtn, tv_status;
     private ProgressBar progressBar;
-    private Button btn_completeBooking;
+    private Button btn_completeBooking, btn_rate;
     private CardView cardView17;
 
-    private String imageUrl, custID, bookingIdFromIntent, latString, longString, tempProjName, projectIdFromIntent;
+    private String imageUrl, custID, bookingIdFromIntent, latString, longString,
+            tempProjName, projectIdFromIntent, techID;
 
     private FirebaseUser user;
     private FirebaseStorage mStorage;
     private StorageReference projectStorage;
-    private DatabaseReference userDatabase, projectDatabase, bookingDatabase;
+    private DatabaseReference userDatabase, ratingDatabase, bookingDatabase;
     private StorageTask addTask;
     private String userID;
     private ProgressDialog progressDialog;
@@ -72,7 +74,7 @@ public class tech_booking_details extends AppCompatActivity {
         projectStorage = FirebaseStorage.getInstance().getReference("Projects");
         userDatabase = FirebaseDatabase.getInstance().getReference("Users");
         bookingDatabase = FirebaseDatabase.getInstance().getReference("Bookings");
-        projectDatabase = FirebaseDatabase.getInstance().getReference("Projects");
+        ratingDatabase = FirebaseDatabase.getInstance().getReference("Ratings");
 
         setRef();
         clickListener();
@@ -101,15 +103,65 @@ public class tech_booking_details extends AppCompatActivity {
             tv_status.setTextColor(Color.GREEN);
             tv_status.setText("STATUS: " + bookingStatus);
             iv_deleteBtn.setVisibility(View.INVISIBLE);
-            cardView17.setVisibility(View.INVISIBLE);
             iv_viewInMapBtn.setVisibility(View.INVISIBLE);
             iv_messageCustomer.setVisibility(View.INVISIBLE);
-            generateBookingData();
+            checkIfRated();
+
+
         }
         else
         {
             generateBookingData();
         }
+    }
+
+    private void checkIfRated() {
+
+        String projId = getIntent().getStringExtra("project id");
+
+        Query query = ratingDatabase
+                .orderByChild("ratingOfId")
+                .equalTo(projId);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if(snapshot.exists())
+                {
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren())
+                    {
+                        Ratings ratings = dataSnapshot.getValue(Ratings.class);
+                        String c = ratings.ratingById;
+
+                        if(ratings.ratingById.equals(userID))
+                        {
+                            cardView17.setVisibility(View.INVISIBLE);
+                        }
+                        else
+                        {
+                            btn_completeBooking.setVisibility(View.INVISIBLE);
+                            btn_rate.setVisibility(View.VISIBLE);
+                        }
+                        generateBookingData();
+
+                    }
+                }
+                else
+                {
+                    btn_completeBooking.setVisibility(View.INVISIBLE);
+                    btn_rate.setVisibility(View.VISIBLE);
+                    generateBookingData();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+
+        });
     }
 
     private void clickListener() {
@@ -178,7 +230,7 @@ public class tech_booking_details extends AppCompatActivity {
                                 intent.putExtra("category", "booking");
                                 intent.putExtra("booking id", bookingIdFromIntent);
                                 intent.putExtra("client id", custID);
-                                intent.putExtra("tech id", userID);
+                                intent.putExtra("tech id", techID);
                                 startActivity(intent);
 
                             }
@@ -193,6 +245,20 @@ public class tech_booking_details extends AppCompatActivity {
 
                 // Show Dialog
                 mBottomSheetDialog.show();
+            }
+        });
+
+        btn_rate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                Intent intent = new Intent(tech_booking_details.this, rating_and_review_page.class);
+                intent.putExtra("booking id", bookingIdFromIntent);
+                intent.putExtra("category", "booking");
+                intent.putExtra("client id", custID);
+                intent.putExtra("tech id", techID);
+                startActivity(intent);
             }
         });
 
@@ -313,6 +379,7 @@ public class tech_booking_details extends AppCompatActivity {
                         longString = bookingData.getLongitude();
                         projectIdFromIntent = bookingData.getProjId();
 
+                        techID = bookingData.techID;
                         custID  = bookingData.custID;
                         imageUrl = bookingData.imageUrl;
                         tempProjName = bookingData.projName;
@@ -350,7 +417,8 @@ public class tech_booking_details extends AppCompatActivity {
                         btn_completeBooking.setText("Total Price: ₱ " + twoPlaces.format(price) + " · " + "Complete Booking");
 
                         generateProfile();
-                        progressBar.setVisibility(View.GONE);
+
+
                     } catch (Exception e)
                     {
                         e.printStackTrace();
@@ -371,7 +439,8 @@ public class tech_booking_details extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Users custData = snapshot.getValue(Users.class);
-                if(snapshot.exists()){
+                if(snapshot.exists())
+                {
 
                     String sp_fName = custData.firstName;
                     String sp_lName = custData.lastName;
@@ -387,8 +456,9 @@ public class tech_booking_details extends AppCompatActivity {
                                 .into(iv_custPhoto);
                     }
 
-                }
 
+                }
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
@@ -399,6 +469,7 @@ public class tech_booking_details extends AppCompatActivity {
     }
 
     private void setRef() {
+
         iv_bookingPhoto = findViewById(R.id.iv_bookingPhoto);
         iv_messageCustomer = findViewById(R.id.iv_messageCustomer);
         iv_custPhoto = findViewById(R.id.iv_custPhoto);
@@ -426,6 +497,7 @@ public class tech_booking_details extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         btn_completeBooking = findViewById(R.id.btn_completeBooking);
+        btn_rate = findViewById(R.id.btn_rate);
 
         cardView17 = findViewById(R.id.cardView17);
 
