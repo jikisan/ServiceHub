@@ -2,6 +2,8 @@ package com.example.servicehub;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +34,11 @@ import com.google.firebase.storage.StorageTask;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import Adapter_and_fragments.AdapterRatingsItem;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import dev.shreyaspatil.MaterialDialog.MaterialDialog;
@@ -42,37 +47,57 @@ import dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 public class booking_page extends AppCompatActivity {
 
     private Chip chip_Mon, chip_Tue, chip_Wed, chip_Thu, chip_Fri, chip_Sat, chip_Sun;
-    private ImageView iv_projectImage,  iv_message, iv_cart, iv_favorite;
-    private TextView tv_projName, tv_projRating, tv_projPrice, tv_back, tv_projDesc, tv_availabilityText, tv_timeAvailable, tv_quantity;
-    private Button btn_bookNow, btn_orderNow;
-    private View layout_favorite, layout_cart;
+    private ImageView iv_projectImage;
+    private ImageView iv_message;
+    private ImageView iv_favorite;
+    private TextView tv_projName;
+    private TextView tv_projPrice;
+    private TextView tv_back;
+    private TextView tv_projDesc;
+    private TextView tv_timeAvailable;
+    private TextView tv_userRating;
+    private Button btn_bookNow;
+    private RecyclerView recyclerViewRatings;
 
-    private FirebaseUser user;
-    private DatabaseReference projectDatabase, listingDatabase, favoriteDatabase, cartDatabase;
-    private String userID, projectIdFromIntent, listingIdFromIntent, imageUrlText, latLng,  tempProjectID, tempProjName,
-            tempProjPrice, tempProjRatings, tempListName, listPrice, listRatings, techID;
+    private DatabaseReference projectDatabase;
+    private DatabaseReference favoriteDatabase;
+    private String userID;
+    private String projectIdFromIntent;
+    private String imageUrlText;
+    private String latLng;
+    private String tempProjectID;
+    private String tempProjName;
+    private String tempProjPrice;
+    private String tempProjRatings;
+    private String tempListName;
+    private String listPrice;
+    private String listRatings;
+    private String techID;
     private Uri tempUri;
-
+    private RatingBar rb_userRating;
     private ProgressBar progressBar;
+    private ArrayList<Ratings> arr;
+    private AdapterRatingsItem adapterRatingsItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.booking_page);
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
         StorageReference projectStorage = FirebaseStorage.getInstance().getReference("Projects");
         projectDatabase = FirebaseDatabase.getInstance().getReference("Projects");
-        listingDatabase = FirebaseDatabase.getInstance().getReference("Listings");
+        DatabaseReference listingDatabase = FirebaseDatabase.getInstance().getReference("Listings");
         favoriteDatabase = FirebaseDatabase.getInstance().getReference("Favorites");
-        cartDatabase = FirebaseDatabase.getInstance().getReference("Cart");
+        DatabaseReference cartDatabase = FirebaseDatabase.getInstance().getReference("Cart");
 
-        listingIdFromIntent = getIntent().getStringExtra("Listing ID");
+        String listingIdFromIntent = getIntent().getStringExtra("Listing ID");
         projectIdFromIntent = getIntent().getStringExtra("Project ID");
 
         setRef();
         generateProjDataValue();
+        generateRecyclerLayout();
         clickListeners();
     }
 
@@ -204,9 +229,9 @@ public class booking_page extends AppCompatActivity {
 
         iv_projectImage = findViewById(R.id.iv_projPhotoSummary);
         iv_message = findViewById(R.id.iv_message);
-        iv_cart = findViewById(R.id.iv_cart);
+        ImageView iv_cart = findViewById(R.id.iv_cart);
 
-        tv_projRating = findViewById(R.id.tv_projRating);
+        TextView tv_projRating = findViewById(R.id.tv_projRating);
         iv_favorite = findViewById(R.id.iv_favorite);
 
         tv_projRating = findViewById(R.id.tv_projRating);
@@ -214,12 +239,13 @@ public class booking_page extends AppCompatActivity {
         tv_projPrice = findViewById(R.id.tv_projPrice);
         tv_projDesc = findViewById(R.id.tv_projDesc);
         tv_back = findViewById(R.id.tv_back);
-        tv_availabilityText = findViewById(R.id.tv_availabilityText);
+        TextView tv_availabilityText = findViewById(R.id.tv_availabilityText);
         tv_timeAvailable = findViewById(R.id.tv_timeAvailable);
-        tv_quantity = findViewById(R.id.tv_quantity);
+        TextView tv_quantity = findViewById(R.id.tv_quantity);
+        tv_userRating = findViewById(R.id.tv_userRating);
 
         btn_bookNow = findViewById(R.id.btn_bookNow);
-        btn_orderNow = findViewById(R.id.btn_orderNow);
+        Button btn_orderNow = findViewById(R.id.btn_orderNow);
 
         chip_Mon = findViewById(R.id.chip_Mon);
         chip_Tue = findViewById(R.id.chip_Tue);
@@ -231,8 +257,55 @@ public class booking_page extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
 
-        layout_favorite = findViewById(R.id.layout_favorite);
-        layout_cart = findViewById(R.id.layout_cart);
+        rb_userRating = findViewById(R.id.rb_userRating);
+
+        recyclerViewRatings = findViewById(R.id.recyclerViewRatings);
+
+        View layout_favorite = findViewById(R.id.layout_favorite);
+        View layout_cart = findViewById(R.id.layout_cart);
+
+    }
+
+    private void generateRecyclerLayout() {
+
+        recyclerViewRatings.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerViewRatings.setLayoutManager(linearLayoutManager);
+
+        arr = new ArrayList<>();
+        adapterRatingsItem = new AdapterRatingsItem(arr);
+        recyclerViewRatings.setAdapter(adapterRatingsItem);
+
+        getViewHolderValues();
+
+    }
+
+    private void getViewHolderValues() {
+
+        DatabaseReference ratingsDatabase = FirebaseDatabase.getInstance().getReference("Ratings");
+
+        Query query = ratingsDatabase
+                .orderByChild("ratingOfId")
+                .equalTo(projectIdFromIntent);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                    Ratings ratings = dataSnapshot.getValue(Ratings.class);
+                    arr.add(ratings);
+                }
+                adapterRatingsItem.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
     }
 
@@ -250,7 +323,8 @@ public class booking_page extends AppCompatActivity {
 
                         imageUrlText = projectData.getImageUrl();
                         String sp_category = projectData.getCategory();
-                        String sp_ratings = projectData.getRatings();
+                        int sp_ratingCount = projectData.getRatingCount();
+                        double sp_ratingAverage = projectData.getRatingAverage();
                         tempProjName = projectData.getProjName();
                         String sp_projPrice = projectData.getPrice();
                         String sp_projSpecialInstruction = projectData.getProjInstruction();
@@ -281,7 +355,8 @@ public class booking_page extends AppCompatActivity {
 
                         tv_back.setText(sp_category);
                         tv_projName.setText(tempProjName);
-                        tv_projRating.setText(sp_ratings);
+                        tv_userRating.setText("("+sp_ratingCount+")");
+                        rb_userRating.setRating((float) sp_ratingAverage);
                         tv_projPrice.setText("₱ " + tempProjPrice + " /Job");
                         tv_timeAvailable.setText(sp_startTime + " - " + sp_endTime);
                         tv_projDesc.setText(sp_projSpecialInstruction);

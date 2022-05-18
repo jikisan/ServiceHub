@@ -38,6 +38,7 @@
     </androidx.cardview.widget.CardView>
 
     <ScrollView
+        android:id="@+id/scrollView6"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout9"
@@ -48,11 +49,10 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="8dp"
             android:paddingLeft="8dp"
+            android:paddingTop="8dp"
             android:paddingRight="8dp"
-            android:paddingBottom="16dp"
-            >
+            android:paddingBottom="16dp">
 
             <androidx.cardview.widget.CardView
                 android:id="@id/cardView"
@@ -94,33 +94,44 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Project Name"
+                android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textAllCaps="true"
                 app:layout_constraintStart_toStartOf="@+id/cardView"
                 app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
-            <TextView
-                android:id="@+id/tv_projRating"
+            <RatingBar
+                android:id="@+id/rb_userRating"
+                style="@style/Widget.AppCompat.RatingBar.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/star"
-                android:gravity="center"
-                android:text="Ratings"
-                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:numStars="5"
+                android:theme="@style/RatingBar"
                 app:layout_constraintStart_toStartOf="@+id/tv_projName"
                 app:layout_constraintTop_toBottomOf="@+id/tv_projName" />
+
+
+            <TextView
+                android:id="@+id/tv_userRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(0)"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/rb_userRating"
+                app:layout_constraintStart_toEndOf="@+id/rb_userRating" />
 
             <TextView
                 android:id="@+id/tv_projPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Price"
                 android:textColor="@color/red"
                 android:textSize="20sp"
-                app:layout_constraintStart_toStartOf="@+id/tv_projRating"
-                app:layout_constraintTop_toBottomOf="@+id/tv_projRating" />
+                app:layout_constraintStart_toStartOf="@+id/rb_userRating"
+                app:layout_constraintTop_toBottomOf="@+id/rb_userRating" />
 
             <TextView
                 android:id="@+id/tv_quantity"
@@ -150,8 +161,8 @@
                 android:id="@+id/chipGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_availabilityText">
@@ -161,56 +172,56 @@
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:text="Mon"/>
+                    android:text="Mon"
+                    android:visibility="gone" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_Tue"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:text="Tue"/>
+                    android:text="Tue"
+                    android:visibility="gone" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_Wed"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:text="Wed"/>
+                    android:text="Wed"
+                    android:visibility="gone" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_Thu"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:text="Thu"/>
+                    android:text="Thu"
+                    android:visibility="gone" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_Fri"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:text="Fri"/>
+                    android:text="Fri"
+                    android:visibility="gone" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_Sat"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:text="Sat"/>
+                    android:text="Sat"
+                    android:visibility="gone" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/chip_Sun"
                     style="@style/Widget.MaterialComponents.Chip.Choice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:text="Sun"/>
+                    android:text="Sun"
+                    android:visibility="gone" />
 
 
             </com.google.android.material.chip.ChipGroup>
@@ -222,9 +233,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="00:00 AM - 00:00 AM"
+                android:textAllCaps="true"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textAllCaps="true"
                 app:layout_constraintStart_toStartOf="@+id/chipGroup"
                 app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
 
@@ -246,11 +257,33 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:textSize="16sp"
                 android:textColor="@color/black"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView34" />
+
+            <TextView
+                android:id="@+id/textView35"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Ratings &amp; Reviews"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/tv_projDesc"
+                app:layout_constraintTop_toBottomOf="@+id/tv_projDesc" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewRatings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView35" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -264,7 +297,8 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView6">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -277,8 +311,8 @@
                 android:id="@+id/iv_message"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:src="@drawable/message"
                 android:elevation="20dp"
+                android:src="@drawable/message"
                 app:tint="@color/black" />
 
 
@@ -298,8 +332,8 @@
             android:layout_weight="40"
             android:gravity="center"
 
-            android:visibility="gone"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/iv_cart"
@@ -336,8 +370,8 @@
             android:layout_height="match_parent"
             android:layout_weight="25"
             android:background="@drawable/rounded_blue"
-            android:text="Book now"
             android:elevation="20dp"
+            android:text="Book now"
             app:backgroundTint="@color/light_blue" />
 
         <Button
@@ -346,8 +380,8 @@
             android:layout_height="match_parent"
             android:layout_weight="25"
             android:background="@drawable/rounded_blue"
-            android:text="Order now"
             android:elevation="20dp"
+            android:text="Order now"
             android:visibility="gone"
             app:backgroundTint="@color/light_blue" />
 
