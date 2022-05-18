@@ -372,6 +372,7 @@ public class fragment2Map extends Fragment {
 
                         }
 
+
                     }
 
                 }

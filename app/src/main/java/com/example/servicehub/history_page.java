@@ -79,7 +79,6 @@ public class history_page extends AppCompatActivity {
         });
     }
 
-
     private void bottomNavTaskbar() {
 
         iv_messageBtn.setOnClickListener(new View.OnClickListener() {

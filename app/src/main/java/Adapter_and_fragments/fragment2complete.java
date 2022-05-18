@@ -98,7 +98,7 @@ public class fragment2complete extends Fragment {
         recyclerViewBookings.setAdapter(adapterBookingItem);
 
         Query query = bookingDatabase
-                .orderByChild("techID")
+                .orderByChild("custID")
                 .equalTo(userID);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {

@@ -91,6 +91,8 @@ public class tech_booking_details extends AppCompatActivity {
             tv_status.setText("STATUS: " + bookingStatus);
             iv_deleteBtn.setVisibility(View.INVISIBLE);
             cardView17.setVisibility(View.INVISIBLE);
+            iv_viewInMapBtn.setVisibility(View.INVISIBLE);
+            iv_messageCustomer.setVisibility(View.INVISIBLE);
             generateBookingData();
         }
         else if(bookingStatus.equals("complete"))
@@ -100,6 +102,8 @@ public class tech_booking_details extends AppCompatActivity {
             tv_status.setText("STATUS: " + bookingStatus);
             iv_deleteBtn.setVisibility(View.INVISIBLE);
             cardView17.setVisibility(View.INVISIBLE);
+            iv_viewInMapBtn.setVisibility(View.INVISIBLE);
+            iv_messageCustomer.setVisibility(View.INVISIBLE);
             generateBookingData();
         }
         else
@@ -154,6 +158,41 @@ public class tech_booking_details extends AppCompatActivity {
                 intentProject.putExtra("longString", longString);
                 intentProject.putExtra("Marker Title", markerTitle);
                 startActivity(intentProject);
+            }
+        });
+
+        btn_completeBooking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(tech_booking_details.this)
+                        .setTitle("Complete Booking?")
+                        .setMessage("Are you sure you want to complete this booking?")
+                        .setCancelable(true)
+                        .setPositiveButton("Complete Booking", new MaterialDialog.OnClickListener() {
+                            @Override
+                            public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
+
+                                bookingIdFromIntent = getIntent().getStringExtra("Booking ID");
+
+                                Intent intent = new Intent(tech_booking_details.this, rating_and_review_client.class);
+                                intent.putExtra("category", "booking");
+                                intent.putExtra("booking id", bookingIdFromIntent);
+                                intent.putExtra("client id", custID);
+                                intent.putExtra("tech id", userID);
+                                startActivity(intent);
+
+                            }
+                        })
+                        .setNegativeButton("Back", new MaterialDialog.OnClickListener() {
+                            @Override
+                            public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
+                                dialogInterface.dismiss();
+                            }
+                        })
+                        .build();
+
+                // Show Dialog
+                mBottomSheetDialog.show();
             }
         });
 

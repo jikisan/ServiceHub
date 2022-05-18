@@ -8,8 +8,10 @@ public class Tech_application {
     String validIdUrl;
     String selfieName;
     String selfieUrl;
-    String fileName;
-    String fileUrl;
+    String proofOfWorkName;
+    String proofOfWorkUrl;
+    String proofOfEquipmentName;
+    String proofOfEquipmentUrl;
     String phoneNumber;
     String userID;
     boolean isApproved;
@@ -20,8 +22,8 @@ public class Tech_application {
     }
 
     public Tech_application(String firstName, String lastName, String validIdName, String validIdUrl, String selfieName,
-                            String selfieUrl, String fileName, String fileUrl, String phoneNumber, String userID,
-                            boolean isApproved, boolean isPending)
+                            String selfieUrl, String proofOfWorkName, String proofOfWorkUrl, String proofOfEquipmentName,
+                            String proofOfEquipmentUrl, String phoneNumber, String userID, boolean isApproved, boolean isPending)
     {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -29,8 +31,8 @@ public class Tech_application {
         this.validIdUrl = validIdUrl;
         this.selfieName = selfieName;
         this.selfieUrl = selfieUrl;
-        this.fileName = fileName;
-        this.fileUrl = fileUrl;
+        this.proofOfWorkName = proofOfWorkName;
+        this.proofOfWorkUrl = proofOfWorkUrl;
         this.phoneNumber = phoneNumber;
         this.userID = userID;
         this.isApproved = isApproved;
@@ -87,20 +89,36 @@ public class Tech_application {
         this.selfieUrl = selfieUrl;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getProofOfWorkName() {
+        return proofOfWorkName;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setProofOfWorkName(String proofOfWorkName) {
+        this.proofOfWorkName = proofOfWorkName;
     }
 
-    public String getFileUrl() {
-        return fileUrl;
+    public String getProofOfWorkUrl() {
+        return proofOfWorkUrl;
     }
 
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
+    public void setProofOfWorkUrl(String proofOfWorkUrl) {
+        this.proofOfWorkUrl = proofOfWorkUrl;
+    }
+
+    public String getProofOfEquipmentName() {
+        return proofOfEquipmentName;
+    }
+
+    public void setProofOfEquipmentName(String proofOfEquipmentName) {
+        this.proofOfEquipmentName = proofOfEquipmentName;
+    }
+
+    public String getProofOfEquipmentUrl() {
+        return proofOfEquipmentUrl;
+    }
+
+    public void setProofOfEquipmentUrl(String proofOfEquipmentUrl) {
+        this.proofOfEquipmentUrl = proofOfEquipmentUrl;
     }
 
     public String getPhoneNumber() {

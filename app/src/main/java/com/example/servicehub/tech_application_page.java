@@ -55,15 +55,16 @@ public class tech_application_page extends AppCompatActivity{
 
     private static final int PICK_IMAGE_REQUEST = 60;
     private static final int PICK_POW_REQUEST = 70;
+    private static final int PICK_POE_REQUEST = 80;
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn, iv_proofOfWork,
-            iv_moreBtn, iv_validIdImage, iv_selfieImage;
-    private TextView tv_fileResult, tv_uploadSelfie, tv_uploadValidID, tv_back;
+            iv_moreBtn, iv_validIdImage, iv_selfieImage, iv_proofOfEquipment;
+    private TextView tv_fileResult, tv_uploadSelfie, tv_uploadValidID, tv_back, tv_uploadPOW, tv_proofOfEquipment;
     private Button btn_submit, btn_requestCode;
     private TextInputEditText et_firstName, et_lastName, phoneEditText;
 
 
-    private Uri validIdUri, proofOfWorkUri, selfieUri;
+    private Uri validIdUri, proofOfWorkUri, selfieUri, proofOfEquipmentUri;
 
     private FirebaseUser user;
     private DatabaseReference techApplicationDatabase;
@@ -140,7 +141,7 @@ public class tech_application_page extends AppCompatActivity{
             }
         });
 
-        iv_proofOfWork.setOnClickListener(new View.OnClickListener() {
+        tv_uploadPOW.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onClick(View view) {
@@ -160,11 +161,32 @@ public class tech_application_page extends AppCompatActivity{
             }
         });
 
+        tv_proofOfEquipment.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                boolean pick = true;
+                if (pick == true){
+                    if(!checkCameraPermission()){
+                        requestCameraPermission();
+                    }else
+                        pickProofOfEquipment();
+
+                }else{
+                    if(!checkStoragePermission()){
+                        requestStoragePermission();
+                    }else
+                        pickProofOfEquipment();
+                }
+            }
+        });
+
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if(addTask != null && addTask.isInProgress()){
+                if(addTask != null && addTask.isInProgress())
+                {
                     Toast.makeText(tech_application_page.this, "In progress", Toast.LENGTH_SHORT).show();
                 } else {
                     inputValidation();
@@ -183,10 +205,13 @@ public class tech_application_page extends AppCompatActivity{
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
         iv_validIdImage = findViewById(R.id.iv_validIdImage);
         iv_selfieImage = findViewById(R.id.iv_selfieImage);
+        iv_proofOfEquipment = findViewById(R.id.iv_proofOfEquipment);
 
         tv_uploadSelfie = findViewById(R.id.tv_uploadSelfie);
         tv_uploadValidID = findViewById(R.id.tv_uploadValidID);
         tv_back = findViewById(R.id.tv_back);
+        tv_uploadPOW = findViewById(R.id.tv_uploadPOW);
+        tv_proofOfEquipment = findViewById(R.id.tv_proofOfEquipment);
 
         btn_submit = findViewById(R.id.btn_submit);
         btn_requestCode = findViewById(R.id.btn_requestCode);
@@ -195,31 +220,6 @@ public class tech_application_page extends AppCompatActivity{
         et_firstName = findViewById(R.id.et_firstName);
         et_lastName = findViewById(R.id.et_lastName);
         phoneEditText = findViewById(R.id.phoneEditText);
-
-
-//        DatabaseReference userDB = FirebaseDatabase.getInstance().getReference("Users");
-//        userDB.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                Users users = snapshot.getValue(Users.class);
-//
-//                if(users != null){
-//
-//                    String sp_fName = users.firstName.substring(0, 1).toUpperCase() + users.firstName.substring(1).toLowerCase();
-//                    String sp_lName = users.lastName.substring(0, 1).toUpperCase() + users.lastName.substring(1).toLowerCase();
-//
-//                    et_firstName.setText(sp_fName);
-//                    et_lastName.setText(sp_lName);
-//                }
-//
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
 
 
     }
@@ -259,8 +259,6 @@ public class tech_application_page extends AppCompatActivity{
                 try {
 
                     Picasso.get().load(selfieUri)
-                            .placeholder(R.drawable.upload_photo)
-                            .error(R.drawable.upload_photo)
                             .into(iv_selfieImage);
 
                 } catch (Exception e) {
@@ -276,14 +274,32 @@ public class tech_application_page extends AppCompatActivity{
 
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
-                selfieUri = result.getUri();
+                proofOfWorkUri = result.getUri();
 
                 try {
 
                     Picasso.get().load(proofOfWorkUri)
-                            .placeholder(R.drawable.upload_photo)
-                            .error(R.drawable.upload_photo)
                             .into(iv_proofOfWork);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
+
+        else if(requestCode == PICK_POE_REQUEST){
+
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                proofOfEquipmentUri = result.getUri();
+
+                try {
+
+                    Picasso.get().load(proofOfEquipmentUri)
+                            .into(iv_proofOfEquipment);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -295,7 +311,10 @@ public class tech_application_page extends AppCompatActivity{
         }
     }
 
-
+    private void pickProofOfEquipment() {
+        Intent intent = CropImage.activity(proofOfEquipmentUri).getIntent(getBaseContext());
+        startActivityForResult(intent, PICK_POE_REQUEST);
+    }
 
     private void pickProofOfWork() {
         Intent intent = CropImage.activity(proofOfWorkUri).getIntent(getBaseContext());
@@ -332,6 +351,9 @@ public class tech_application_page extends AppCompatActivity{
         else if(hasImage(iv_proofOfWork)){
             Toast.makeText(this, "Proof of Work is required", Toast.LENGTH_SHORT).show();
         }
+        else if(hasImage(iv_proofOfEquipment)){
+            Toast.makeText(this, "Proof of Equipment is required", Toast.LENGTH_SHORT).show();
+        }
         else if(TextUtils.isEmpty(phoneEditText.getText().toString())){
             Toast.makeText(this, "Please verify Phone Number", Toast.LENGTH_SHORT).show();
 
@@ -340,7 +362,6 @@ public class tech_application_page extends AppCompatActivity{
             Toast.makeText(this, "Please enter 10 digit number", Toast.LENGTH_SHORT).show();
 
         }
-
         else
         {
 
@@ -351,7 +372,9 @@ public class tech_application_page extends AppCompatActivity{
             new AlertDialog.Builder(tech_application_page.this)
                     .setIcon(R.drawable.logo)
                     .setTitle("ServiceHUB")
-                    .setMessage("Please make sure all information entered are correct"
+                    .setMessage("Please make sure all information entered are correct. " +
+                            "\n\nWarning: Any information mismatch with support documents " +
+                            "\ncan result to account disapproval."
                             + "\n\nFull Name: " + sp_fullName
                             + "\nPhone number: 0" + phoneEditText.getText().toString() + "\n")
                     .setCancelable(true)
@@ -373,6 +396,7 @@ public class tech_application_page extends AppCompatActivity{
 
 
     }
+
 
     private void uploadDataToFireBaseStorage(Uri validIdUri, Uri selfieUri, Uri pdfUri) {
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -402,48 +426,7 @@ public class tech_application_page extends AppCompatActivity{
                                     public void onSuccess(Uri uri) {
                                         final String selfieUrl = uri.toString();
 
-                                        if (!Uri.EMPTY.equals(pdfUri)){
-
-                                            final String pdfUrl = "";
-                                            String pdfFileName = "";
-
-
-                                            addingDataToRealtimeDB(validIdUrl, selfieUrl, pdfUrl, pdfFileName);
-
-                                            Intent intent = new Intent(tech_application_page.this, switch_account_page.class);
-                                            startActivity(intent);
-                                            Toast.makeText(tech_application_page.this, "Application Submitted", Toast.LENGTH_SHORT).show();
-
-
-                                        }
-                                        else
-                                        {
-
-                                            StorageReference pdfFileRef = techApplicationStorage.child(pdfUri.getLastPathSegment());
-
-                                            //adding of pdf file to firebase storage
-                                            pdfFileRef.putFile(pdfUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                                @Override
-                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                    pdfFileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                        @Override
-                                                        public void onSuccess(Uri uri) {
-                                                            final String pdfUrl = uri.toString();
-                                                            String pdfFileName = pdfUri.getLastPathSegment();
-
-
-                                                            addingDataToRealtimeDB(validIdUrl, selfieUrl, pdfUrl, pdfFileName);
-                                                            progressDialog.dismiss();
-
-                                                            Intent intent = new Intent(tech_application_page.this, switch_account_page.class);
-                                                            startActivity(intent);
-                                                            Toast.makeText(tech_application_page.this, "Application Submitted", Toast.LENGTH_SHORT).show();
-
-                                                        }
-                                                    });
-                                                }
-                                            });
-                                        }
+                                        addingPOWtoStorage(validIdUrl, selfieUrl, progressDialog);
                                     }
                                 });
                             }
@@ -458,7 +441,50 @@ public class tech_application_page extends AppCompatActivity{
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(tech_application_page.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                })
+                });
+
+    }
+
+    private void addingPOWtoStorage(String validIdUrl, String selfieUrl, ProgressDialog progressDialog) {
+
+        StorageReference PowImageRef = techApplicationStorage.child(proofOfWorkUri.getLastPathSegment());
+        StorageReference PoeImageRef = techApplicationStorage.child(proofOfEquipmentUri.getLastPathSegment());
+
+        PowImageRef.putFile(proofOfWorkUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                PowImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        final String powURL = uri.toString();
+
+                        PoeImageRef.putFile(proofOfEquipmentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                PoeImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        final String poeURL = uri.toString();
+
+                                        addingDataToRealtimeDB(validIdUrl, selfieUrl, powURL, poeURL, progressDialog);
+
+                                        Intent intent = new Intent(tech_application_page.this, switch_account_page.class);
+                                        startActivity(intent);
+                                    }
+                                });
+
+
+                            }
+                        });
+
+
+                    }
+                });
+
+            }
+
+        })
+
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
@@ -466,9 +492,11 @@ public class tech_application_page extends AppCompatActivity{
                         progressDialog.setMessage("Sending Application " + (int)progress + "%");
                     }
                 });
+
     }
 
-    private void addingDataToRealtimeDB(String validIdUrl, String selfieUrl, String pdfUrl, String pdfFileName) {
+    private void addingDataToRealtimeDB(String poeURL, String validIdUrl, String selfieUrl, String powURL, ProgressDialog progressDialog) {
+
         String sp_fName = et_firstName.getText().toString();
         String sp_lName = et_lastName.getText().toString();
 
@@ -476,23 +504,26 @@ public class tech_application_page extends AppCompatActivity{
         String lastName = sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();
         String validIDName = validIdUri.getLastPathSegment();
         String selfieImageName = selfieUri.getLastPathSegment();
+        String PowName = proofOfWorkUri.getLastPathSegment();
+        String PoeName = proofOfEquipmentUri.getLastPathSegment();
         String phoneNumber = "0" + phoneEditText.getText().toString();
 
-
         Tech_application tech_application = new Tech_application(firstName, lastName, validIDName, validIdUrl, selfieImageName, selfieUrl,
-                pdfFileName, pdfUrl, phoneNumber, userID, isApprove, isPending);
+                PowName, powURL, PoeName, poeURL, phoneNumber, userID, isApprove, isPending);
 
         techApplicationDatabase.setValue(tech_application).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-
+                    Toast.makeText(tech_application_page.this, "Application Submitted ", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(tech_application_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
+
+
 
     private boolean hasImage(ImageView iv)    {
 

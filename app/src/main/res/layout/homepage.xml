@@ -69,11 +69,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:drawableRight="@drawable/star"
                 android:gravity="center"
                 android:text="0"
-                android:textSize="16sp"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/rb_userRating"
+                app:layout_constraintEnd_toStartOf="@+id/rb_userRating" />
+
+            <RatingBar
+                android:id="@+id/rb_userRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:numStars="5"
+                android:theme="@style/RatingBar"
+                style="@style/Widget.AppCompat.RatingBar.Small"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_userPic"
                 app:layout_constraintEnd_toStartOf="@+id/iv_userPic" />
 

@@ -1,12 +1,16 @@
 package com.example.servicehub;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +23,10 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +39,10 @@ import java.util.Collections;
 
 import Adapter_and_fragments.AdapterCartItem;
 import Adapter_and_fragments.AdapterInstallerItem;
+import dev.shreyaspatil.MaterialDialog.AbstractDialog;
+import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
+import dev.shreyaspatil.MaterialDialog.MaterialDialog;
+import dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 
 public class search_page extends AppCompatActivity {
 
@@ -49,12 +61,14 @@ public class search_page extends AppCompatActivity {
     private DatabaseReference projDatabase;
     private ArrayList<Projects> arrProj, arr;
     private ArrayList<String> arrCategory;
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_page);
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
         projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
         setRef();
@@ -98,34 +112,17 @@ public class search_page extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
 
-                Toast.makeText(getApplicationContext(), "Position: " + position, Toast.LENGTH_SHORT).show();
-
                 arrProj.get(position);
 
-                Query query = projDatabase
-                        .orderByChild("projName")
-                        .equalTo(arrProj.get(position).getProjName());
+                if(user == null)
+                {
+                    loginValidation();
+                }
+                else
+                {
+                    goToNextActivity(position);
+                }
 
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-
-                            String projectID = dataSnapshot.getKey().toString();
-                            Intent intentProject = new Intent(search_page.this, booking_page.class);
-                            intentProject.putExtra("Project ID", projectID);
-                            startActivity(intentProject);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-                adapterInstallerItem.notifyItemChanged(position);
             }
         });
 
@@ -229,8 +226,6 @@ public class search_page extends AppCompatActivity {
         }
     }
 
-
-
     private void generateAllProjects() {
 
         projDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -279,34 +274,18 @@ public class search_page extends AppCompatActivity {
         adapter.setOnItemClickListener(new AdapterInstallerItem.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-
-                Toast.makeText(getApplicationContext(), "Position: " + position, Toast.LENGTH_SHORT).show();
                 arr.get(position);
 
-                Query query = projDatabase
-                        .orderByChild("projName")
-                        .equalTo(arr.get(position).getProjName());
 
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(user == null)
+                {
+                    loginValidation();
+                }
+                else
+                {
+                    goToNextActivity(position);
+                }
 
-                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
-
-                            String projectID = dataSnapshot.getKey().toString();
-                            Intent intentProject = new Intent(search_page.this, booking_page.class);
-                            intentProject.putExtra("Project ID", projectID);
-                            startActivity(intentProject);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
-                adapterInstallerItem.notifyItemChanged(position);
             }
         });
 
@@ -379,5 +358,63 @@ public class search_page extends AppCompatActivity {
 
     }
 
+    private void loginValidation(){
+
+            BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(search_page.this)
+                    .setTitle("Please log in first to proceed")
+                    .setMessage("You must login to proceed")
+                    .setCancelable(true)
+                    .setPositiveButton("Go to Login", new MaterialDialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int which) {
+
+                            Toast.makeText(search_page.this, "Coming Soon", Toast.LENGTH_SHORT).show();
+
+//                            Intent intent = new Intent(search_page.this, login_page.class);
+//                            startActivity(intent);
+
+                        }
+                    })
+                    .setNegativeButton("Back", new MaterialDialog.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int which) {
+
+                            dialogInterface.dismiss();
+                        }
+                    })
+                    .build();
+
+            // Show Dialog
+            mBottomSheetDialog.show();
+
+
+    }
+
+    private void goToNextActivity(int position) {
+        Query query = projDatabase
+                .orderByChild("projName")
+                .equalTo(arrProj.get(position).getProjName());
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                    String projectID = dataSnapshot.getKey().toString();
+                    Intent intentProject = new Intent(search_page.this, booking_page.class);
+                    intentProject.putExtra("Project ID", projectID);
+                    startActivity(intentProject);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        adapterInstallerItem.notifyItemChanged(position);
+    }
 
 }
