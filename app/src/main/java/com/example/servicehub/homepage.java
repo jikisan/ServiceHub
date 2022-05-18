@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -28,12 +30,13 @@ public class homepage extends AppCompatActivity {
     private String userID;
     private ProgressBar progressBar;
 
-    private TextView tv_bannerName, tv_userRate,  btn_installation, btn_repair, btn_cleaning, btn_marketplace;
+    private TextView tv_bannerName, tv_userRating,  btn_installation, btn_repair, btn_cleaning, btn_marketplace;
     private ImageView iv_userPic;
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn;
     private EditText et_search;
     private View layout_myBookings, layout_myOrders, layout_favorites, layout_myCart, layout_promos, layout_history;
+    private RatingBar rb_userRating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,8 +201,11 @@ public class homepage extends AppCompatActivity {
     private void setRef() {
 
         tv_bannerName = findViewById(R.id.tv_bannerName);
+        tv_userRating = findViewById(R.id.tv_userRating);
 
         et_search = findViewById(R.id.et_search);
+
+        rb_userRating = findViewById(R.id.rb_userRating);
 
         btn_installation = findViewById(R.id.btn_installation);
         btn_repair = findViewById(R.id.btn_repair);
@@ -246,7 +252,9 @@ public class homepage extends AppCompatActivity {
                                 .into(iv_userPic);
                     }
 
-                    progressBar.setVisibility(View.GONE);
+                    generateRatings();
+
+
 
                 }
             }
@@ -257,6 +265,45 @@ public class homepage extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void generateRatings() {
+        DatabaseReference ratingDatabase = FirebaseDatabase.getInstance().getReference("Ratings");
+
+        Query query = ratingDatabase
+                .orderByChild("ratingOfId")
+                .equalTo(userID);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                double counter = 0;
+                double totalRating = 0, tempRatingValue = 0;
+
+               for(DataSnapshot dataSnapshot : snapshot.getChildren())
+               {
+                   Ratings ratings = dataSnapshot.getValue(Ratings.class);
+                   tempRatingValue = ratings.ratingValue;
+                   totalRating = totalRating + tempRatingValue;
+                   counter++;
+
+               }
+
+               double averageRating = totalRating / counter;
+               String ratingCounter = "(" + String.valueOf(averageRating) + ")";
+               tv_userRating.setText(ratingCounter);
+               rb_userRating.setRating((float) averageRating);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        progressBar.setVisibility(View.GONE);
     }
 
 }

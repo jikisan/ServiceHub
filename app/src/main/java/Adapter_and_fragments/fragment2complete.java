@@ -2,17 +2,17 @@ package Adapter_and_fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.example.servicehub.Booking;
-import com.example.servicehub.Projects;
 import com.example.servicehub.R;
 import com.example.servicehub.tech_booking_details;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,16 +29,15 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link fragment2Booking#newInstance} factory method to
+ * Use the {@link fragment2complete#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class fragment2Booking extends Fragment {
+public class fragment2complete extends Fragment {
 
     private List<Booking> arr;
     private AdapterBookingItem adapterBookingItem;
     private String userID;
-    private String bookingID;
-
+    private String status = "complete";
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -48,7 +47,7 @@ public class fragment2Booking extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public fragment2Booking() {
+    public fragment2complete() {
         // Required empty public constructor
     }
 
@@ -58,11 +57,11 @@ public class fragment2Booking extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment fragment2.
+     * @return A new instance of fragment fragment2complete.
      */
     // TODO: Rename and change types and number of parameters
-    public static fragment2Booking newInstance(String param1, String param2) {
-        fragment2Booking fragment = new fragment2Booking();
+    public static fragment2complete newInstance(String param1, String param2) {
+        fragment2complete fragment = new fragment2complete();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -99,7 +98,7 @@ public class fragment2Booking extends Fragment {
         recyclerViewBookings.setAdapter(adapterBookingItem);
 
         Query query = bookingDatabase
-                .orderByChild("techID")
+                .orderByChild("custID")
                 .equalTo(userID);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -109,7 +108,7 @@ public class fragment2Booking extends Fragment {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                     Booking bookings = dataSnapshot.getValue(Booking.class);
 
-                    if(bookings.getStatus().equals("ongoing"))
+                    if(bookings.getStatus().equals(status))
                     {
                         arr.add(bookings);
                     }
@@ -139,11 +138,12 @@ public class fragment2Booking extends Fragment {
 
                         for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
-                            bookingID = dataSnapshot.getKey().toString();
+                            String bookingID = dataSnapshot.getKey().toString();
                             Intent intentProject = new Intent(getContext(), tech_booking_details.class);
-                            intentProject.putExtra("status", "ongoing");
+                            intentProject.putExtra("status", status);
                             intentProject.putExtra("Booking ID", bookingID);
                             startActivity(intentProject);
+
                         }
                     }
 
@@ -159,5 +159,6 @@ public class fragment2Booking extends Fragment {
 
         // Inflate the layout for this fragment
         return view;
+
     }
 }

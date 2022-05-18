@@ -235,9 +235,10 @@ public class booking_summary_page extends AppCompatActivity {
         progressDialog.show();
 
         Date currentTime = new Date();
-
         bookingCreated = currentTime.toString();
-        Booking booking = new Booking(imageUrl, custID, projName, addressFromIntent, latString, longString, propertyTypeFromIntent, airconBrandFromIntent,
+        String bookingStatus = "ongoing";
+
+        Booking booking = new Booking(bookingStatus, imageUrl, custID, projName, addressFromIntent, latString, longString, propertyTypeFromIntent, airconBrandFromIntent,
                 airconTypeFromIntent, unitTypeFromIntent, bookingDateFromIntent, bookingTimeFromIntent,
                 contactNumberFromIntent, addInfoFromIntent, totalPrice, paymentMethod, sp_techId, bookingCreated, projectIdFromIntent);
 

@@ -130,7 +130,7 @@ public class login_page extends AppCompatActivity {
         btn_guest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(login_page.this, homepage.class);
+                Intent intent = new Intent(login_page.this, search_page.class);
                 startActivity(intent);
             }
         });

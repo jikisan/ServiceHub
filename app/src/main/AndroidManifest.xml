@@ -19,6 +19,12 @@
         android:theme="@style/Theme.ServiceHub"
         tools:replace="android:icon">
         <activity
+            android:name=".rating_and_review_client"
+            android:exported="false" />
+        <activity
+            android:name=".rating_and_review_page"
+            android:exported="false" />
+        <activity
             android:name=".privacy_and_policy_page"
             android:exported="false" />
         <activity

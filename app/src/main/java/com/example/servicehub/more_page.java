@@ -202,7 +202,6 @@ public class more_page extends AppCompatActivity {
 
     private void generateProfile() {
 
-
         userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {

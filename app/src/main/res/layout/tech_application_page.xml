@@ -222,7 +222,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:text="Step 2: Upload a Valid ID"
+                            android:text="Step 2: Upload a Selfie"
                             android:textColor="#3E3E3E"
                             android:textSize="16sp" />
 
@@ -245,7 +245,7 @@
                     android:id="@+id/expansionLayout2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:expansion_expanded="false">
+                    app:expansion_expanded="true">
 
                     <LinearLayout
                         android:id="@+id/container2"
@@ -253,36 +253,30 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <LinearLayout
-                            android:id="@+id/linearLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:layout_marginStart="24dp"
-                            android:layout_marginLeft="24dp"
-                            android:layout_marginTop="16dp"
-                            android:layout_marginEnd="24dp"
-                            android:layout_marginRight="24dp"
-                            android:background="@drawable/rounded_blue"
-                            android:gravity="center">
-
-                            <ImageView
-                                android:id="@+id/iv_validIdImage"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="5dp" />
-
-                        </LinearLayout>
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/iv_selfieImage"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:layout_gravity="center"
+                            android:src="@color/white"
+                            app:civ_border_width="2dp"
+                            app:civ_border_color="@color/light_blue"
+                            />
 
                         <TextView
-                            android:id="@+id/tv_uploadValidID"
+                            android:id="@+id/tv_uploadSelfie"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
                             android:layout_marginTop="8dp"
                             android:drawableLeft="@drawable/add"
-                            android:gravity="center"
-                            android:text="Upload a Valid ID"
-                            android:textColor="@color/black" />
+                            android:text="Upload a Selfie"
+                            android:textColor="@color/black"
+                            android:layout_gravity="center"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+
 
 
                     </LinearLayout>
@@ -324,7 +318,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:text="Step 3: Upload a Selfie"
+                            android:text="Step 3: Upload a Valid ID"
                             android:textColor="#3E3E3E"
                             android:textSize="16sp" />
 
@@ -347,7 +341,7 @@
                     android:id="@+id/expansionLayout3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:expansion_expanded="false">
+                    app:expansion_expanded="true">
 
                     <LinearLayout
                         android:id="@+id/container3"
@@ -355,28 +349,36 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/iv_selfieImage"
-                            android:layout_width="120dp"
-                            android:layout_height="120dp"
-                            android:layout_gravity="center"
-                            android:src="@color/white"
-                            app:civ_border_width="2dp"
-                            app:civ_border_color="@color/light_blue"
-                            />
+                        <LinearLayout
+                            android:id="@+id/linearLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:layout_marginStart="24dp"
+                            android:layout_marginLeft="24dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="24dp"
+                            android:layout_marginRight="24dp"
+                            android:background="@drawable/rounded_blue"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/iv_validIdImage"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp" />
+
+                        </LinearLayout>
 
                         <TextView
-                            android:id="@+id/tv_uploadSelfie"
+                            android:id="@+id/tv_uploadValidID"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:layout_marginTop="8dp"
                             android:drawableLeft="@drawable/add"
-                            android:text="Upload a Selfie"
-                            android:textColor="@color/black"
-                            android:layout_gravity="center"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+                            android:gravity="center"
+                            android:text="Upload a Valid ID"
+                            android:textColor="@color/black" />
 
 
                     </LinearLayout>
@@ -418,7 +420,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:text="Step 4: Upload any proof of work. (Optional) \n\t\tex. Resume, Certificates, etc.."
+                            android:text="Step 4: Upload any proof of work.\n\t\tex. Resume, Certificates, etc.."
                             android:textColor="#3E3E3E"
                             android:textSize="16sp" />
 
@@ -440,7 +442,7 @@
                     android:id="@+id/expansionLayout4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:expansion_expanded="false">
+                    app:expansion_expanded="true">
 
                     <LinearLayout
                         android:id="@+id/container4"
@@ -448,24 +450,37 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <Button
-                            android:id="@+id/btn_uploadFile"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:drawableLeft="@drawable/add"
-                            android:drawableTint="@color/white"
-                            android:text="Upload file"
-                            android:layout_gravity="center"
-                            app:backgroundTint="@color/light_blue" />
+                        <LinearLayout
+                            android:id="@+id/linearLayout1"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:layout_marginStart="24dp"
+                            android:layout_marginLeft="24dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="24dp"
+                            android:layout_marginRight="24dp"
+                            android:background="@drawable/rounded_blue"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/iv_proofOfWork"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp" />
+
+                        </LinearLayout>
 
                         <TextView
-                            android:id="@+id/tv_fileResult"
+                            android:id="@+id/tv_uploadPOW"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginLeft="16dp"
-                            android:layout_marginTop="16dp"/>
+                            android:layout_gravity="center"
+                            android:layout_marginTop="8dp"
+                            android:drawableLeft="@drawable/add"
+                            android:gravity="center"
+                            android:text="Upload a Proof of Work"
+                            android:textColor="@color/black" />
+
 
 
                     </LinearLayout>
@@ -489,6 +504,108 @@
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
                 <com.github.florent37.expansionpanel.ExpansionHeader
+                    android:id="@+id/expanshionHeader41"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:expansion_headerIndicator="@id/headerIndicator4"
+                    app:expansion_layout="@id/expansionLayout4"
+                    app:expansion_toggleOnClick="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@android:color/white"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:text="Step 5: Upload proof of equipment"
+                            android:textColor="#3E3E3E"
+                            android:textSize="16sp" />
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/headerIndicator41"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="16dp"
+                            android:adjustViewBounds="true"
+                            app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
+
+                    </RelativeLayout>
+
+                </com.github.florent37.expansionpanel.ExpansionHeader>
+
+                <com.github.florent37.expansionpanel.ExpansionLayout
+                    android:id="@+id/expansionLayout41"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:expansion_expanded="true">
+
+                    <LinearLayout
+                        android:id="@+id/container41"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/linearLayout11"
+                            android:layout_width="match_parent"
+                            android:layout_height="150dp"
+                            android:layout_marginStart="24dp"
+                            android:layout_marginLeft="24dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="24dp"
+                            android:layout_marginRight="24dp"
+                            android:background="@drawable/rounded_blue"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:id="@+id/iv_proofOfEquipment"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="5dp" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_proofOfEquipment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="8dp"
+                            android:drawableLeft="@drawable/add"
+                            android:gravity="center"
+                            android:text="Upload photo of equipment"
+                            android:textColor="@color/black" />
+
+
+
+                    </LinearLayout>
+
+                </com.github.florent37.expansionpanel.ExpansionLayout>
+
+            </LinearLayout>
+            <!--            Step 6-->
+            <LinearLayout
+                android:id="@+id/linearLayout7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
+
+                <com.github.florent37.expansionpanel.ExpansionHeader
                     android:id="@+id/expanshionHeader5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -508,7 +625,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:text="Step 5: Please verify phone number"
+                            android:text="Step 6: Please verify phone number"
                             android:textColor="#3E3E3E"
                             android:textSize="16sp" />
 
@@ -533,7 +650,7 @@
                     android:id="@+id/expansionLayout5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:expansion_expanded="false">
+                    app:expansion_expanded="true">
 
                     <LinearLayout
                         android:id="@+id/container5"
@@ -586,27 +703,14 @@
 
 
                         </LinearLayout>
-
-                        <Button
-                            android:id="@+id/btn_requestCode"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="Request Code"
-                            android:layout_gravity="center"
-                            app:backgroundTint="@color/light_blue" />
-
                     </LinearLayout>
-
-
-
 
                 </com.github.florent37.expansionpanel.ExpansionLayout>
 
             </LinearLayout>
-            <!--            Step 6-->
+            <!--            Step 7-->
             <LinearLayout
-                android:id="@+id/linearLayout7"
+                android:id="@+id/linearLayout8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -617,7 +721,7 @@
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout7">
 
                 <com.github.florent37.expansionpanel.ExpansionHeader
                     android:id="@+id/expanshionHeader6"
@@ -638,7 +742,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:text="Step 6: Verify all information provided"
+                            android:text="Step 7: Verify all information provided"
                             android:textColor="#3E3E3E"
                             android:textSize="16sp" />
 
@@ -661,7 +765,7 @@
                     android:id="@+id/expansionLayout6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:expansion_expanded="false">
+                    app:expansion_expanded="true">
 
                     <LinearLayout
                         android:id="@+id/container"
