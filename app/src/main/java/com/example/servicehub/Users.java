@@ -12,6 +12,7 @@ public class Users {
     String imageName;
     String imageUrl;
     String ratings;
+    String ratingsCount;
 
     public Users(){}
 

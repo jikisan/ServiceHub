@@ -34,7 +34,7 @@ public class my_booking_page extends AppCompatActivity {
 
     private List<Booking> arr;
     private AdapterMyBookings adapterMyBookings;
-    private DatabaseReference cartDatabase;
+    private DatabaseReference bookingDatabase;
     private String userID, bookingID;
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
@@ -49,7 +49,7 @@ public class my_booking_page extends AppCompatActivity {
         setContentView(R.layout.my_booking_page);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        cartDatabase = FirebaseDatabase.getInstance().getReference("Bookings");
+        bookingDatabase = FirebaseDatabase.getInstance().getReference("Bookings");
         userID = user.getUid();
 
         setRef();
@@ -114,7 +114,7 @@ public class my_booking_page extends AppCompatActivity {
         adapterMyBookings = new AdapterMyBookings(arr);
         recyclerView_myBookings.setAdapter(adapterMyBookings);
 
-        Query query = cartDatabase
+        Query query = bookingDatabase
                 .orderByChild("custID")
                 .equalTo(userID);
 
@@ -125,7 +125,11 @@ public class my_booking_page extends AppCompatActivity {
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
                     Booking booking = dataSnapshot.getValue(Booking.class);
-                    arr.add(booking);
+
+                    if(booking.status.equals("ongoing"))
+                    {
+                        arr.add(booking);
+                    }
 
                 }
 

@@ -154,7 +154,7 @@ public class sign_up_page extends AppCompatActivity {
         {
             new SweetAlertDialog(sign_up_page.this, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Error!.")
-                    .setContentText("Password should contain \natleast one: uppercase letters,\n one Special Character,  \nand one number")
+                    .setContentText("Please choose a stronger password. Try a mix of letters, numbers, and symbols.")
                     .show();
 
             Toast.makeText(this, "Passwords should contain atleast one: uppercase letters: A-Z. One Special Characters. One number: 0-9. ", Toast.LENGTH_LONG).show();

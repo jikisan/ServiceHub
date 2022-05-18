@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -42,8 +43,9 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
 
         Projects project = arr.get(position);
         holder.projName.setText(project.getProjName());
-        holder.projRatings.setText(project.getRatings());
         holder.projPrice.setText(project.getPrice());
+        holder.tv_userRating.setText("("+project.getRatingCount()+")");
+        holder.rb_userRating.setRating((float) project.getRatingAverage());
 
         imageUriText = project.getImageUrl();
 
@@ -67,8 +69,9 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        TextView projName, projRatings, projPrice;
+        TextView projName, projRatings, projPrice, tv_userRating;
         ImageView projectImage;
+        RatingBar rb_userRating;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -77,6 +80,8 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
             projName = itemView.findViewById(R.id.tv_projName);
             projRatings = itemView.findViewById(R.id.tv_projRatings);
             projPrice = itemView.findViewById(R.id.tv_price);
+            tv_userRating = itemView.findViewById(R.id.tv_userRating);
+            rb_userRating = itemView.findViewById(R.id.rb_userRating);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

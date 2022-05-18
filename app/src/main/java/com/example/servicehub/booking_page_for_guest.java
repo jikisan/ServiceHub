@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,11 +22,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -39,10 +36,10 @@ import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import dev.shreyaspatil.MaterialDialog.MaterialDialog;
 import dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 
-public class booking_page extends AppCompatActivity {
+public class booking_page_for_guest extends AppCompatActivity {
 
     private Chip chip_Mon, chip_Tue, chip_Wed, chip_Thu, chip_Fri, chip_Sat, chip_Sun;
-    private ImageView iv_projectImage,  iv_message, iv_cart, iv_favorite;
+    private ImageView iv_projectImage;
     private TextView tv_projName, tv_projRating, tv_projPrice, tv_back, tv_projDesc, tv_availabilityText, tv_timeAvailable, tv_quantity;
     private Button btn_bookNow, btn_orderNow;
     private View layout_favorite, layout_cart;
@@ -58,10 +55,8 @@ public class booking_page extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.booking_page);
+        setContentView(R.layout.booking_page_for_guest);
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        userID = user.getUid();
         StorageReference projectStorage = FirebaseStorage.getInstance().getReference("Projects");
         projectDatabase = FirebaseDatabase.getInstance().getReference("Projects");
         listingDatabase = FirebaseDatabase.getInstance().getReference("Listings");
@@ -85,117 +80,54 @@ public class booking_page extends AppCompatActivity {
             }
         });
 
-        iv_message.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String chatUid = userID.toString() + "_" + techID.toString() + "_" + tempProjName;
-
-                Intent intent = new Intent(booking_page.this, chat_activity.class);
-                intent.putExtra("project id", projectIdFromIntent);
-                intent.putExtra("tech id", techID);
-                intent.putExtra("sender id", userID);
-                intent.putExtra("chat id", chatUid);
-                startActivity(intent);
-
-            }
-        });
-
-        iv_favorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                addToFavorite();
-
-            }
-        });
-
         btn_bookNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                if(user == null)
+                {
+                    loginValidation();
+                }
+                else
+                {
 
-                    Intent intent = new Intent(booking_page.this, booking_application_page.class);
+                    Intent intent = new Intent(booking_page_for_guest.this, booking_application_page.class);
                     intent.putExtra("projectIdFromIntent", tempProjectID);
                     startActivity(intent);
-
+                }
             }
         });
 
     }
 
-    private void addToFavorite() {
+    private void loginValidation(){
 
-        favoriteDatabase
-                .orderByChild("projName")
-                .startAt(tempProjName).endAt(tempProjName)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists())
-                {
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren())
-                    {
-                        Favorites f = dataSnapshot.getValue(Favorites.class);
-                        if( f.getCustID().equals(userID) )
-                        {
-                            new SweetAlertDialog(booking_page.this, SweetAlertDialog.ERROR_TYPE)
-                                    .setTitleText("Service already in Favorites")
-                                    .setCancelText("Back")
-                                    .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
-                                        @Override
-                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                            Intent intent = new Intent(booking_page.this, favorite_page.class);
-                                            startActivity(intent);
+        BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(booking_page_for_guest.this)
+                .setTitle("Please log in first to proceed")
+                .setMessage("You must login to proceed")
+                .setCancelable(true)
+                .setPositiveButton("Go to Login", new MaterialDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
 
-                                        }
-                                    })
-                                    .setContentText("Go to favorite?")
-                                    .show();
-                        }
+                        Intent intent = new Intent(booking_page_for_guest.this, login_page.class);
+                        intent.putExtra("user", "guest");
+                        intent.putExtra("projectIdFromIntent", tempProjectID);
+                        startActivity(intent);
+
                     }
+                })
+                .setNegativeButton("Back", new MaterialDialog.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
 
+                        dialogInterface.dismiss();
+                    }
+                })
+                .build();
 
-                }
-                else
-                {
-                    //Project ID doesn't exists.
-                    Date currentTime = Calendar.getInstance().getTime();
-                    String favoriteCreated = currentTime.toString();
-                    Favorites favorites = new Favorites(userID, projectIdFromIntent, favoriteCreated, imageUrlText, tempProjName, tempProjPrice, tempProjRatings);
-
-                    favoriteDatabase.push().setValue(favorites).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-
-
-                                new SweetAlertDialog(booking_page.this, SweetAlertDialog.SUCCESS_TYPE)
-                                        .setTitleText("Project is added to favorites!")
-                                        .setCancelText("Back")
-                                        .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
-                                            @Override
-                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                Intent intent = new Intent(booking_page.this, cart_page.class);
-                                                startActivity(intent);
-                                            }
-                                        })
-                                        .setContentText("Go to favorite?")
-                                        .show();
-
-
-                            } else {
-                                Toast.makeText(booking_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        // Show Dialog
+        mBottomSheetDialog.show();
 
 
     }
@@ -203,11 +135,7 @@ public class booking_page extends AppCompatActivity {
     private void setRef() {
 
         iv_projectImage = findViewById(R.id.iv_projPhotoSummary);
-        iv_message = findViewById(R.id.iv_message);
-        iv_cart = findViewById(R.id.iv_cart);
-
         tv_projRating = findViewById(R.id.tv_projRating);
-        iv_favorite = findViewById(R.id.iv_favorite);
 
         tv_projRating = findViewById(R.id.tv_projRating);
         tv_projName = findViewById(R.id.tv_projName);
@@ -333,7 +261,7 @@ public class booking_page extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(booking_page.this, "Empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(booking_page_for_guest.this, "Empty", Toast.LENGTH_SHORT).show();
                     System.out.println("Empty");
                     progressBar.setVisibility(View.GONE);
                 }
@@ -341,9 +269,8 @@ public class booking_page extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(booking_page.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(booking_page_for_guest.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 }

@@ -463,9 +463,12 @@ public class add_project_page extends AppCompatActivity {
 
                         chipsValidation();
 
+                        int ratingCount = 0;
+                        double ratingAverage = 0;
+
                         Projects projects = new Projects(userID, category, downloadUrl, imageName, projName, latString, longString, projAddress, price, percentageFee,
                                 sp_projStartTime, sp_projEndTime, projInstruction, ratingsText, isAvailableMon, isAvailableTue, isAvailableWed, isAvailableThu,
-                                isAvailableFri, isAvailableSat, isAvailableSun);
+                                isAvailableFri, isAvailableSat, isAvailableSun, ratingCount, ratingAverage);
 
                         projectDatabase.push().setValue(projects).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override

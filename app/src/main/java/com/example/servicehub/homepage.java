@@ -278,8 +278,8 @@ public class homepage extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                double counter = 0;
-                double totalRating = 0, tempRatingValue = 0;
+                int counter = 0;
+                double totalRating = 0, tempRatingValue = 0, averageRating = 0;
 
                for(DataSnapshot dataSnapshot : snapshot.getChildren())
                {
@@ -290,8 +290,8 @@ public class homepage extends AppCompatActivity {
 
                }
 
-               double averageRating = totalRating / counter;
-               String ratingCounter = "(" + String.valueOf(averageRating) + ")";
+               averageRating = totalRating / counter;
+               String ratingCounter = "(" + String.valueOf(counter) + ")";
                tv_userRating.setText(ratingCounter);
                rb_userRating.setRating((float) averageRating);
 

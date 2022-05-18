@@ -41,7 +41,7 @@ public class rating_and_review_client extends AppCompatActivity {
     private Button btn_ratingSubmit;
 
     private DatabaseReference userDatabase, projectDatabase, listDatabase, ratingDatabase, bookingDatabase;
-    private String reviewCategory, serviceId, clientId,techId;
+    private String reviewCategory, serviceId, clientId, techId;
     private String clientFirstName, clientLastName, techFirstName, techLastName, bookingName, bookingImageUrl;
 
     @Override
@@ -178,8 +178,6 @@ public class rating_and_review_client extends AppCompatActivity {
         });
     }
 
-
-
     private void submitRating(float getRating) {
 
         String ratingMessage = et_ratingMessage.getText().toString();
@@ -199,8 +197,6 @@ public class rating_and_review_client extends AppCompatActivity {
 
             }
         });
-
-
 
     }
 
@@ -241,7 +237,6 @@ public class rating_and_review_client extends AppCompatActivity {
                     startActivity(intent);
                     Toast.makeText(rating_and_review_client.this, "Rating Submitted", Toast.LENGTH_SHORT).show();
 
-
                 }
 
             }
@@ -263,4 +258,5 @@ public class rating_and_review_client extends AppCompatActivity {
         et_ratingMessage = findViewById(R.id.et_ratingMessage);
         btn_ratingSubmit = findViewById(R.id.btn_ratingSubmit);
     }
+
 }

@@ -116,7 +116,7 @@ public class search_page extends AppCompatActivity {
 
                 if(user == null)
                 {
-                    loginValidation();
+                    goToNextActivityGuest(position);
                 }
                 else
                 {
@@ -279,7 +279,7 @@ public class search_page extends AppCompatActivity {
 
                 if(user == null)
                 {
-                    loginValidation();
+                    goToNextActivityGuest(position);
                 }
                 else
                 {
@@ -358,37 +358,33 @@ public class search_page extends AppCompatActivity {
 
     }
 
-    private void loginValidation(){
+    private void goToNextActivityGuest(int position) {
+        Query query = projDatabase
+                .orderByChild("projName")
+                .equalTo(arrProj.get(position).getProjName());
 
-            BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(search_page.this)
-                    .setTitle("Please log in first to proceed")
-                    .setMessage("You must login to proceed")
-                    .setCancelable(true)
-                    .setPositiveButton("Go to Login", new MaterialDialog.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int which) {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            Toast.makeText(search_page.this, "Coming Soon", Toast.LENGTH_SHORT).show();
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
 
-//                            Intent intent = new Intent(search_page.this, login_page.class);
-//                            startActivity(intent);
+                    String projectID = dataSnapshot.getKey().toString();
+                    Intent intentProject = new Intent(search_page.this, booking_page_for_guest.class);
+                    intentProject.putExtra("Project ID", projectID);
+                    startActivity(intentProject);
+                }
+            }
 
-                        }
-                    })
-                    .setNegativeButton("Back", new MaterialDialog.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int which) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                            dialogInterface.dismiss();
-                        }
-                    })
-                    .build();
+            }
+        });
 
-            // Show Dialog
-            mBottomSheetDialog.show();
-
-
+        adapterInstallerItem.notifyItemChanged(position);
     }
+
 
     private void goToNextActivity(int position) {
         Query query = projDatabase

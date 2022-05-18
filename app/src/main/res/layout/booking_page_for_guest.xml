@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".booking_page_for_guest">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        app:cardElevation="100dp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="131dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="26dp"
+                android:drawableLeft="@drawable/back_arrow"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <ScrollView
+        android:id="@+id/scrollView5"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="16dp">
+
+            <androidx.cardview.widget.CardView
+                android:id="@id/cardView"
+                android:layout_width="0dp"
+                android:layout_height="300dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/rounded_blue"
+                    android:gravity="center">
+
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:indeterminate="true"
+                        android:indeterminateTint="@color/light_blue"
+                        android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/iv_projPhotoSummary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp" />
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+            <TextView
+                android:id="@+id/tv_projName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Project Name"
+                android:textAllCaps="true"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/cardView"
+                app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+            <TextView
+                android:id="@+id/tv_projRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/star"
+                android:gravity="center"
+                android:text="Ratings"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/tv_projName"
+                app:layout_constraintTop_toBottomOf="@+id/tv_projName" />
+
+            <TextView
+                android:id="@+id/tv_projPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price"
+                android:textColor="@color/red"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="@+id/tv_projRating"
+                app:layout_constraintTop_toBottomOf="@+id/tv_projRating" />
+
+            <TextView
+                android:id="@+id/tv_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="2"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_projPrice"
+                app:layout_constraintStart_toEndOf="@+id/tv_projPrice"
+                app:layout_constraintTop_toTopOf="@+id/tv_projPrice" />
+
+
+            <TextView
+                android:id="@+id/tv_availabilityText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Availability"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/tv_projPrice"
+                app:layout_constraintTop_toBottomOf="@+id/tv_projPrice" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_availabilityText">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Mon"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mon"
+                    android:visibility="gone" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Tue"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tue"
+                    android:visibility="gone" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Wed"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wed"
+                    android:visibility="gone" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Thu"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thu"
+                    android:visibility="gone" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Fri"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Fri"
+                    android:visibility="gone" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Sat"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sat"
+                    android:visibility="gone" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_Sun"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sun"
+                    android:visibility="gone" />
+
+
+            </com.google.android.material.chip.ChipGroup>
+
+
+            <TextView
+                android:id="@+id/tv_timeAvailable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="00:00 AM - 00:00 AM"
+                android:textAllCaps="true"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/chipGroup"
+                app:layout_constraintTop_toBottomOf="@+id/chipGroup" />
+
+
+            <TextView
+                android:id="@+id/textView34"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Description"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/tv_timeAvailable"
+                app:layout_constraintTop_toBottomOf="@+id/tv_timeAvailable" />
+
+            <TextView
+                android:id="@+id/tv_projDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView34" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/linearLayout9"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/lighter_light_blue"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView5">
+
+
+        <Button
+            android:id="@+id/btn_bookNow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="25"
+            android:background="@drawable/rounded_blue"
+            android:elevation="20dp"
+            android:text="Book now"
+            app:backgroundTint="@color/light_blue" />
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
