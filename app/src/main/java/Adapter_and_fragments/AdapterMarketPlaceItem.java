@@ -38,7 +38,6 @@ public class AdapterMarketPlaceItem extends RecyclerView.Adapter<AdapterMarketPl
 
         Listings listings = arr.get(position);
         holder.tv_itemName.setText(listings.getListName());
-        holder.tv_itemRatings.setText(listings.getRatings());
         holder.tv_price.setText(listings.getListPrice());
 
         imageUriText = listings.getImageUrl();

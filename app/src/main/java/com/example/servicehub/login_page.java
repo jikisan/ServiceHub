@@ -176,6 +176,7 @@ public class login_page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(login_page.this, search_page.class);
+                intent.putExtra("user type", "guest");
                 startActivity(intent);
             }
         });

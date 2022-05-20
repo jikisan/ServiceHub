@@ -34,6 +34,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:maxHeight="42dp"
                 android:text="Item Name"
                 android:textAllCaps="true"
@@ -47,6 +48,7 @@
                 android:id="@+id/textView28"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="₱ "
                 android:textColor="@color/red"
                 app:layout_constraintStart_toStartOf="@+id/tv_itemName"
@@ -61,15 +63,6 @@
                 app:layout_constraintStart_toEndOf="@+id/textView28"
                 app:layout_constraintTop_toTopOf="@+id/textView28" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" /Job"
-                android:textColor="@color/red"
-                android:gravity="center"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_price"
-                app:layout_constraintStart_toEndOf="@+id/tv_price"
-                app:layout_constraintTop_toTopOf="@+id/tv_price" />
 
             <RatingBar
                 android:id="@+id/rb_userRating"
@@ -77,8 +70,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 android:numStars="5"
                 android:theme="@style/RatingBar"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/textView28"
                 app:layout_constraintTop_toBottomOf="@+id/tv_price" />
 

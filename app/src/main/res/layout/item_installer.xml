@@ -90,7 +90,7 @@
 
 
             <TextView
-                android:id="@+id/tv_userRating"
+                android:id="@+id/tv_userRatingCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="(0)"
@@ -98,7 +98,27 @@
                 app:layout_constraintBottom_toBottomOf="@+id/rb_userRating"
                 app:layout_constraintStart_toEndOf="@+id/rb_userRating" />
 
+            <TextView
+                android:id="@+id/textView64"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Distance: "
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/rb_userRating"
+                app:layout_constraintTop_toBottomOf="@+id/rb_userRating" />
 
+            <TextView
+                android:id="@+id/txtLocationDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:maxLines="1"
+                android:text="Loading..."
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/textView64"
+                app:layout_constraintStart_toEndOf="@+id/textView64" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

@@ -245,7 +245,7 @@
                     android:id="@+id/expansionLayout2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:expansion_expanded="true">
+                    app:expansion_expanded="false">
 
                     <LinearLayout
                         android:id="@+id/container2"
@@ -341,7 +341,7 @@
                     android:id="@+id/expansionLayout3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:expansion_expanded="true">
+                    app:expansion_expanded="false">
 
                     <LinearLayout
                         android:id="@+id/container3"
@@ -442,7 +442,7 @@
                     android:id="@+id/expansionLayout4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:expansion_expanded="true">
+                    app:expansion_expanded="false">
 
                     <LinearLayout
                         android:id="@+id/container4"
@@ -544,7 +544,7 @@
                     android:id="@+id/expansionLayout41"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:expansion_expanded="true">
+                    app:expansion_expanded="false">
 
                     <LinearLayout
                         android:id="@+id/container41"
@@ -650,7 +650,7 @@
                     android:id="@+id/expansionLayout5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:expansion_expanded="true">
+                    app:expansion_expanded="false">
 
                     <LinearLayout
                         android:id="@+id/container5"
@@ -765,7 +765,7 @@
                     android:id="@+id/expansionLayout6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:expansion_expanded="true">
+                    app:expansion_expanded="false">
 
                     <LinearLayout
                         android:id="@+id/container"
