@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -31,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.example.servicehub.Listings;
 import com.example.servicehub.Projects;
 import com.example.servicehub.R;
+import com.example.servicehub.installation_page;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -43,6 +45,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,22 +66,26 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class fragment2Map extends Fragment {
+public class fragment2Map extends Fragment{
 
     private FusedLocationProviderClient client;
+    private double latitude, longitude;
+    private LatLng location;
+    private Location currentLocation;
 
     private SupportMapFragment supportMapFragment;
     private View view;
     private Double latDouble, longDouble;
     private String projCategory;
+    //private GoogleMap googleMap;
 
-    double latitude, longitude;
-    private LatLng location;
+
     private ArrayList<LatLng> arrLoc;
+    private ArrayList<String> arrKeyID;
     private ArrayList<String> arrName;
     private ArrayList<String> arrPrice;
     private ArrayList<URL> arrProjImageUrl;
-
+    private AdapterInfoWindow adapterInfoWindow;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,6 +96,7 @@ public class fragment2Map extends Fragment {
         validatePermission();
         init(inflater, container, savedInstanceState);
 
+        arrKeyID = new ArrayList<>();
         arrLoc = new ArrayList<>();
         arrName = new ArrayList<>();
         arrPrice = new ArrayList<>();
@@ -115,6 +123,8 @@ public class fragment2Map extends Fragment {
         } else {
             // When permission is not granted
             // Call method
+
+
             requestPermissions(
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
         }
@@ -133,6 +143,8 @@ public class fragment2Map extends Fragment {
                 public void onComplete(
                         @NonNull Task<Location> task) {
 
+                    adapterInfoWindow = null;
+
                     // Initialize location
                     Location location = task.getResult();                    // Check condition
                     if (location != null) {
@@ -141,6 +153,7 @@ public class fragment2Map extends Fragment {
                         latDouble = location.getLatitude();
                         longDouble = location.getLongitude();
                         asyncMap(latDouble, longDouble);
+                        adapterInfoWindow= new AdapterInfoWindow(location, requireContext());
 
 
                     } else {
@@ -164,6 +177,8 @@ public class fragment2Map extends Fragment {
                                 longDouble = location1.getLongitude();
                                 asyncMap(latDouble, longDouble);
 
+                                adapterInfoWindow= new AdapterInfoWindow(location1, requireContext());
+
                             }
                         };
 
@@ -181,9 +196,12 @@ public class fragment2Map extends Fragment {
 
     private void asyncMap(Double latDouble, Double longDouble) {
         // Async map
+
         supportMapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
+
+
 
                 if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                         && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -306,11 +324,16 @@ public class fragment2Map extends Fragment {
                         arrName.add(listName);
                         arrPrice.add("₱ " + listPrice);
 
+                        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.custom_marker);
+                        Bitmap b=bitmapdraw.getBitmap();
+                        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 84, 84, false);
+
                         for (int i = 0; i < arrLoc.size(); i++) {
 
                             // below line is use to add marker to each location of our array list.
                             googleMap.addMarker(new MarkerOptions()
                                     .position(arrLoc.get(i))
+                                    .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
                                     .title(arrName.get(i)
                                     + "\n" + arrPrice.get(i)));
 
@@ -347,32 +370,43 @@ public class fragment2Map extends Fragment {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
                         Projects projects = dataSnapshot.getValue(Projects.class);
+                        String projId = dataSnapshot.getKey();
 
                         String imageUrl = projects.getImageUrl().toString();
                         String projName = projects.getProjName().toString().toUpperCase(Locale.ROOT);
+
+
                         String latString = projects.getLatitude();
                         String longString = projects.getLongitude();
-                        //String projLatLng = projects.getProjLatLng().toString();
-
-                       //String[] pos = projLatLng.split(",");
                         latitude = Double.parseDouble(latString);
                         longitude = Double.parseDouble(longString);
                         location = new LatLng(latitude, longitude);
 
                         arrLoc.add(location);
                         arrName.add(projName);
+                        arrKeyID.add(projId);
 
+                        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.custom_marker);
+                        Bitmap b=bitmapdraw.getBitmap();
+                        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 84, 84, false);
+
+
+                        googleMap.setInfoWindowAdapter(adapterInfoWindow);
 
                         for (int i = 0; i < arrLoc.size(); i++) {
 
                             // below line is use to add marker to each location of our array list.
                             googleMap.addMarker(new MarkerOptions()
                                     .position(arrLoc.get(i))
-                                    .title(arrName.get(i)));
+                                    .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
+                                    .snippet(arrKeyID.get(i))
+                                    .title(arrName.get(i))
+
+                            );
+
+                            //googleMap.setOnInfoWindowClickListener(fragment2Map.this);
 
                         }
-
-
                     }
 
                 }
@@ -401,5 +435,8 @@ public class fragment2Map extends Fragment {
             Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+
 
 }

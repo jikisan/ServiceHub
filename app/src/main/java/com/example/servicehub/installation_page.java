@@ -1,16 +1,34 @@
 package com.example.servicehub;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.location.LocationRequest;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 
 import Adapter_and_fragments.fragmentAdapterInstallation;
@@ -24,6 +42,8 @@ public class installation_page extends AppCompatActivity {
     private fragmentAdapterInstallation adapter;
     private ProgressBar progressBar;
     private int currentTab;
+    private FusedLocationProviderClient client;
+    private Location currentlocation1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +144,7 @@ public class installation_page extends AppCompatActivity {
     }
 
     private void setRef() {
-
+        client = LocationServices.getFusedLocationProviderClient(this);
         progressBar = findViewById(R.id.progressBar);
 
         iv_messageBtn = findViewById(R.id.iv_messageBtn);
@@ -146,6 +166,8 @@ public class installation_page extends AppCompatActivity {
             }
         });
     }
+
+
 
 
 }

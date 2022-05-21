@@ -1,14 +1,26 @@
 package com.example.servicehub;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.Menu;
@@ -23,8 +35,16 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +56,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 import Adapter_and_fragments.AdapterCartItem;
 import Adapter_and_fragments.AdapterInstallerItem;
@@ -48,38 +69,64 @@ public class search_page extends AppCompatActivity {
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn;
-    private TextView tv_back, tv_headerTitle;
+    private TextView tv_back, tv_headerTitle, tv_headerTitle2;
     private SearchView sv_search;
     private RecyclerView recyclerView_searches;
     private ProgressBar progressBar;
-    private AutoCompleteTextView auto_complete_txt;
+    private AutoCompleteTextView auto_complete_txt, auto_complete_txt_sort;
     private String listOfCategory = "";
-    private String[] categoryArrayFix = {"All services", "Installation","Repair","Cleaning","Heating","Ventilation","Others"};
+    private CardView cardViewBottom;
+    private final String[] categoryArrayFix = {"All services", "Installation","Repair","Cleaning","Heating","Ventilation","Others"};
+    private final String[] sortArrayFix = {"Name (A-Z)", "Name (Z-A)", "Price (Highest - Lowest)", "Price (Lowest - Highest)" , "Ratings (Highest - Lowest)", "Ratings (Lowest - Highest)" };
 
     private ArrayAdapter<CharSequence> adapterCategoryItems;
+    private ArrayAdapter<CharSequence> adapterSortItems;
     private AdapterInstallerItem adapterInstallerItem, adapter;
     private DatabaseReference projDatabase;
     private ArrayList<Projects> arrProj, arr;
     private ArrayList<String> arrCategory;
     private FirebaseUser user;
 
+    private FusedLocationProviderClient client;
+    private Location currentlocation1;
+    private LatLng currentLatLng;
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_page);
 
+        client = LocationServices.getFusedLocationProviderClient(search_page.this);
+        validatePermission();
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
         setRef();
+        userValidation();
         generateRecyclerLayout();
-        generateListOfCategory();
+        dropDownMenuTextView();
         generateDataValue();
         clickListeners();
         bottomNavTaskbar();
+
+    }
+
+    private void userValidation() {
+        String userType = getIntent().getStringExtra("user type");
+
+        if(!(userType == null))
+        {
+            if(userType.equals("guest"))
+            {
+                cardViewBottom.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void clickListeners() {
+
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -108,6 +155,87 @@ public class search_page extends AppCompatActivity {
             }
         });
 
+        auto_complete_txt_sort.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                String category = adapterView.getItemAtPosition(i).toString();
+                tv_headerTitle2.setText(category);
+
+                Toast.makeText(search_page.this, "Position: " + i, Toast.LENGTH_SHORT).show();
+
+                switch (i){
+                    case 0:
+                        Collections.sort(arrProj, nameAZ);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        break;
+
+                    case 1:
+                        Collections.sort(arrProj, nameAZ);
+                        Collections.reverse(arrProj);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        break;
+
+                    case 2:
+                        Collections.sort(arrProj, priceLowestToHighest);
+                        Collections.reverse(arrProj);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        break;
+
+                    case 3:
+                        Collections.sort(arrProj, priceLowestToHighest);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        break;
+
+                    case 4:
+                        Collections.sort(arrProj, ratingsLowestToHighest);
+                        Collections.reverse(arrProj);
+                        adapterInstallerItem.notifyDataSetChanged();
+                      break;
+
+                    case 5:
+                        Collections.sort(arrProj, ratingsLowestToHighest);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        break;
+
+                }
+
+            }
+
+            public Comparator<Projects> nameAZ = new Comparator<Projects>() {
+                @Override
+                public int compare(Projects projects, Projects t1) {
+                    return projects.getProjName().compareTo(t1.getProjName());
+                }
+            };
+
+            public Comparator<Projects> priceLowestToHighest = new Comparator<Projects>() {
+                @Override
+                public int compare(Projects projects, Projects t1) {
+
+                    String p1 = projects.getPrice();
+                    String p2 = t1.getPrice();
+
+                    return extractInt(p1) - extractInt(p2);
+                }
+
+                int extractInt(String s) {
+                    String num = s.replaceAll("\\D", "");
+                    // return 0 if no digits found
+                    return num.isEmpty() ? 0 : Integer.parseInt(num);
+                }
+            };
+
+            public Comparator<Projects> ratingsLowestToHighest = new Comparator<Projects>() {
+                @Override
+                public int compare(Projects projects, Projects t1) {
+                    return String.valueOf(projects.getRatingAverage()).compareToIgnoreCase(String.valueOf(t1.getRatingAverage()));
+                }
+            };
+
+
+        });
+
         adapterInstallerItem.setOnItemClickListener(new AdapterInstallerItem.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -126,7 +254,6 @@ public class search_page extends AppCompatActivity {
             }
         });
 
-
     }
 
     private void generateRecyclerLayout() {
@@ -135,10 +262,10 @@ public class search_page extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView_searches.setLayoutManager(linearLayoutManager);
 
-        adapterInstallerItem = new AdapterInstallerItem(arrProj);
-        adapter = new AdapterInstallerItem(arr);
+        adapterInstallerItem = new AdapterInstallerItem(currentLatLng, arrProj, getApplicationContext());
+        adapter = new AdapterInstallerItem(currentLatLng, arr, getApplicationContext());
         recyclerView_searches.setAdapter(adapterInstallerItem);
-
+        adapterInstallerItem.notifyDataSetChanged();
     }
 
     private void generateListOfCategory() {
@@ -187,11 +314,6 @@ public class search_page extends AppCompatActivity {
                     }
                     adapterInstallerItem.notifyDataSetChanged();
                 }
-
-
-//                AdapterInstallerItem adapter = new AdapterInstallerItem(arrProj);
-//                recyclerView_searches.setAdapter(adapter);
-
 
             }
 
@@ -253,9 +375,12 @@ public class search_page extends AppCompatActivity {
 
     private void dropDownMenuTextView() {
 
-        String[] categoryArray = listOfCategory.split(",");
         adapterCategoryItems = new ArrayAdapter<CharSequence>(search_page.this, R.layout.list_property, categoryArrayFix);
         auto_complete_txt.setAdapter(adapterCategoryItems);
+
+        adapterSortItems = new ArrayAdapter<CharSequence>(search_page.this, R.layout.list_property, sortArrayFix);
+        auto_complete_txt_sort.setAdapter(adapterSortItems);
+
     }
 
     private void search(String s) {
@@ -267,7 +392,7 @@ public class search_page extends AppCompatActivity {
                 arr.add(object);
             }
 
-            adapter = new AdapterInstallerItem(arr);
+            adapter = new AdapterInstallerItem(currentLatLng, arr, getApplicationContext());
             recyclerView_searches.setAdapter(adapter);
         }
 
@@ -347,6 +472,9 @@ public class search_page extends AppCompatActivity {
 
         tv_back = findViewById(R.id.tv_back);
         tv_headerTitle = findViewById(R.id.tv_headerTitle);
+        tv_headerTitle2 = findViewById(R.id.tv_headerTitle2);
+
+        cardViewBottom = findViewById(R.id.cardViewBottom);
 
         sv_search = findViewById(R.id.sv_search);
 
@@ -355,6 +483,7 @@ public class search_page extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         auto_complete_txt = findViewById(R.id.auto_complete_txt);
+        auto_complete_txt_sort = findViewById(R.id.auto_complete_txt_sort);
 
     }
 
@@ -385,7 +514,6 @@ public class search_page extends AppCompatActivity {
         adapterInstallerItem.notifyItemChanged(position);
     }
 
-
     private void goToNextActivity(int position) {
         Query query = projDatabase
                 .orderByChild("projName")
@@ -412,5 +540,106 @@ public class search_page extends AppCompatActivity {
 
         adapterInstallerItem.notifyItemChanged(position);
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void validatePermission() {
+
+        // check condition
+        if (ContextCompat.checkSelfPermission(search_page.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(search_page.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            // When permission is granted
+            // Call method
+            getCurrentLocation();
+        }
+        else
+        {
+            // When permission is not granted
+            // Call method
+
+            requestPermissions(
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getCurrentLocation() {
+        // Initialize Location manager
+        LocationManager locationManager = (LocationManager) search_page.this.getSystemService(Context.LOCATION_SERVICE);
+        // Check condition
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+        {
+            // When location service is enabled
+            // Get last location
+            client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(
+                        @NonNull Task<Location> task) {
+
+
+                    // Initialize location
+                    Location location  = task.getResult();                    // Check condition
+                    if (location != null) {
+                        // When location result is not
+                        // null set latitude
+                        double latDouble = location.getLatitude();
+                        double longDouble = location.getLongitude();
+                        currentLatLng = new LatLng(latDouble, longDouble);
+                        currentlocation1 = location;
+
+                    } else {
+                        // When location result is null
+                        // initialize location request
+                        LocationRequest locationRequest = new LocationRequest()
+                                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                .setInterval(10000)
+                                .setFastestInterval(1000)
+                                .setNumUpdates(1);
+
+                        // Initialize location call back
+                        LocationCallback locationCallback = new LocationCallback() {
+                            @Override
+                            public void
+                            onLocationResult(LocationResult locationResult) {
+                                // Initialize
+                                // location
+                                Location location1  = locationResult.getLastLocation();
+                                double latDouble = location1.getLatitude();
+                                double longDouble = location1.getLongitude();
+                                currentLatLng = new LatLng(latDouble, longDouble);
+                                currentlocation1 = location1;
+                            }
+                        };
+
+                        // Request location updates
+                        client.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+                    }
+                }
+            });
+        }
+        else
+        {
+            // When location service is not enabled
+            // open location setting
+            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Check condition
+        if (requestCode == 100 && (grantResults.length > 0) && (grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+            // When permission are granted
+            // Call  method
+            getCurrentLocation();
+        } else {
+            // When permission are denied
+            // Display toast
+            Toast.makeText(search_page.this, "Permission denied", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 }

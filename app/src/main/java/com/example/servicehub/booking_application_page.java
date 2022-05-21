@@ -50,6 +50,8 @@ import java.util.Locale;
 
 public class booking_application_page extends AppCompatActivity {
 
+    private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
+            iv_moreBtn;
     private ImageView iv_pickAddress;
     private EditText et_addInfo;
     private TextInputEditText et_phoneNum;
@@ -80,6 +82,7 @@ public class booking_application_page extends AppCompatActivity {
         initPlaces();
         dropDownMenuTextView();
         clickListeners();
+        bottomNavTaskbar();
     }
 
     private void initPlaces() {
@@ -461,6 +464,12 @@ public class booking_application_page extends AppCompatActivity {
         tv_address = findViewById(R.id.et_address);
         tv_back = findViewById(R.id.tv_back);
 
+        iv_messageBtn = findViewById(R.id.iv_messageBtn);
+        iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
+        iv_homeBtn = findViewById(R.id.iv_homeBtn);
+        iv_accountBtn = findViewById(R.id.iv_accountBtn);
+        iv_moreBtn = findViewById(R.id.iv_moreBtn);
+
         et_phoneNum = findViewById(R.id.et_phoneNum);
         et_addInfo = findViewById(R.id.et_addInfo);
         et_date = findViewById(R.id.et_date);
@@ -487,6 +496,49 @@ public class booking_application_page extends AppCompatActivity {
         btn_back5 = findViewById(R.id.btn_back5);
         btn_submit = findViewById(R.id.btn_submit);
 
+    }
+
+    private void bottomNavTaskbar() {
+
+        iv_messageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentMessageBtn = new Intent(booking_application_page.this, message_page.class);
+                startActivity(intentMessageBtn);
+            }
+        }); // end of message button
+
+        iv_notificationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentNotification = new Intent(booking_application_page.this, notification_page.class);
+                startActivity(intentNotification);
+            }
+        }); // end of notification button
+
+        iv_homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentHomeBtn = new Intent(booking_application_page.this, homepage.class);
+                startActivity(intentHomeBtn);
+            }
+        }); // end of home button
+
+        iv_accountBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentAccount = new Intent(booking_application_page.this, switch_account_page.class);
+                startActivity(intentAccount);
+            }
+        }); // end of account button
+
+        iv_moreBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentMoreBtn = new Intent(booking_application_page.this, more_page.class);
+                startActivity(intentMoreBtn);
+            }
+        }); // end of more button
     }
 
     private void dropDownMenuTextView() {

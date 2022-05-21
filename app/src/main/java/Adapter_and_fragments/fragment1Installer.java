@@ -1,7 +1,15 @@
 package Adapter_and_fragments;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +19,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,7 +31,17 @@ import com.example.servicehub.Projects;
 import com.example.servicehub.R;
 import com.example.servicehub.booking_page;
 import com.example.servicehub.edit_project_page;
+import com.example.servicehub.installation_page;
 import com.example.servicehub.view_in_map;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -50,6 +70,10 @@ public class fragment1Installer extends Fragment {
     private DatabaseReference projDatabase, marketDatabase;
     private ImageView iv_sort, iv_Location;
     private TextView tv_category;
+
+    private FusedLocationProviderClient client;
+    private Location currentlocation1;
+    private LatLng currentLatLng;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -97,11 +121,11 @@ public class fragment1Installer extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
+        client = LocationServices.getFusedLocationProviderClient(getActivity());
+        validatePermission();
 
         View view = inflater.inflate(R.layout.fragment1_installer, container, false);
 
-        iv_sort = (ImageView) view.findViewById(R.id.iv_sort);
         iv_Location = (ImageView) view.findViewById(R.id.iv_Location);
         tv_category = (TextView) view.findViewById(R.id.tv_category);
         projCategory = "Installation";
@@ -114,7 +138,8 @@ public class fragment1Installer extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         arrProjects = new ArrayList<>();
-        adapterInstallerItem = new AdapterInstallerItem(arrProjects);
+
+        adapterInstallerItem = new AdapterInstallerItem(currentLatLng, arrProjects, getContext());
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -140,12 +165,7 @@ public class fragment1Installer extends Fragment {
             }
         });
 
-        iv_sort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "Sort Clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
+
     }
 
     private void getProjByCategory() {
@@ -215,5 +235,98 @@ public class fragment1Installer extends Fragment {
 
     }
 
+    private void validatePermission() {
+
+        // check condition
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // When permission is granted
+            // Call method
+            getCurrentLocation();
+        } else {
+            // When permission is not granted
+            // Call method
+
+            requestPermissions(
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 100);
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void getCurrentLocation() {
+        // Initialize Location manager
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        // Check condition
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            // When location service is enabled
+            // Get last location
+            client.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(
+                        @NonNull Task<Location> task) {
+
+
+                    // Initialize location
+                    Location location  = task.getResult();                    // Check condition
+                    if (location != null) {
+                        // When location result is not
+                        // null set latitude
+                        double latDouble = location.getLatitude();
+                        double longDouble = location.getLongitude();
+                        currentLatLng = new LatLng(latDouble, longDouble);
+                        currentlocation1 = location;
+
+                    } else {
+                        // When location result is null
+                        // initialize location request
+                        LocationRequest locationRequest = new LocationRequest()
+                                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                                .setInterval(10000)
+                                .setFastestInterval(1000)
+                                .setNumUpdates(1);
+
+                        // Initialize location call back
+                        LocationCallback locationCallback = new LocationCallback() {
+                            @Override
+                            public void
+                            onLocationResult(LocationResult locationResult) {
+                                // Initialize
+                                // location
+                                Location location1  = locationResult.getLastLocation();
+                                double latDouble = location1.getLatitude();
+                                double longDouble = location1.getLongitude();
+                                currentLatLng = new LatLng(latDouble, longDouble);
+                                currentlocation1 = location1;
+
+                            }
+                        };
+
+                        // Request location updates
+                        client.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+                    }
+                }
+            });
+        } else {
+            // When location service is not enabled
+            // open location setting
+            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(
+            int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // Check condition
+        if (requestCode == 100 && (grantResults.length > 0) && (grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
+            // When permission are granted
+            // Call  method
+            getCurrentLocation();
+        } else {
+            // When permission are denied
+            // Display toast
+            Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }

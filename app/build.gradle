@@ -6,6 +6,10 @@ plugins {
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    dataBinding {
+        enabled = true
+    }
+
     compileSdkVersion 32
 
     defaultConfig {
@@ -70,6 +74,8 @@ dependencies {
     implementation 'com.github.florent37:expansionpanel:1.2.4'
     implementation 'com.asdev.PhoneEditText-Android:PhoneEditText-Android:1.1.1'
     implementation 'com.github.f0ris.sweetalert:library:1.5.1'
+    implementation 'com.google.maps.android:android-maps-utils:0.6.2'
+
 
     // Material Dialog Library
     implementation 'dev.shreyaspatil.MaterialDialog:MaterialDialog:2.2.3'
