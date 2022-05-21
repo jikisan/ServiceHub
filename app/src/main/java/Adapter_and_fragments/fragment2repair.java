@@ -118,7 +118,6 @@ public class fragment2repair extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment1_installer, container, false);
 
-        iv_sort = (ImageView) view.findViewById(R.id.iv_sort);
         iv_Location = (ImageView) view.findViewById(R.id.iv_Location);
         tv_category = (TextView) view.findViewById(R.id.tv_category);
         projCategory = "Repair";
@@ -158,12 +157,7 @@ public class fragment2repair extends Fragment {
             }
         });
 
-        iv_sort.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "Sort Clicked 2", Toast.LENGTH_SHORT).show();
-            }
-        });
+
     }
 
     private void getProjByCategory() {

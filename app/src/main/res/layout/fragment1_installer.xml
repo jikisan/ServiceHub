@@ -25,22 +25,98 @@
             android:id="@+id/iv_Location"
             android:layout_width="35dp"
             android:layout_height="35dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
             android:src="@drawable/map"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_sort"
-            app:layout_constraintEnd_toStartOf="@+id/iv_sort"
-            app:layout_constraintTop_toTopOf="@+id/iv_sort"
-           />
+            app:layout_constraintEnd_toStartOf="@+id/linearLayout3"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/iv_sort"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/sort"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_category"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:background="@color/bg_color"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tv_category" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.github.florent37.expansionpanel.ExpansionHeader
+                android:id="@+id/expanshionHeader2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_color"
+                app:expansion_headerIndicator="@id/headerIndicator2"
+                app:expansion_layout="@id/expansionLayout2"
+                app:expansion_toggleOnClick="true">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@android:color/white">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/headerIndicator2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="16dp"
+                        android:adjustViewBounds="true"
+                        app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
+
+
+                    <TextView
+                        android:id="@+id/tv_headerTitle2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="-12dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_toEndOf="@+id/headerIndicator2"
+                        android:drawableRight="@drawable/sort2"
+                        android:drawablePadding="8dp"
+                        android:gravity="center"
+                        android:text="Sort by"
+                        android:textAlignment="viewEnd"
+                        android:textColor="#3E3E3E"
+                        android:textSize="16sp"
+                        tools:ignore="RtlCompat" />
+
+
+                </RelativeLayout>
+
+
+            </com.github.florent37.expansionpanel.ExpansionHeader>
+
+            <com.github.florent37.expansionpanel.ExpansionLayout
+                android:id="@+id/expansionLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                app:expansion_expanded="false">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textInputLayout1"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Sort by"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/et_address">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/auto_complete_txt_sort"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </com.github.florent37.expansionpanel.ExpansionLayout>
+
+        </LinearLayout>
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -51,7 +127,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_sort" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_Location" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
