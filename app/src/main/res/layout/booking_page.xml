@@ -93,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Project Name"
+                android:text="Loading..."
                 android:textAllCaps="true"
                 android:textColor="@color/black"
                 android:textSize="24sp"
@@ -127,7 +127,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Price"
+                android:text="Loading..."
                 android:textColor="@color/red"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@+id/rb_userRating"
@@ -226,13 +226,12 @@
 
             </com.google.android.material.chip.ChipGroup>
 
-
             <TextView
                 android:id="@+id/tv_timeAvailable"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="00:00 AM - 00:00 AM"
+                android:text="Loading..."
                 android:textAllCaps="true"
                 android:textSize="16sp"
                 android:textStyle="bold"

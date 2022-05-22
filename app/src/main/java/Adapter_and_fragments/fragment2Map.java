@@ -32,7 +32,10 @@ import com.bumptech.glide.Glide;
 import com.example.servicehub.Listings;
 import com.example.servicehub.Projects;
 import com.example.servicehub.R;
+import com.example.servicehub.booking_page;
 import com.example.servicehub.installation_page;
+import com.example.servicehub.intro_logo;
+import com.example.servicehub.more_page;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -66,7 +69,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-public class fragment2Map extends Fragment{
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+public class fragment2Map extends Fragment implements GoogleMap.OnInfoWindowClickListener {
 
     private FusedLocationProviderClient client;
     private double latitude, longitude;
@@ -404,7 +409,7 @@ public class fragment2Map extends Fragment{
 
                             );
 
-                            //googleMap.setOnInfoWindowClickListener(fragment2Map.this);
+                            googleMap.setOnInfoWindowClickListener(fragment2Map.this);
 
                         }
                     }
@@ -436,7 +441,26 @@ public class fragment2Map extends Fragment{
         }
     }
 
+    @Override
+    public void onInfoWindowClick(@NonNull Marker marker) {
 
+        new SweetAlertDialog(getContext(), SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Warning!.")
+                .setCancelText("Back")
+                .setConfirmButton("View Service", new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                        String projectID = marker.getSnippet();
+                        Intent intentProject = new Intent(getContext(), booking_page.class);
+                        intentProject.putExtra("Project ID", projectID);
+                        getContext().startActivity(intentProject);
+
+                    }
+                })
+                .setContentText("View " + marker.getTitle()+ " ?")
+                .show();
+    }
 
 
 }

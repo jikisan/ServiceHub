@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ public class fragment4marketplace extends Fragment {
     private DatabaseReference  marketDatabase;
     private ImageView iv_sort, iv_Location;
     private TextView tv_category;
+    private LinearLayout linearLayout3;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -99,8 +101,12 @@ public class fragment4marketplace extends Fragment {
 
         iv_Location = (ImageView) view.findViewById(R.id.iv_Location);
         tv_category = (TextView) view.findViewById(R.id.tv_category);
+        linearLayout3 = (LinearLayout) view.findViewById(R.id.linearLayout3);
+
+
         listCategory = "Marketplace";
 
+        linearLayout3.setVisibility(View.INVISIBLE);
         user = FirebaseAuth.getInstance().getCurrentUser();
         marketDatabase = FirebaseDatabase.getInstance().getReference("Listings");
         userID = user.getUid();

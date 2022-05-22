@@ -77,7 +77,8 @@ public class search_page extends AppCompatActivity {
     private String listOfCategory = "";
     private CardView cardViewBottom;
     private final String[] categoryArrayFix = {"All services", "Installation","Repair","Cleaning","Heating","Ventilation","Others"};
-    private final String[] sortArrayFix = {"Name (A-Z)", "Name (Z-A)", "Price (Highest - Lowest)", "Price (Lowest - Highest)" , "Ratings (Highest - Lowest)", "Ratings (Lowest - Highest)" };
+    private final String[] sortArrayFix = {"Name (A-Z)", "Name (Z-A)", "Price (Highest - Lowest)", "Price (Lowest - Highest)" , "Ratings (Highest - Lowest)",
+            "Ratings (Lowest - Highest)" };
 
     private ArrayAdapter<CharSequence> adapterCategoryItems;
     private ArrayAdapter<CharSequence> adapterSortItems;
@@ -85,6 +86,7 @@ public class search_page extends AppCompatActivity {
     private DatabaseReference projDatabase;
     private ArrayList<Projects> arrProj, arr;
     private ArrayList<String> arrCategory;
+    private ArrayList<CurrentLocation> arrCurrentLocaction;
     private FirebaseUser user;
 
     private FusedLocationProviderClient client;
@@ -103,11 +105,12 @@ public class search_page extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
+
         setRef();
         userValidation();
+        generateDataValue();
         generateRecyclerLayout();
         dropDownMenuTextView();
-        generateDataValue();
         clickListeners();
         bottomNavTaskbar();
 
@@ -162,9 +165,9 @@ public class search_page extends AppCompatActivity {
                 String category = adapterView.getItemAtPosition(i).toString();
                 tv_headerTitle2.setText(category);
 
-                Toast.makeText(search_page.this, "Position: " + i, Toast.LENGTH_SHORT).show();
 
                 switch (i){
+
                     case 0:
                         Collections.sort(arrProj, nameAZ);
                         adapterInstallerItem.notifyDataSetChanged();
@@ -198,9 +201,17 @@ public class search_page extends AppCompatActivity {
                         adapterInstallerItem.notifyDataSetChanged();
                         break;
 
+                    default:
+                        Collections.sort(arrProj, nameAZ);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        break;
+
                 }
 
             }
+
+
+
 
             public Comparator<Projects> nameAZ = new Comparator<Projects>() {
                 @Override
@@ -262,8 +273,8 @@ public class search_page extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView_searches.setLayoutManager(linearLayoutManager);
 
-        adapterInstallerItem = new AdapterInstallerItem(currentLatLng, arrProj, getApplicationContext());
-        adapter = new AdapterInstallerItem(currentLatLng, arr, getApplicationContext());
+        adapter = new AdapterInstallerItem(arrCurrentLocaction, arr, getApplicationContext());
+        adapterInstallerItem = new AdapterInstallerItem(arrCurrentLocaction, arrProj, getApplicationContext());
         recyclerView_searches.setAdapter(adapterInstallerItem);
         adapterInstallerItem.notifyDataSetChanged();
     }
@@ -392,7 +403,7 @@ public class search_page extends AppCompatActivity {
                 arr.add(object);
             }
 
-            adapter = new AdapterInstallerItem(currentLatLng, arr, getApplicationContext());
+            adapter = new AdapterInstallerItem(arrCurrentLocaction, arr, getApplicationContext());
             recyclerView_searches.setAdapter(adapter);
         }
 
@@ -463,6 +474,7 @@ public class search_page extends AppCompatActivity {
 
         arrProj = new ArrayList<>();
         arrCategory = new ArrayList<>();
+        arrCurrentLocaction = new ArrayList<>();
 
         iv_messageBtn = findViewById(R.id.iv_messageBtn);
         iv_notificationBtn = findViewById(R.id.iv_notificationBtn);
@@ -586,6 +598,11 @@ public class search_page extends AppCompatActivity {
                         double longDouble = location.getLongitude();
                         currentLatLng = new LatLng(latDouble, longDouble);
                         currentlocation1 = location;
+                        CurrentLocation currentLocation = new CurrentLocation(currentLatLng);
+                        arrCurrentLocaction.add(currentLocation);
+                        adapterInstallerItem = new AdapterInstallerItem(arrCurrentLocaction, arrProj, getApplicationContext());
+                        recyclerView_searches.setAdapter(adapterInstallerItem);
+                        adapterInstallerItem.notifyDataSetChanged();
 
                     } else {
                         // When location result is null
@@ -608,6 +625,11 @@ public class search_page extends AppCompatActivity {
                                 double longDouble = location1.getLongitude();
                                 currentLatLng = new LatLng(latDouble, longDouble);
                                 currentlocation1 = location1;
+                                CurrentLocation currentLocation = new CurrentLocation(currentLatLng);
+                                arrCurrentLocaction.add(currentLocation);
+                                adapterInstallerItem = new AdapterInstallerItem(arrCurrentLocaction, arrProj, getApplicationContext());
+                                recyclerView_searches.setAdapter(adapterInstallerItem);
+                                adapterInstallerItem.notifyDataSetChanged();
                             }
                         };
 

@@ -21,8 +21,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.servicehub.CurrentLocation;
 import com.example.servicehub.Projects;
 import com.example.servicehub.R;
+import com.example.servicehub.booking_page;
+import com.firebase.client.FirebaseError;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -32,6 +35,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.SphericalUtil;
 import com.squareup.picasso.Picasso;
 
@@ -41,8 +50,8 @@ import java.util.List;
 public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerItem.ItemViewHolder> {
 
     List<Projects> arr;
-    OnItemClickListener onItemClickListener;
-
+    List<CurrentLocation> arrCurrentLocaction;
+    AdapterInstallerItem.OnItemClickListener onItemClickListener;
 
     private Context context;
     private Location currentlocation;
@@ -52,8 +61,8 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
     public AdapterInstallerItem() {
     }
 
-    public AdapterInstallerItem(LatLng currentLatLng, List<Projects> arr, Context context) {
-        this.currentLatLng = currentLatLng;
+    public AdapterInstallerItem(List<CurrentLocation> arrCurrentLocaction, List<Projects> arr, Context context) {
+        this.arrCurrentLocaction = arrCurrentLocaction;
         this.arr = arr;
         this.context = context;
     }
@@ -68,7 +77,10 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Projects project = arr.get(position);
+        CurrentLocation currentLocation = arrCurrentLocaction.get(0);
 
+
+        currentLatLng = currentLocation.getCurrentLocation();
         double priceDouble = Double.parseDouble(project.getPrice());
         double lat = Double.parseDouble(project.getLatitude());
         double lng =  Double.parseDouble(project.getLongitude());
@@ -99,6 +111,36 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
 
         Picasso.get().load(imageUriText)
                 .into(holder.projectImage);
+
+        DatabaseReference projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Query query = projDatabase
+                        .orderByChild("projName")
+                        .equalTo(project.getProjName());
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                            String projectID = dataSnapshot.getKey().toString();
+                            Intent intentProject = new Intent(view.getContext(), booking_page.class);
+                            intentProject.putExtra("Project ID", projectID);
+                            view.getContext().startActivity(intentProject);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -110,7 +152,7 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener){
+    public void setOnItemClickListener(AdapterInstallerItem.OnItemClickListener listener){
         onItemClickListener = listener;
     }
 
@@ -134,6 +176,8 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+
                     if(onItemClickListener != null){
                         int position = getAdapterPosition();
                         if(position != RecyclerView.NO_POSITION){
