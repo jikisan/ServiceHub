@@ -34,7 +34,7 @@ public class more_page extends AppCompatActivity {
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_userPhoto;
     private TextView tv_editProfile, tv_changePassword, tv_contactUs, tv_aboutUs, tv_logout,
-            tv_bannerName, tv_userRating, tv_privacyPolicy, tv_myAddress, tv_back;
+            tv_bannerName, tv_userRating, tv_privacyPolicy, tv_myAddress, tv_back, tv_myRatings;
     private RatingBar rb_userRating;
 
     @Override
@@ -136,6 +136,14 @@ public class more_page extends AppCompatActivity {
             }
         });
 
+        tv_myRatings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(more_page.this, my_ratings_page.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void bottomNavTaskbar() {
@@ -200,6 +208,7 @@ public class more_page extends AppCompatActivity {
         tv_privacyPolicy = findViewById(R.id.tv_privacyPolicy);
         tv_back = findViewById(R.id.tv_back);
         tv_userRating = findViewById(R.id.tv_userRating);
+        tv_myRatings = findViewById(R.id.tv_myRatings);
 
         progressBar = findViewById(R.id.progressBar);
 
