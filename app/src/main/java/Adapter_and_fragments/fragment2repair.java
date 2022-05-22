@@ -13,6 +13,9 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +28,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.servicehub.CurrentLocation;
 import com.example.servicehub.Listings;
 import com.example.servicehub.Projects;
 import com.example.servicehub.R;
@@ -51,21 +55,29 @@ import com.google.firebase.database.ValueEventListener;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class fragment2repair extends Fragment {
 
+    private ArrayAdapter<CharSequence> adapterSortItems;
     private List<Projects> arrProjects;
+    private List<CurrentLocation> arrCurrentLocation;
     private AdapterInstallerItem adapterInstallerItem;
     private String userID, projectID, projCategory;
     private FirebaseUser user;
     private DatabaseReference projDatabase, marketDatabase;
     private ImageView iv_sort, iv_Location;
-    private TextView tv_category;
+    private TextView tv_category, tv_headerTitle2;
+    private RecyclerView recyclerView;
+    private AutoCompleteTextView auto_complete_txt_sort;
 
     private FusedLocationProviderClient client;
     private Location currentlocation1;
     private LatLng currentLatLng;
+    private final String[] sortArrayFix = {"Name (A-Z)", "Name (Z-A)", "Price (Highest - Lowest)", "Price (Lowest - Highest)" , "Ratings (Highest - Lowest)",
+            "Ratings (Lowest - Highest)" };
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -114,12 +126,15 @@ public class fragment2repair extends Fragment {
                              Bundle savedInstanceState) {
 
         client = LocationServices.getFusedLocationProviderClient(getActivity());
-        validatePermission();
+
 
         View view = inflater.inflate(R.layout.fragment1_installer, container, false);
 
+        auto_complete_txt_sort = (AutoCompleteTextView) view.findViewById(R.id.auto_complete_txt_sort);
         iv_Location = (ImageView) view.findViewById(R.id.iv_Location);
         tv_category = (TextView) view.findViewById(R.id.tv_category);
+        tv_headerTitle2 = (TextView) view.findViewById(R.id.tv_headerTitle2);
+
         projCategory = "Repair";
 
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -127,24 +142,29 @@ public class fragment2repair extends Fragment {
         marketDatabase = FirebaseDatabase.getInstance().getReference("Listings");
         userID = user.getUid();
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewInstallers);
-        recyclerView.setHasFixedSize(true);
-
-
-            arrProjects = new ArrayList<>();
-            adapterInstallerItem = new AdapterInstallerItem(currentLatLng, arrProjects, getContext());
-
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.setAdapter(adapterInstallerItem);
-
-            onClickToGetKeyProj();
-            getProjByCategory();
-
-
+        generateRecyclerLayout(view);
+        onClickToGetKeyProj();
+        getProjByCategory();
+        dropDownMenuTextView();
         clickListeners();
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void generateRecyclerLayout(View view) {
+        recyclerView = view.findViewById(R.id.recyclerViewInstallers);
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        arrProjects = new ArrayList<>();
+        arrCurrentLocation = new ArrayList<>();
+        adapterInstallerItem = new AdapterInstallerItem(arrCurrentLocation, arrProjects, getContext());
+
+
+        recyclerView.setAdapter(adapterInstallerItem);
+
+        validatePermission();
     }
 
     private void clickListeners() {
@@ -157,6 +177,94 @@ public class fragment2repair extends Fragment {
             }
         });
 
+        auto_complete_txt_sort.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+
+                String category = adapterView.getItemAtPosition(i).toString();
+                tv_headerTitle2.setText(category);
+
+
+                switch (i){
+
+                    case 0:
+                        Collections.sort(arrProjects, nameAZ);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        break;
+
+                    case 1:
+                        Collections.sort(arrProjects, nameAZ);
+                        Collections.reverse(arrProjects);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        break;
+
+                    case 2:
+                        Collections.sort(arrProjects, priceLowestToHighest);
+                        Collections.reverse(arrProjects);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        break;
+
+                    case 3:
+                        Collections.sort(arrProjects, priceLowestToHighest);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        break;
+
+                    case 4:
+                        Collections.sort(arrProjects, ratingsLowestToHighest);
+                        Collections.reverse(arrProjects);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        break;
+
+                    case 5:
+                        Collections.sort(arrProjects, ratingsLowestToHighest);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        break;
+
+                    default:
+                        Collections.sort(arrProjects, nameAZ);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        break;
+
+                }
+
+            }
+
+
+
+
+            public Comparator<Projects> nameAZ = new Comparator<Projects>() {
+                @Override
+                public int compare(Projects projects, Projects t1) {
+                    return projects.getProjName().compareTo(t1.getProjName());
+                }
+            };
+
+            public Comparator<Projects> priceLowestToHighest = new Comparator<Projects>() {
+                @Override
+                public int compare(Projects projects, Projects t1) {
+
+                    String p1 = projects.getPrice();
+                    String p2 = t1.getPrice();
+
+                    return extractInt(p1) - extractInt(p2);
+                }
+
+                int extractInt(String s) {
+                    String num = s.replaceAll("\\D", "");
+                    // return 0 if no digits found
+                    return num.isEmpty() ? 0 : Integer.parseInt(num);
+                }
+            };
+
+            public Comparator<Projects> ratingsLowestToHighest = new Comparator<Projects>() {
+                @Override
+                public int compare(Projects projects, Projects t1) {
+                    return String.valueOf(projects.getRatingAverage()).compareToIgnoreCase(String.valueOf(t1.getRatingAverage()));
+                }
+            };
+
+
+        });
 
     }
 
@@ -269,6 +377,11 @@ public class fragment2repair extends Fragment {
                         double longDouble = location.getLongitude();
                         currentLatLng = new LatLng(latDouble, longDouble);
                         currentlocation1 = location;
+                        CurrentLocation currentLocation = new CurrentLocation(currentLatLng);
+                        arrCurrentLocation.add(currentLocation);
+                        adapterInstallerItem = new AdapterInstallerItem(arrCurrentLocation, arrProjects, getContext());
+                        recyclerView.setAdapter(adapterInstallerItem);
+                        adapterInstallerItem.notifyDataSetChanged();
 
                     } else {
                         // When location result is null
@@ -291,6 +404,11 @@ public class fragment2repair extends Fragment {
                                 double longDouble = location1.getLongitude();
                                 currentLatLng = new LatLng(latDouble, longDouble);
                                 currentlocation1 = location1;
+                                CurrentLocation currentLocation = new CurrentLocation(currentLatLng);
+                                arrCurrentLocation.add(currentLocation);
+                                adapterInstallerItem = new AdapterInstallerItem(arrCurrentLocation, arrProjects, getContext());
+                                recyclerView.setAdapter(adapterInstallerItem);
+                                adapterInstallerItem.notifyDataSetChanged();
 
                             }
                         };
@@ -321,5 +439,12 @@ public class fragment2repair extends Fragment {
             // Display toast
             Toast.makeText(getActivity(), "Permission denied", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void dropDownMenuTextView() {
+
+        adapterSortItems = new ArrayAdapter<CharSequence>(getContext(), R.layout.list_property, sortArrayFix);
+        auto_complete_txt_sort.setAdapter(adapterSortItems);
+
     }
 }

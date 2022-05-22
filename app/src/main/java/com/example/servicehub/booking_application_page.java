@@ -240,7 +240,7 @@ public class booking_application_page extends AppCompatActivity {
                         et_date.setText(dateString  + "/" + dayOfWeek);
                     }
                 }, mYear, mMonth, mDay);
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000+(1000*60*60*24*3));
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() + 1*24*60*60*1000);
                 datePickerDialog.show();
 
             }
@@ -266,6 +266,7 @@ public class booking_application_page extends AppCompatActivity {
                 int style = TimePickerDialog.THEME_HOLO_DARK;
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(booking_application_page.this, style, onTimeSetListener, hour, minute, false);
+                timePickerDialog.updateTime(8,00);
                 timePickerDialog.setTitle("Select Time");
                 timePickerDialog.show();
             }

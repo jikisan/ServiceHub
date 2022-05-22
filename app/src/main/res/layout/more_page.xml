@@ -170,6 +170,20 @@
                 app:layout_constraintStart_toStartOf="@+id/tv_changePassword"
                 app:layout_constraintTop_toBottomOf="@+id/tv_changePassword" />
 
+            <TextView
+                android:id="@+id/tv_myRatings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:drawableLeft="@drawable/my_ratings"
+                android:drawablePadding="16dp"
+                android:gravity="center"
+                android:text="My Ratings"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/tv_myAddress"
+                app:layout_constraintTop_toBottomOf="@+id/tv_myAddress" />
+
 
             <TextView
                 android:id="@+id/textView9"
@@ -182,7 +196,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.034"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_myAddress" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_myRatings" />
 
             <View
                 android:id="@+id/view9"
