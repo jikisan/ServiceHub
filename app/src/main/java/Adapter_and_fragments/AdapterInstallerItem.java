@@ -25,6 +25,8 @@ import com.example.servicehub.CurrentLocation;
 import com.example.servicehub.Projects;
 import com.example.servicehub.R;
 import com.example.servicehub.booking_page;
+import com.example.servicehub.booking_page_for_guest;
+import com.example.servicehub.search_page;
 import com.firebase.client.FirebaseError;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -35,6 +37,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,7 +60,7 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
     private Context context;
     private Location currentlocation;
     private LatLng currentLatLng;
-
+    private FirebaseUser user;
 
     public AdapterInstallerItem() {
     }
@@ -78,7 +82,7 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Projects project = arr.get(position);
         CurrentLocation currentLocation = arrCurrentLocaction.get(0);
-
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         currentLatLng = currentLocation.getCurrentLocation();
         double priceDouble = Double.parseDouble(project.getPrice());
@@ -97,12 +101,12 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
                double kilometers = distance / 1000;
                holder.txtLocationDistance.setText(df.format(kilometers) + " KM");
            } else {
-               holder.txtLocationDistance.setText(distance + " Meters");
+               holder.txtLocationDistance.setText(df.format(distance) + " m");
            }
        }
 
-
-        holder.projName.setText(project.getProjName());
+        String projName = project.getProjName();
+        holder.projName.setText(projName);
         holder.projPrice.setText("" + priceDouble);
         holder.tv_userRatingCount.setText("(" + project.getRatingCount() + ")");
         holder.rb_userRating.setRating((float) project.getRatingAverage());
@@ -118,9 +122,47 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
             @Override
             public void onClick(View view) {
 
+                if(user == null)
+                {
+                    goToNextActivityGuest(projName, view);
+                }
+                else
+                {
+                    goToNextActivity(projName, view);
+                }
+
+
+            }
+
+            private void goToNextActivityGuest(String projName, View view) {
                 Query query = projDatabase
                         .orderByChild("projName")
-                        .equalTo(project.getProjName());
+                        .equalTo(projName);
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+
+                            String projectID = dataSnapshot.getKey().toString();
+                            Intent intentProject = new Intent(view.getContext(), booking_page_for_guest.class);
+                            intentProject.putExtra("Project ID", projectID);
+                            view.getContext().startActivity(intentProject);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            private void goToNextActivity(String projName, View view) {
+                Query query = projDatabase
+                        .orderByChild("projName")
+                        .equalTo(projName);
 
                 query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

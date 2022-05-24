@@ -75,13 +75,7 @@ public class tech_dashboard extends AppCompatActivity {
             }
         }); // end of add project button
 
-        iv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(tech_dashboard.this, switch_account_page.class);
-                startActivity(intent);
-            }
-        });
+
     }
 
     private void setRef() {
@@ -91,7 +85,6 @@ public class tech_dashboard extends AppCompatActivity {
         iv_homeBtn = findViewById(R.id.iv_homeBtn);
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
-        iv_back = findViewById(R.id.tv_back);
         iv_userPic = findViewById(R.id.iv_userPic);
 
 
