@@ -13,7 +13,7 @@
             android:id="@+id/tv_category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:textColor="@color/black"
             android:textSize="24sp"
@@ -25,12 +25,12 @@
             android:id="@+id/linearLayout3"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:background="@color/bg_color"
             android:orientation="vertical"
-            app:layout_constraintEnd_toStartOf="@+id/iv_Location"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_category">
 
             <com.github.florent37.expansionpanel.ExpansionHeader
                 android:id="@+id/expanshionHeader2"
@@ -109,21 +109,46 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/iv_Location"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+
+        <LinearLayout
+            android:id="@+id/linearLayout10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:src="@drawable/map"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_category">
+
+            <ImageView
+                android:id="@+id/iv_Location"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/map"
+                app:layout_constraintBottom_toBottomOf="@+id/textView67"
+                app:layout_constraintEnd_toStartOf="@+id/textView67"
+                app:layout_constraintTop_toTopOf="@+id/textView67" />
+
+            <TextView
+                android:id="@+id/textView67"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="View in map"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewInstallers"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

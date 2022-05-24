@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -129,6 +130,27 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/distanceLayout3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/distanceLayout"
+                android:layout_alignStart="@+id/distanceLayou2"
+                android:layout_alignEnd="@+id/distanceLayou2"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tap to view service"
+                    android:textColor="@color/black"
+                    android:gravity="center"/>
+
+
+            </LinearLayout>
 
         </RelativeLayout>
 
