@@ -209,7 +209,6 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
 
             projectImage = itemView.findViewById(R.id.iv_projectPhoto);
             projName = itemView.findViewById(R.id.tv_projName);
-            projRatings = itemView.findViewById(R.id.tv_projRatings);
             projPrice = itemView.findViewById(R.id.tv_price);
             tv_userRatingCount = itemView.findViewById(R.id.tv_userRatingCount);
             txtLocationDistance = itemView.findViewById(R.id.txtLocationDistance);

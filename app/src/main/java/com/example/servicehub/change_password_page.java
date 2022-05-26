@@ -48,8 +48,6 @@ public class change_password_page extends AppCompatActivity {
         clickListeners();
     }
 
-
-
     private void clickListeners() {
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +64,7 @@ public class change_password_page extends AppCompatActivity {
 
 
                 AlertDialog.Builder pwResetDialog = new AlertDialog.Builder(view.getContext());
-                pwResetDialog.setTitle("Reset Password?");
+                pwResetDialog.setTitle("Forgot Password?");
                 pwResetDialog.setMessage("Please enter your email to reset password.");
                 pwResetDialog.setView(resetMail);
 

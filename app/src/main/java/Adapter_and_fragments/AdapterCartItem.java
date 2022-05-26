@@ -155,7 +155,6 @@ public class AdapterCartItem extends RecyclerView.Adapter<AdapterCartItem.ItemVi
                 @Override
                 public void onClick(View view) {
 
-
                     if(onItemClickListener != null){
                         int position = getAdapterPosition();
                         if(position != RecyclerView.NO_POSITION){

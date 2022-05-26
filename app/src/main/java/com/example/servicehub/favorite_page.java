@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +40,8 @@ public class favorite_page extends AppCompatActivity {
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, item3;
     private RecyclerView recyclerView_favorites;
-    private TextView tv_back;
+    private TextView tv_back, tv_userRatingCount;
+    private RatingBar rb_userRating;
     private ProgressBar progressBar;
 
     @Override
@@ -206,6 +208,9 @@ public class favorite_page extends AppCompatActivity {
         recyclerView_favorites = findViewById(R.id.recyclerView_favorites);
 
         tv_back = findViewById(R.id.tv_back);
+        tv_userRatingCount = findViewById(R.id.tv_userRatingCount);
+
+        rb_userRating = findViewById(R.id.rb_userRating);
 
         progressBar = findViewById(R.id.progressBar);
 

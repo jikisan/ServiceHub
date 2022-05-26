@@ -23,7 +23,8 @@ public class Tech_application {
 
     public Tech_application(String firstName, String lastName, String validIdName, String validIdUrl, String selfieName,
                             String selfieUrl, String proofOfWorkName, String proofOfWorkUrl, String proofOfEquipmentName,
-                            String proofOfEquipmentUrl, String phoneNumber, String userID, boolean isApproved, boolean isPending)
+                            String proofOfEquipmentUrl, String phoneNumber, String userID, boolean isApproved,
+                            boolean isPending)
     {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -33,13 +34,13 @@ public class Tech_application {
         this.selfieUrl = selfieUrl;
         this.proofOfWorkName = proofOfWorkName;
         this.proofOfWorkUrl = proofOfWorkUrl;
+        this.proofOfEquipmentName = proofOfEquipmentName;
+        this.proofOfEquipmentUrl = proofOfEquipmentUrl;
         this.phoneNumber = phoneNumber;
         this.userID = userID;
         this.isApproved = isApproved;
         this.isPending = isPending;
     }
-
-
 
     public String getFirstName() {
         return firstName;
