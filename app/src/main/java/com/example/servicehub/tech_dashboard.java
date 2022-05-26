@@ -30,7 +30,7 @@ import Adapter_and_fragments.fragmentAdapter;
 public class tech_dashboard extends AppCompatActivity {
 
     private FirebaseUser user;
-    private DatabaseReference userDatabase;
+    private DatabaseReference userDatabase, techDatabase;
     private String userID;
     private TabLayout tabLayout;
     private ViewPager2 vp_viewPager2;
@@ -38,7 +38,7 @@ public class tech_dashboard extends AppCompatActivity {
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_editProject, iv_back, iv_userPic;
-    private TextView tv_bannerName;
+    private TextView tv_bannerName, tv_back;
     private Button btn_addProject;
     private String imageUriText;
     private Uri imageUri;
@@ -52,6 +52,7 @@ public class tech_dashboard extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userDatabase = FirebaseDatabase.getInstance().getReference("Users");
+        techDatabase = FirebaseDatabase.getInstance().getReference("Technician Applicants");
         userID = user.getUid();
 
 
@@ -66,7 +67,6 @@ public class tech_dashboard extends AppCompatActivity {
 
     private void clickListener() {
 
-
         btn_addProject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +74,13 @@ public class tech_dashboard extends AppCompatActivity {
                 startActivity(intentAddProject);
             }
         }); // end of add project button
+
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
 
     }
@@ -89,6 +96,7 @@ public class tech_dashboard extends AppCompatActivity {
 
 
         tv_bannerName = findViewById(R.id.tv_bannerName);
+        tv_back = findViewById(R.id.tv_back);
 
         btn_addProject = findViewById(R.id.btn_addProject);
 
@@ -103,8 +111,7 @@ public class tech_dashboard extends AppCompatActivity {
 
     private void generateTabLayout() {
 
-
-        tabLayout.addTab(tabLayout.newTab().setText("Active Projects"));
+        tabLayout.addTab(tabLayout.newTab().setText("My Projects"));
         tabLayout.addTab(tabLayout.newTab().setText("Active Bookings"));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -138,15 +145,15 @@ public class tech_dashboard extends AppCompatActivity {
 
     private void getTechInfo() {
 
-        userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+        techDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Users userProfile = snapshot.getValue(Users.class);
+                Tech_application userProfile = snapshot.getValue(Tech_application.class);
 
                 if(userProfile != null){
                     String sp_fName = userProfile.firstName;
                     String sp_lName = userProfile.lastName;
-                    String sp_imageUrl = userProfile.imageUrl;
+                    String sp_imageUrl = userProfile.selfieUrl;
 
                     String firstName = sp_fName.substring(0, 1).toUpperCase()+ sp_fName.substring(1).toLowerCase();
                     String lastName = sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();

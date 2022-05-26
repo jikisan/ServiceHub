@@ -507,8 +507,8 @@
                     android:id="@+id/expanshionHeader41"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:expansion_headerIndicator="@id/headerIndicator4"
-                    app:expansion_layout="@id/expansionLayout4"
+                    app:expansion_headerIndicator="@id/headerIndicator41"
+                    app:expansion_layout="@id/expansionLayout41"
                     app:expansion_toggleOnClick="true">
 
                     <RelativeLayout
@@ -625,7 +625,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:text="Step 6: Please verify phone number"
+                            android:text="Step 6: Please enter phone number"
                             android:textColor="#3E3E3E"
                             android:textSize="16sp" />
 

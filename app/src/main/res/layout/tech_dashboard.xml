@@ -62,8 +62,10 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:src="@color/lighter_light_blue"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -86,6 +88,8 @@
                 android:layout_marginTop="4dp"
                 android:numStars="5"
                 android:theme="@style/RatingBar"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_userPic"
                 app:layout_constraintStart_toStartOf="@+id/tv_bannerName"
                 app:layout_constraintTop_toBottomOf="@+id/tv_bannerName" />
 
@@ -96,54 +100,55 @@
                 android:layout_marginStart="4dp"
                 android:text="(0)"
                 android:textSize="13sp"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/rb_userRating"
                 app:layout_constraintStart_toEndOf="@+id/rb_userRating" />
 
-            <TextView
-                android:id="@+id/textView65"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Available Funds"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_userRating" />
+            <!--            <TextView-->
+            <!--                android:id="@+id/textView65"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="16dp"-->
+            <!--                android:text="Available Funds"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/tv_userRating" />-->
 
-            <TextView
-                android:id="@+id/textView66"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="10,000.00"
-                android:textColor="@color/black"
-                android:textSize="34sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView65" />
+            <!--            <TextView-->
+            <!--                android:id="@+id/textView66"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="8dp"-->
+            <!--                android:text="10,000.00"-->
+            <!--                android:textColor="@color/black"-->
+            <!--                android:textSize="34sp"-->
+            <!--                android:textStyle="bold"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/textView65" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/rounded"
-                android:backgroundTint="@color/light_blue"
-                android:drawableRight="@drawable/add"
-                android:drawablePadding="8dp"
-                android:drawableTint="@color/white"
-                android:gravity="center"
-                android:paddingLeft="16dp"
-                android:paddingTop="8dp"
-                android:paddingRight="8dp"
-                android:paddingBottom="8dp"
-                android:text="Add Funds"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/textView66"
-                app:layout_constraintStart_toStartOf="@+id/textView66"
-                app:layout_constraintTop_toBottomOf="@+id/textView66" />
+            <!--            <TextView-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="16dp"-->
+            <!--                android:layout_marginBottom="8dp"-->
+            <!--                android:background="@drawable/rounded"-->
+            <!--                android:backgroundTint="@color/light_blue"-->
+            <!--                android:drawableRight="@drawable/add"-->
+            <!--                android:drawablePadding="8dp"-->
+            <!--                android:drawableTint="@color/white"-->
+            <!--                android:gravity="center"-->
+            <!--                android:paddingLeft="16dp"-->
+            <!--                android:paddingTop="8dp"-->
+            <!--                android:paddingRight="8dp"-->
+            <!--                android:paddingBottom="8dp"-->
+            <!--                android:text="Add Funds"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="12sp"-->
+            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--                app:layout_constraintEnd_toEndOf="@+id/textView66"-->
+            <!--                app:layout_constraintStart_toStartOf="@+id/textView66"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/textView66" />-->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -153,7 +158,7 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:background="@color/bg_color"
         app:layout_constraintEnd_toEndOf="parent"
@@ -167,6 +172,7 @@
         android:id="@+id/vp_viewPager2"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:paddingBottom="60dp"
         app:layout_constraintBottom_toTopOf="@+id/cardViewBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

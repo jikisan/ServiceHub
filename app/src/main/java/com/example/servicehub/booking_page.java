@@ -50,6 +50,8 @@ public class booking_page extends AppCompatActivity {
     private ImageView iv_projectImage;
     private ImageView iv_message;
     private ImageView iv_favorite;
+    private ImageView iv_techPhoto;
+    private TextView tv_techName;
     private TextView tv_projName;
     private TextView tv_projPrice;
     private TextView tv_back;
@@ -146,6 +148,15 @@ public class booking_page extends AppCompatActivity {
             }
         });
 
+        tv_techName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(booking_page.this, view_tech.class);
+                intent.putExtra("tech id", techID);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void addToFavorite() {
@@ -200,7 +211,7 @@ public class booking_page extends AppCompatActivity {
                                         .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
                                             @Override
                                             public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                Intent intent = new Intent(booking_page.this, cart_page.class);
+                                                Intent intent = new Intent(booking_page.this, favorite_page.class);
                                                 startActivity(intent);
                                             }
                                         })
@@ -229,11 +240,13 @@ public class booking_page extends AppCompatActivity {
 
         iv_projectImage = findViewById(R.id.iv_projPhotoSummary);
         iv_message = findViewById(R.id.iv_message);
+        iv_techPhoto = findViewById(R.id.iv_techPhoto);
         ImageView iv_cart = findViewById(R.id.iv_cart);
 
         TextView tv_projRating = findViewById(R.id.tv_projRating);
         iv_favorite = findViewById(R.id.iv_favorite);
 
+        tv_techName = findViewById(R.id.tv_techName);
         tv_projRating = findViewById(R.id.tv_projRating);
         tv_projName = findViewById(R.id.tv_projName);
         tv_projPrice = findViewById(R.id.tv_projPrice);
@@ -400,6 +413,9 @@ public class booking_page extends AppCompatActivity {
                             chip_Sun.setClickable(false);
                         }
 
+
+                        String sp_userId = projectData.userID;
+                        generateTechData(sp_userId);
                         progressBar.setVisibility(View.GONE);
                     }catch (Exception e){
                         e.printStackTrace();
@@ -417,6 +433,38 @@ public class booking_page extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(booking_page.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void generateTechData(String sp_userId) {
+        DatabaseReference techDatabase = FirebaseDatabase.getInstance().getReference("Technician Applicants");
+
+        techDatabase.child(sp_userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists())
+                {
+                    Tech_application tech = snapshot.getValue(Tech_application.class);
+
+                    String sp_imageUrl = tech.selfieUrl;
+                    String sp_fname = tech.firstName;
+                    String sp_lname = tech.lastName;
+                    String techName = sp_fname + " " + sp_lname;
+
+                    Picasso.get()
+                            .load(sp_imageUrl)
+                            .into(iv_techPhoto);
+
+                    tv_techName.setText(techName);
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

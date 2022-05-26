@@ -163,7 +163,6 @@ public class seller_application_page extends AppCompatActivity {
         tv_back = findViewById(R.id.tv_back);
 
         btn_submit = findViewById(R.id.btn_submit);
-        btn_requestCode = findViewById(R.id.btn_requestCode);
 
         et_firstName = findViewById(R.id.et_firstName);
         et_lastName = findViewById(R.id.et_lastName);

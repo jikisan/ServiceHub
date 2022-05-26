@@ -223,6 +223,7 @@ public class edit_profile_page extends AppCompatActivity {
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Deleting account...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         AuthCredential credential = EmailAuthProvider
@@ -320,6 +321,7 @@ public class edit_profile_page extends AppCompatActivity {
     private void updateProject() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Updating Profile...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         StorageReference fileReference = userStorage.child(imageUri.getLastPathSegment());
@@ -384,6 +386,7 @@ public class edit_profile_page extends AppCompatActivity {
     private void updateProjectNoImage() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Updating Profile...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         String sp_fname = tv_fname.getText().toString();
@@ -429,7 +432,7 @@ public class edit_profile_page extends AppCompatActivity {
     private boolean isValidPassword(String password) {
         String regex = "^(?=.*[0-9])"
                 + "(?=.*[a-z])(?=.*[A-Z])"
-                + "(?=.*[@#$%^&+=?!])"
+                + "(?=.*[@#$%^&+=?!#$%&()*+,./])"
                 + "(?=\\S+$).{8,15}$";
 
         Pattern p = Pattern.compile(regex);

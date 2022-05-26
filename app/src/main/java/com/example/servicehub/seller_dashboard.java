@@ -29,7 +29,7 @@ import Adapter_and_fragments.fragmentAdapterListings;
 public class seller_dashboard extends AppCompatActivity {
 
     private FirebaseUser user;
-    private DatabaseReference userDatabase;
+    private DatabaseReference userDatabase, sellerDatabase;
     private String userID;
     private TabLayout tabLayout;
     private ViewPager2 vp_viewPager2;
@@ -37,7 +37,7 @@ public class seller_dashboard extends AppCompatActivity {
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn, iv_back, iv_userPic;
-    private TextView tv_bannerName;
+    private TextView tv_bannerName, tv_back;
     private Button btn_addListing;
     private ProgressBar progressBar;
     private int currentTab;
@@ -49,6 +49,7 @@ public class seller_dashboard extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userDatabase = FirebaseDatabase.getInstance().getReference("Users");
+        sellerDatabase = FirebaseDatabase.getInstance().getReference("Seller Applicants");
         userID = user.getUid();
 
         setRef();
@@ -70,6 +71,7 @@ public class seller_dashboard extends AppCompatActivity {
         btn_addListing = findViewById(R.id.btn_addListing);
 
         tv_bannerName = findViewById(R.id.tv_bannerName);
+        tv_back = findViewById(R.id.tv_back);
 
         tabLayout = findViewById(R.id.tab_layout);
 
@@ -121,15 +123,15 @@ public class seller_dashboard extends AppCompatActivity {
     private void getSellerInfo() {
 
 
-        userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+        sellerDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Users userProfile = snapshot.getValue(Users.class);
+                Seller_application userProfile = snapshot.getValue(Seller_application.class);
 
                 if(userProfile != null){
                     String sp_fName = userProfile.firstName;
                     String sp_lName = userProfile.lastName;
-                    String sp_imageUrl = userProfile.imageUrl;
+                    String sp_imageUrl = userProfile.selfieUrl;
 
                     String firstName = sp_fName.substring(0, 1).toUpperCase()+ sp_fName.substring(1).toLowerCase();
                     String lastName = sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();
@@ -163,6 +165,13 @@ public class seller_dashboard extends AppCompatActivity {
                 startActivity(intentAddListing);
             }
         }); // end of add listing button
+
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
     }
 

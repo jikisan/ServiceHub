@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,10 +58,8 @@ public class AdapterFavoriteItem extends RecyclerView.Adapter<AdapterFavoriteIte
         Favorites favorites = arr.get(position);
         holder.projName.setText(favorites.getProjName());
         holder.projPrice.setText(favorites.getProjPrice());
-        holder.projRatings.setText(favorites.getProjRatings());
 
         imageUriText = favorites.getProjImageUrl();
-
 
         Picasso.get()
                 .load(imageUriText)
@@ -129,17 +128,19 @@ public class AdapterFavoriteItem extends RecyclerView.Adapter<AdapterFavoriteIte
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        TextView projName, projRatings, projPrice;
+        TextView projName, tv_userRatingCount, projPrice;
         ImageView projectImage, projDeleteBtn;
+        ProgressBar rb_userRating;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
             projectImage = itemView.findViewById(R.id.iv_projectPhoto);
             projName = itemView.findViewById(R.id.tv_projName);
-            projRatings = itemView.findViewById(R.id.tv_projRatings);
             projPrice = itemView.findViewById(R.id.tv_price);
             projDeleteBtn = itemView.findViewById(R.id.iv_deleteBtn);
+            tv_userRatingCount = itemView.findViewById(R.id.tv_userRatingCount);
+            rb_userRating = itemView.findViewById(R.id.rb_userRating);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

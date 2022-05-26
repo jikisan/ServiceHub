@@ -214,7 +214,6 @@ public class tech_application_page extends AppCompatActivity{
         tv_proofOfEquipment = findViewById(R.id.tv_proofOfEquipment);
 
         btn_submit = findViewById(R.id.btn_submit);
-        btn_requestCode = findViewById(R.id.btn_requestCode);
         iv_proofOfWork = findViewById(R.id.iv_proofOfWork);
 
         et_firstName = findViewById(R.id.et_firstName);
@@ -237,8 +236,6 @@ public class tech_application_page extends AppCompatActivity{
                 try {
 
                     Picasso.get().load(validIdUri)
-                            .placeholder(R.drawable.logo)
-                            .error(R.drawable.logo)
                             .into(iv_validIdImage);
 
                 } catch (Exception e) {
@@ -355,7 +352,7 @@ public class tech_application_page extends AppCompatActivity{
             Toast.makeText(this, "Proof of Equipment is required", Toast.LENGTH_SHORT).show();
         }
         else if(TextUtils.isEmpty(phoneEditText.getText().toString())){
-            Toast.makeText(this, "Please verify Phone Number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter Phone Number", Toast.LENGTH_SHORT).show();
 
         }
         else if(sp_phone.length() < 10){
@@ -373,7 +370,8 @@ public class tech_application_page extends AppCompatActivity{
                     .setIcon(R.drawable.logo)
                     .setTitle("ServiceHUB")
                     .setMessage("Please make sure all information entered are correct. " +
-                            "\n\nWarning: Any information mismatch with support documents " +
+                            "\n\nWarning: Any information mismatch " +
+                            "\nwith supporting documents " +
                             "\ncan result to account disapproval."
                             + "\n\nFull Name: " + sp_fullName
                             + "\nPhone number: 0" + phoneEditText.getText().toString() + "\n")
@@ -396,7 +394,6 @@ public class tech_application_page extends AppCompatActivity{
 
 
     }
-
 
     private void uploadDataToFireBaseStorage(Uri validIdUri, Uri selfieUri, Uri pdfUri) {
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -495,7 +492,7 @@ public class tech_application_page extends AppCompatActivity{
 
     }
 
-    private void addingDataToRealtimeDB(String poeURL, String validIdUrl, String selfieUrl, String powURL, ProgressDialog progressDialog) {
+    private void addingDataToRealtimeDB(String validIdUrl, String selfieUrl, String powURL, String poeURL, ProgressDialog progressDialog) {
 
         String sp_fName = et_firstName.getText().toString();
         String sp_lName = et_lastName.getText().toString();
@@ -508,7 +505,8 @@ public class tech_application_page extends AppCompatActivity{
         String PoeName = proofOfEquipmentUri.getLastPathSegment();
         String phoneNumber = "0" + phoneEditText.getText().toString();
 
-        Tech_application tech_application = new Tech_application(firstName, lastName, validIDName, validIdUrl, selfieImageName, selfieUrl,
+        Tech_application tech_application = new Tech_application(firstName, lastName, validIDName,
+                validIdUrl, selfieImageName, selfieUrl,
                 PowName, powURL, PoeName, poeURL, phoneNumber, userID, isApprove, isPending);
 
         techApplicationDatabase.setValue(tech_application).addOnCompleteListener(new OnCompleteListener<Void>() {

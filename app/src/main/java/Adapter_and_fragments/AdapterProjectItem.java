@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,7 +39,8 @@ public class AdapterProjectItem extends RecyclerView.Adapter<AdapterProjectItem.
 
         Projects project = arr.get(position);
         holder.projName.setText(project.getProjName());
-        holder.ratings.setText(project.getRatings());
+        holder.tv_userRatingCount.setText("(" + project.getRatingCount() + ")");
+        holder.rb_userRating.setRating((float) project.getRatingAverage());
 
         imageUriText = project.getImageUrl();
         Picasso.get().load(project.getImageUrl())
@@ -63,8 +65,9 @@ public class AdapterProjectItem extends RecyclerView.Adapter<AdapterProjectItem.
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
 
-        TextView projName, ratings;
+        TextView projName, tv_userRatingCount;
         ImageView projectImage;
+        RatingBar rb_userRating;
 
 
         public ItemViewHolder(@NonNull View itemView) {
@@ -72,7 +75,8 @@ public class AdapterProjectItem extends RecyclerView.Adapter<AdapterProjectItem.
 
             projectImage = itemView.findViewById(R.id.iv_projectPhoto);
             projName = itemView.findViewById(R.id.tv_projName);
-            ratings = itemView.findViewById(R.id.tv_listingRatings);
+            tv_userRatingCount = itemView.findViewById(R.id.tv_userRatingCount);
+            rb_userRating = itemView.findViewById(R.id.rb_userRating);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

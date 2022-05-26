@@ -57,6 +57,7 @@ public class sign_up_page extends AppCompatActivity {
     }
 
     private void clickListener() {
+
         tv_terms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,7 +117,6 @@ public class sign_up_page extends AppCompatActivity {
         String imageUrl = "";
         String ratings = "0";
 
-
         if (TextUtils.isEmpty(firstName))
         {
             et_firstName.setError("This field is required");
@@ -175,6 +175,7 @@ public class sign_up_page extends AppCompatActivity {
         {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Creating account");
+            progressDialog.setCancelable(false);
             progressDialog.show();
 
             fAuth.createUserWithEmailAndPassword(username, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -198,7 +199,7 @@ public class sign_up_page extends AppCompatActivity {
                                             progressDialog.dismiss();
                                             fAuth.signOut();
                                             startActivity(new Intent(getApplicationContext(), login_page.class));
-                                            Toast.makeText(sign_up_page.this, "User Created", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(sign_up_page.this, "Account Created", Toast.LENGTH_LONG).show();
 
                                         } else {
                                             Toast.makeText(sign_up_page.this, "Creation Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -222,10 +223,6 @@ public class sign_up_page extends AppCompatActivity {
 
     private static boolean isValidPassword(String password) {
 
-//        String regex = "^(?=.*[0-9])"
-//                + "(?=.*[a-z])(?=.*[A-Z])"
-//                + "(?=.*:;<=>?@!\"#$%&()*+,-./)"
-//                + "(?=\\S+$).{8,15}$";
 
         String regex = "^(?=.*[0-9])"
                 + "(?=.*[a-z])(?=.*[A-Z])"
