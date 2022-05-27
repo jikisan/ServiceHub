@@ -271,7 +271,6 @@ public class fragment1Installer extends Fragment {
 
         });
 
-
     }
 
     private void getProjByCategory() {

@@ -67,6 +67,7 @@ import dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 
 public class search_page extends AppCompatActivity {
 
+    private View linearLayout10;
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn;
     private TextView tv_back, tv_headerTitle, tv_headerTitle2;
@@ -262,6 +263,15 @@ public class search_page extends AppCompatActivity {
                     goToNextActivity(position);
                 }
 
+            }
+        });
+
+        linearLayout10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentProject = new Intent(search_page.this, view_in_map.class);
+                intentProject.putExtra("Category", "all");
+                startActivity(intentProject);
             }
         });
 
@@ -496,6 +506,8 @@ public class search_page extends AppCompatActivity {
 
         auto_complete_txt = findViewById(R.id.auto_complete_txt);
         auto_complete_txt_sort = findViewById(R.id.auto_complete_txt_sort);
+
+        linearLayout10 = findViewById(R.id.linearLayout10);
 
     }
 

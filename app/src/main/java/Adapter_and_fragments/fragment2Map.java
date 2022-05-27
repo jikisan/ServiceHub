@@ -238,6 +238,10 @@ public class fragment2Map extends Fragment implements GoogleMap.OnInfoWindowClic
                 {
                     generateOrderFromFireBase(googleMap);
                 }
+                else if(projCategory.equals("all"))
+                {
+                    generateAllProjFromFirebase(googleMap);
+                }
                 else
                 {
                     generateProjDataFromFirebase(googleMap);
@@ -247,6 +251,7 @@ public class fragment2Map extends Fragment implements GoogleMap.OnInfoWindowClic
             }
         });
     }
+
 
     private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
         // below line is use to generate a drawable.
@@ -423,6 +428,66 @@ public class fragment2Map extends Fragment implements GoogleMap.OnInfoWindowClic
             }
         });
 
+    }
+
+    private void generateAllProjFromFirebase(GoogleMap googleMap) {
+
+        DatabaseReference projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
+        projDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (snapshot.exists()){
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren())
+                    {
+                        Projects projects = dataSnapshot.getValue(Projects.class);
+                        String projId = dataSnapshot.getKey();
+
+                        String imageUrl = projects.getImageUrl().toString();
+                        String projName = projects.getProjName().toString().toUpperCase(Locale.ROOT);
+
+
+                        String latString = projects.getLatitude();
+                        String longString = projects.getLongitude();
+                        latitude = Double.parseDouble(latString);
+                        longitude = Double.parseDouble(longString);
+                        location = new LatLng(latitude, longitude);
+
+                        arrLoc.add(location);
+                        arrName.add(projName);
+                        arrKeyID.add(projId);
+
+                        BitmapDrawable bitmapdraw=(BitmapDrawable)getResources().getDrawable(R.drawable.custom_marker);
+                        Bitmap b=bitmapdraw.getBitmap();
+                        Bitmap smallMarker = Bitmap.createScaledBitmap(b, 84, 84, false);
+
+
+                        googleMap.setInfoWindowAdapter(adapterInfoWindow);
+
+                        for (int i = 0; i < arrLoc.size(); i++) {
+
+                            // below line is use to add marker to each location of our array list.
+                            googleMap.addMarker(new MarkerOptions()
+                                    .position(arrLoc.get(i))
+                                    .icon(BitmapDescriptorFactory.fromBitmap(smallMarker))
+                                    .snippet(arrKeyID.get(i))
+                                    .title(arrName.get(i))
+
+                            );
+
+                            googleMap.setOnInfoWindowClickListener(fragment2Map.this);
+
+                        }
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
