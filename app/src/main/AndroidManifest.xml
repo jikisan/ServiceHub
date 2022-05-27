@@ -19,6 +19,12 @@
         android:theme="@style/Theme.ServiceHub"
         tools:replace="android:icon">
         <activity
+            android:name=".add_photos"
+            android:exported="false" />
+        <activity
+            android:name=".photo_viewer"
+            android:exported="false" />
+        <activity
             android:name=".view_tech"
             android:exported="false" />
         <activity

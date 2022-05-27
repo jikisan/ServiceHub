@@ -70,7 +70,7 @@ public class edit_project_page extends AppCompatActivity {
             iv_moreBtn, iv_projectImage, btn_delete, iv_pickAddress;
     private EditText et_projectName,  et_price, et_specialInstruction;
     private Button btn_pickStartTime, btn_pickEndTime, btn_update;
-    private TextView tv_uploadPhoto, tv_startTime, tv_endTime, tv_address, tv_back, tv_percentageFee, tv_totalPrice;
+    private TextView tv_uploadPhoto, tv_startTime, tv_endTime, tv_address, tv_back, tv_percentageFee, tv_totalPrice, tv_addPhotos;
     private Chip chip_Mon, chip_Tue, chip_Wed, chip_Thu, chip_Fri, chip_Sat, chip_Sun;
     private ChipGroup chipGroup;
     private String imageUriText, projectIdFromIntent, latLng, latString, longString,  tempImageName, category;
@@ -338,6 +338,15 @@ public class edit_project_page extends AppCompatActivity {
             }
         });
 
+        tv_addPhotos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(edit_project_page.this, add_photos.class);
+                intent.putExtra("Project ID", projectIdFromIntent);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void deleteProj() {
@@ -465,6 +474,7 @@ public class edit_project_page extends AppCompatActivity {
         tv_back = findViewById(R.id.tv_back);
         tv_percentageFee = findViewById(R.id.tv_percentageFee);
         tv_totalPrice = findViewById(R.id.tv_totalPrice);
+        tv_addPhotos = findViewById(R.id.tv_addPhotos);
 
         btn_update = findViewById(R.id.btn_update);
         btn_delete = findViewById(R.id.btn_delete);
@@ -911,26 +921,4 @@ public class edit_project_page extends AppCompatActivity {
         return res1 && res2;
     }
 
-    // place picker
-//    private void placePicker() {
-//
-//        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-//
-//
-//        try
-//        {
-//            startActivityForResult (builder.build ( edit_project_page.this)
-//                    , PLACE_PICKER_REQUEST);
-//        }
-//
-//        catch (GooglePlayServicesRepairableException e)
-//        {
-//            e.printStackTrace ();
-//        }
-//
-//        catch (GooglePlayServicesNotAvailableException e)
-//        {
-//            e.printStackTrace ();
-//        }
-//    }
 }
