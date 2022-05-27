@@ -448,7 +448,7 @@ public class booking_application_page extends AppCompatActivity {
                 extras.putString("unit type",acUnitType);
                 extras.putString("booking date", et_date.getText().toString());
                 extras.putString("booking time", et_time.getText().toString());
-                extras.putString("contact number", "+63" + et_phoneNum.getText().toString());
+                extras.putString("contact number", "0" + et_phoneNum.getText().toString());
                 extras.putString("add info", et_addInfo.getText().toString());
                 intent.putExtras(extras);
                 startActivity(intent);

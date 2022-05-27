@@ -39,7 +39,6 @@ public class AdapterListingsItem extends RecyclerView.Adapter<AdapterListingsIte
 
         Listings listings = arr.get(position);
         holder.listName.setText(listings.getListName());
-        holder.listRatings.setText(listings.getRatings());
 
         imageUriText = listings.getImageUrl();
 
@@ -64,7 +63,7 @@ public class AdapterListingsItem extends RecyclerView.Adapter<AdapterListingsIte
 
     class ItemViewHolder extends RecyclerView.ViewHolder{
 
-        TextView listName, listRatings;
+        TextView listName;
         ImageView listImage;
 
         public ItemViewHolder(@NonNull View itemView) {
@@ -72,7 +71,6 @@ public class AdapterListingsItem extends RecyclerView.Adapter<AdapterListingsIte
 
             listImage = itemView.findViewById(R.id.iv_projectPhoto);
             listName = itemView.findViewById(R.id.tv_projName);
-            listRatings = itemView.findViewById(R.id.tv_listingRatings);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
