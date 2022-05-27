@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -38,6 +39,7 @@ public class place_order_page extends AppCompatActivity {
     private ImageView iv_projectImage,  iv_message, iv_cart;
     private TextView tv_projName, tv_projRating, tv_projPrice, tv_back, tv_projDesc, tv_quantity;
     private Button btn_orderNow;
+    private boolean isExist = false;
 
     private FirebaseUser user;
     private DatabaseReference listingDatabase, cartDatabase;
@@ -112,9 +114,11 @@ public class place_order_page extends AppCompatActivity {
 
     private void addToCart() {
 
-        cartDatabase.orderByChild("listName")
-                .startAt(tempListName).endAt(tempListName)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query = cartDatabase
+                .orderByChild("custID")
+                .equalTo(userID);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists())
@@ -122,7 +126,8 @@ public class place_order_page extends AppCompatActivity {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
                         Cart c = dataSnapshot.getValue(Cart.class);
-                        if( c.getCustID().equals(userID) )
+
+                        if( c.getListName().equals(tempListName) )
                         {
                             new SweetAlertDialog(place_order_page.this, SweetAlertDialog.ERROR_TYPE)
                                     .setTitleText("Item is already in Cart")
@@ -136,41 +141,22 @@ public class place_order_page extends AppCompatActivity {
                                     })
                                     .setContentText("Go to cart?")
                                     .show();
+
+                            isExist = true;
+                            break;
                         }
+                    }
+
+                    if(!isExist)
+                    {
+                        addListToCart();
                     }
 
                 }
                 else
                 {
 
-                    Date currentTime = Calendar.getInstance().getTime();
-                    String cartCreated = currentTime.toString();
-                    Cart cart = new Cart(userID, listingIdFromIntent, cartCreated, imageUrlText, tempListName, listPrice, listRatings);
-
-                    cartDatabase.push().setValue(cart).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-
-                                new SweetAlertDialog(place_order_page.this, SweetAlertDialog.SUCCESS_TYPE)
-                                        .setTitleText("Item is added to Cart!")
-                                        .setCancelText("Back")
-                                        .setContentText("Go to Cart?")
-                                        .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
-                                            @Override
-                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                Intent intent = new Intent(place_order_page.this, cart_page.class);
-                                                startActivity(intent);
-                                            }
-                                        })
-                                        .show();
-
-
-                            } else {
-                                Toast.makeText(place_order_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                   addListToCart();
                 }
             }
 
@@ -180,6 +166,38 @@ public class place_order_page extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void addListToCart() {
+        Date currentTime = Calendar.getInstance().getTime();
+        String cartCreated = currentTime.toString();
+        Cart cart = new Cart(userID, listingIdFromIntent, cartCreated, imageUrlText, tempListName, listPrice, listRatings);
+
+        cartDatabase.push().setValue(cart).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+
+                    new SweetAlertDialog(place_order_page.this, SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText("Item is added to Cart!")
+                            .setCancelText("Back")
+                            .setContentText("Go to Cart?")
+                            .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    Intent intent = new Intent(place_order_page.this, cart_page.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .show();
+
+
+                } else {
+                    Toast.makeText(place_order_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
     }
 

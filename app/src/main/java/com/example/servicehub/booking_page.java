@@ -59,6 +59,7 @@ public class booking_page extends AppCompatActivity {
     private TextView tv_timeAvailable;
     private TextView tv_userRating;
     private Button btn_bookNow;
+    private boolean isExist = false;
     private RecyclerView recyclerViewRatings;
 
     private DatabaseReference projectDatabase;
@@ -161,79 +162,96 @@ public class booking_page extends AppCompatActivity {
 
     private void addToFavorite() {
 
-        favoriteDatabase
-                .orderByChild("projName")
-                .startAt(tempProjName).endAt(tempProjName)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query = favoriteDatabase
+                .orderByChild("custID")
+                .equalTo(userID);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot)
+            {
                 if(snapshot.exists())
                 {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
                         Favorites f = dataSnapshot.getValue(Favorites.class);
-                        if( f.getCustID().equals(userID) )
+
+                        if(f.getProjName().equals(tempProjName))
                         {
-                            new SweetAlertDialog(booking_page.this, SweetAlertDialog.ERROR_TYPE)
-                                    .setTitleText("Service already in Favorites")
-                                    .setCancelText("Back")
+                            SweetAlertDialog pdialog;
+                            pdialog = new SweetAlertDialog(booking_page.this, SweetAlertDialog.ERROR_TYPE);
+                            pdialog.setTitleText("Service already in Favorites");
+                            pdialog.setCancelText("Back")
                                     .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
                                         @Override
                                         public void onClick(SweetAlertDialog sweetAlertDialog) {
+
                                             Intent intent = new Intent(booking_page.this, favorite_page.class);
                                             startActivity(intent);
 
                                         }
-                                    })
-                                    .setContentText("Go to favorite?")
-                                    .show();
+                                    });
+                            pdialog.setContentText("Go to favorite?");
+                            pdialog.show();
+                            isExist = true;
+                            break;
                         }
                     }
 
+                    if(!isExist)
+                    {
+                        addProjToFav();
+                    }
 
                 }
                 else
                 {
-                    //Project ID doesn't exists.
-                    Date currentTime = Calendar.getInstance().getTime();
-                    String favoriteCreated = currentTime.toString();
-                    Favorites favorites = new Favorites(userID, projectIdFromIntent, favoriteCreated, imageUrlText, tempProjName, tempProjPrice, tempProjRatings);
-
-                    favoriteDatabase.push().setValue(favorites).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-
-
-                                new SweetAlertDialog(booking_page.this, SweetAlertDialog.SUCCESS_TYPE)
-                                        .setTitleText("Project is added to favorites!")
-                                        .setCancelText("Back")
-                                        .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
-                                            @Override
-                                            public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                                Intent intent = new Intent(booking_page.this, favorite_page.class);
-                                                startActivity(intent);
-                                            }
-                                        })
-                                        .setContentText("Go to favorite?")
-                                        .show();
-
-
-                            } else {
-                                Toast.makeText(booking_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                    addProjToFav();
                 }
+
+//
+
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error)
+            {
 
             }
         });
 
+    }
 
+    private void addProjToFav() {
+        //Project ID doesn't exists.
+        Date currentTime = Calendar.getInstance().getTime();
+        String favoriteCreated = currentTime.toString();
+        Favorites favorites = new Favorites(userID, projectIdFromIntent, favoriteCreated, imageUrlText, tempProjName, tempProjPrice, tempProjRatings);
+
+        favoriteDatabase.push().setValue(favorites).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+
+                    new SweetAlertDialog(booking_page.this, SweetAlertDialog.SUCCESS_TYPE)
+                            .setTitleText("Project is added to favorites!")
+                            .setCancelText("Back")
+                            .setConfirmButton("Yes", new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    Intent intent = new Intent(booking_page.this, favorite_page.class);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setContentText("Go to favorite?")
+                            .show();
+
+
+                } else {
+                    Toast.makeText(booking_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void setRef() {

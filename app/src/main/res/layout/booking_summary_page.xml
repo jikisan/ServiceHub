@@ -477,7 +477,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableTop="@drawable/cod_small"
-                    android:text="Cash on Delivery \n(COD)"
+                    android:text="CASH"
                     android:textAlignment="center"
                     app:layout_constraintEnd_toEndOf="@+id/tv_jobPriceSummary"
                     app:layout_constraintTop_toTopOf="@+id/rb_gcash" />
