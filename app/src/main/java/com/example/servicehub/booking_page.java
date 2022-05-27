@@ -2,6 +2,7 @@ package com.example.servicehub;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,6 +59,7 @@ public class booking_page extends AppCompatActivity {
     private TextView tv_projDesc;
     private TextView tv_timeAvailable;
     private TextView tv_userRating;
+    private TextView tv_viewMorePhoto;
     private Button btn_bookNow;
     private boolean isExist = false;
     private RecyclerView recyclerViewRatings;
@@ -154,6 +156,15 @@ public class booking_page extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(booking_page.this, view_tech.class);
                 intent.putExtra("tech id", techID);
+                startActivity(intent);
+            }
+        });
+
+        tv_viewMorePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(booking_page.this, photo_viewer.class);
+                intent.putExtra("project ID", projectIdFromIntent);
                 startActivity(intent);
             }
         });
@@ -294,6 +305,9 @@ public class booking_page extends AppCompatActivity {
 
         View layout_favorite = findViewById(R.id.layout_favorite);
         View layout_cart = findViewById(R.id.layout_cart);
+
+        tv_viewMorePhoto = findViewById(R.id.tv_viewMorePhoto);
+
 
     }
 
