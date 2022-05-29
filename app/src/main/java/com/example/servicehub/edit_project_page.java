@@ -94,7 +94,7 @@ public class edit_project_page extends AppCompatActivity {
 
     private FirebaseUser user;
     private FirebaseStorage mStorage;
-    private StorageReference projectStorage;
+    private StorageReference projectStorage, projPhotosStorage;
     private DatabaseReference projectDatabase;
     private StorageTask addTask;
 
@@ -106,7 +106,8 @@ public class edit_project_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         String userID = user.getUid();
-        projectStorage = FirebaseStorage.getInstance().getReference("Projects");
+        projectStorage = FirebaseStorage.getInstance().getReference("Projects").child("Banner");
+        projPhotosStorage = FirebaseStorage.getInstance().getReference("Projects");
         projectDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
         setRef();

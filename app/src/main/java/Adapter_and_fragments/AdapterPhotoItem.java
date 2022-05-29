@@ -1,5 +1,6 @@
 package Adapter_and_fragments;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.servicehub.Photos;
 import com.example.servicehub.R;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -29,6 +32,8 @@ public class AdapterPhotoItem extends RecyclerView.Adapter<AdapterPhotoItem.Item
     @NonNull
     @Override
     public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Fresco.initialize(parent.getContext());
+
         return new AdapterPhotoItem.ItemViewHolder
                 (LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photos,parent, false));
     }
@@ -43,6 +48,7 @@ public class AdapterPhotoItem extends RecyclerView.Adapter<AdapterPhotoItem.Item
         Picasso.get()
                 .load(imageUrl)
                 .into(holder.iv_photoItem);
+
 
     }
 
@@ -61,7 +67,6 @@ public class AdapterPhotoItem extends RecyclerView.Adapter<AdapterPhotoItem.Item
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
         ImageView iv_photoItem;
-
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 

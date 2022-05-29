@@ -207,7 +207,6 @@ public class place_order_page extends AppCompatActivity {
         iv_message = findViewById(R.id.iv_message);
         iv_cart = findViewById(R.id.iv_cart);
 
-        tv_projRating = findViewById(R.id.tv_projRating);
         tv_projName = findViewById(R.id.tv_projName);
         tv_projPrice = findViewById(R.id.tv_projPrice);
         tv_projDesc = findViewById(R.id.tv_projDesc);
@@ -250,7 +249,6 @@ public class place_order_page extends AppCompatActivity {
 
                         tv_back.setText("Marketplace");
                         tv_projName.setText(tempListName);
-                        tv_projRating.setText(listRatings);
                         tv_projPrice.setText("₱ " + listPrice + " /Job");
                         tv_quantity.setText(sp_quantity + " Pieces Available");
                         tv_projDesc.setText(sp_projSpecialInstruction);

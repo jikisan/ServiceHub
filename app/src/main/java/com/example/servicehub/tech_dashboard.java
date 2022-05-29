@@ -111,7 +111,7 @@ public class tech_dashboard extends AppCompatActivity {
 
     private void generateTabLayout() {
 
-        tabLayout.addTab(tabLayout.newTab().setText("My Projects"));
+        tabLayout.addTab(tabLayout.newTab().setText("My Services"));
         tabLayout.addTab(tabLayout.newTab().setText("Active Bookings"));
 
         FragmentManager fragmentManager = getSupportFragmentManager();

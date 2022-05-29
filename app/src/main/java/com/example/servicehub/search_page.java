@@ -75,7 +75,7 @@ public class search_page extends AppCompatActivity {
     private RecyclerView recyclerView_searches;
     private ProgressBar progressBar;
     private AutoCompleteTextView auto_complete_txt, auto_complete_txt_sort;
-    private String listOfCategory = "";
+    private String listOfCategory = "", userID;
     private CardView cardViewBottom;
     private final String[] categoryArrayFix = {"All services", "Installation","Repair","Cleaning","Heating","Ventilation","Others"};
     private final String[] sortArrayFix = {"Name (A-Z)", "Name (Z-A)", "Price (Highest - Lowest)", "Price (Lowest - Highest)" , "Ratings (Highest - Lowest)",
@@ -104,6 +104,7 @@ public class search_page extends AppCompatActivity {
         validatePermission();
 
         user = FirebaseAuth.getInstance().getCurrentUser();
+        userID = user.getUid();
         projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
 
@@ -379,6 +380,10 @@ public class search_page extends AppCompatActivity {
                     for(DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
                         Projects projects = dataSnapshot.getValue(Projects.class);
+                        if(projects.getUserID().equals(userID))
+                        {
+                            continue;
+                        }
                         arrProj.add(projects);
                     }
 

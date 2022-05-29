@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -35,7 +36,8 @@ public class chat_activity extends AppCompatActivity {
     private LinearLayout layout;
     private ImageView sendButton, iv_projPhotoInChat;
     private EditText messageArea;
-    private TextView tv_projNameInChat;
+    private TextView tv_projNameInChat, tv_price, tv_userRatingCount;
+    private RatingBar rb_userRating;
 
     private ScrollView scrollView;
     private Firebase reference1, reference2;
@@ -72,6 +74,42 @@ public class chat_activity extends AppCompatActivity {
         clickListeners();
     }
 
+    private void clickListeners() {
+
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Chat chat = new Chat(chatType, senderUid, senderPhotoUrl, receiverUid,
+                        receiverPhotoUrl, receiverName);
+
+                String tempSenderUid;
+
+                tempSenderUid = senderUid;
+                senderUid = userID;
+                receiverUid = tempSenderUid;
+                String messageText = messageArea.getText().toString();
+
+                if(!messageText.equals("")){
+
+                    chatDatabase.child(chatUid).setValue(chat).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if(task.isSuccessful())
+                            {
+                                addDataToMessageDB(senderUid, receiverUid);
+
+                            }
+                        }
+
+
+                    });
+
+                }
+            }
+        });
+    }
+
     private void generateProjectData() {
 
         projDatabase.child(projectID).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -79,12 +117,23 @@ public class chat_activity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Projects projects = snapshot.getValue(Projects.class);
 
-                if(snapshot.exists()){
+                if(snapshot.exists())
+                {
                     receiverPhotoUrl = projects.imageUrl;
                     receiverName = projects.projName;
-
                     tv_projNameInChat.setText(receiverName);
-                    Picasso.get().load(receiverPhotoUrl).into(iv_projPhotoInChat);
+
+                    String price = projects.price;
+                    int count = projects.ratingCount;
+                    double ratings = projects.ratingAverage;
+
+                    Picasso.get()
+                            .load(receiverPhotoUrl)
+                            .into(iv_projPhotoInChat);
+
+                    tv_price.setText(price);
+                    tv_userRatingCount.setText("(" + count + ")");
+                    rb_userRating.setRating((float) ratings);
                 }
             }
 
@@ -143,42 +192,6 @@ public class chat_activity extends AppCompatActivity {
         });
     }
 
-    private void clickListeners() {
-
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Chat chat = new Chat(chatType, senderUid, senderPhotoUrl, receiverUid,
-                        receiverPhotoUrl, receiverName);
-
-                String tempSenderUid;
-
-                tempSenderUid = senderUid;
-                senderUid = userID;
-                receiverUid = tempSenderUid;
-                String messageText = messageArea.getText().toString();
-
-                if(!messageText.equals("")){
-
-                    chatDatabase.child(chatUid).setValue(chat).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful())
-                            {
-                                addDataToMessageDB(senderUid, receiverUid);
-
-                            }
-                        }
-
-
-                    });
-
-                }
-            }
-        });
-    }
-
     private void addDataToMessageDB(String senderUid, String receiverUid) {
 
         String messageText = messageArea.getText().toString();
@@ -201,6 +214,9 @@ public class chat_activity extends AppCompatActivity {
 
         tv_projNameInChat = findViewById(R.id.tv_projNameInChat);
         iv_projPhotoInChat = findViewById(R.id.iv_projPhotoInChat);
+        tv_price = findViewById(R.id.tv_price);
+        tv_userRatingCount = findViewById(R.id.tv_userRatingCount);
+        rb_userRating = findViewById(R.id.rb_userRating);
     }
 
     public void addMessageBox(String message, int type){
@@ -211,20 +227,30 @@ public class chat_activity extends AppCompatActivity {
         lp.setMargins(16, 16, 16, 16);
         textView.setLayoutParams(lp);
 
-        if(type == 1) {
-            textView.setBackgroundResource(R.drawable.rounded_corner1);
-            textView.setTextColor(Color.WHITE);
+        TextView textView2 = new TextView(chat_activity.this);
+        textView2.setText(message);
+        textView2.setTextSize(16);
+        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp2.weight = 1.0f;
+        lp2.gravity = Gravity.RIGHT;
+        lp2.setMargins(16, 16, 16, 16);
+        textView2.setLayoutParams(lp2);
 
+        if(type == 1) {
+            textView2.setBackgroundResource(R.drawable.rounded_corner1);
+            textView2.setTextColor(Color.WHITE);
+            layout.addView(textView2);
 
         }
         else{
             textView.setBackgroundResource(R.drawable.rounded_corner2);
             textView.setTextColor(Color.BLACK);
-
+            layout.addView(textView);
 
         }
 
-        layout.addView(textView);
+
+
         scrollView.fullScroll(View.FOCUS_DOWN);
     }
 

@@ -81,7 +81,8 @@ public class fragment2Map extends Fragment implements GoogleMap.OnInfoWindowClic
     private SupportMapFragment supportMapFragment;
     private View view;
     private Double latDouble, longDouble;
-    private String projCategory;
+    private String projCategory, userID;
+    private FirebaseUser user;
     //private GoogleMap googleMap;
 
 
@@ -94,7 +95,10 @@ public class fragment2Map extends Fragment implements GoogleMap.OnInfoWindowClic
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle savedInstanceState)
+    {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userID = user.getUid();
 
         client = LocationServices.getFusedLocationProviderClient(getActivity());
 
@@ -380,14 +384,14 @@ public class fragment2Map extends Fragment implements GoogleMap.OnInfoWindowClic
                     for (DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
                         Projects projects = dataSnapshot.getValue(Projects.class);
-                        String projId = dataSnapshot.getKey();
 
+
+                        String projId = dataSnapshot.getKey();
                         String imageUrl = projects.getImageUrl().toString();
                         String projName = projects.getProjName().toString().toUpperCase(Locale.ROOT);
-
-
                         String latString = projects.getLatitude();
                         String longString = projects.getLongitude();
+
                         latitude = Double.parseDouble(latString);
                         longitude = Double.parseDouble(longString);
                         location = new LatLng(latitude, longitude);
@@ -441,14 +445,17 @@ public class fragment2Map extends Fragment implements GoogleMap.OnInfoWindowClic
                     for (DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
                         Projects projects = dataSnapshot.getValue(Projects.class);
-                        String projId = dataSnapshot.getKey();
+                        if(projects.getUserID().equals(userID))
+                        {
+                            continue;
+                        }
 
+                        String projId = dataSnapshot.getKey();
                         String imageUrl = projects.getImageUrl().toString();
                         String projName = projects.getProjName().toString().toUpperCase(Locale.ROOT);
-
-
                         String latString = projects.getLatitude();
                         String longString = projects.getLongitude();
+
                         latitude = Double.parseDouble(latString);
                         longitude = Double.parseDouble(longString);
                         location = new LatLng(latitude, longitude);

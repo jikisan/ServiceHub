@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,9 +34,12 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import Adapter_and_fragments.AdapterCartItem;
 import Adapter_and_fragments.AdapterPhotoItem;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class add_photos extends AppCompatActivity {
 
@@ -49,6 +53,7 @@ public class add_photos extends AppCompatActivity {
     private TextView tv_back, tv_summary;
     private RecyclerView rv_photos;
     private String projectIdFromIntent;
+    private ProgressDialog progressDialog;
 
     private DatabaseReference photoDatabase;
     private StorageReference projectPhotoStorage, listingPhotoStorage;
@@ -81,7 +86,20 @@ public class add_photos extends AppCompatActivity {
         btn_addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                uploadPhotos();
+
+                if( arrImageList.size() <= 0)
+                {
+                    Toast.makeText(add_photos.this, "Please choose a photo", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    progressDialog = new ProgressDialog(add_photos.this);
+                    progressDialog.setTitle("Uploading photos");
+                    progressDialog.show();
+
+                    uploadPhotos();
+                }
+
             }
         });
         
@@ -96,15 +114,30 @@ public class add_photos extends AppCompatActivity {
             }
         });
 
+        adapterPhotoItem.setOnItemClickListener(new AdapterPhotoItem.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(add_photos.this, photo_fullscreen_view_page.class);
+                intent.putExtra("Project ID", projectIdFromIntent);
+                intent.putExtra("current position", position);
+                intent.putExtra("category", "add");
+                startActivity(intent);
+            }
+        });
+
     }
 
+    @SuppressLint("SetTextI18n")
     private void uploadPhotos() {
-        tv_summary.setText("Please Wait ... If Uploading takes Too much time please the button again ");
 
-        for (uploads=0; uploads < arrImageList.size(); uploads++) {
+        for (uploads=0; uploads < arrImageList.size(); uploads++)
+        {
             Uri Image  = arrImageList.get(uploads);
 
-            final StorageReference imagename = projectPhotoStorage.child(projectIdFromIntent+"/"+Image.getLastPathSegment());
+            double imageTime = System.currentTimeMillis();
+
+            String imageName = imageTime + Image.getLastPathSegment().toString();
+            final StorageReference imagename = projectPhotoStorage.child(projectIdFromIntent+"/"+ imageName);
 
             imagename.putFile(arrImageList.get(uploads)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -114,26 +147,46 @@ public class add_photos extends AppCompatActivity {
                         public void onSuccess(Uri uri) {
 
                             String url = String.valueOf(uri);
-                            SendLink(url);
+                            SendLink(url, imageName);
                         }
                     });
 
                 }
             });
 
+            if(uploads == arrImageList.size() - 1)
+            {
+                Timer timer = new Timer();
+
+
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+
+                        progressDialog.dismiss();
+                        Intent intent = new Intent(add_photos.this, add_photos.class);
+                        intent.putExtra("Project ID", projectIdFromIntent);
+                        startActivity(intent);
+
+
+                    }
+                }, 5000);
+
+            }
+
         }
+
+        adapterPhotoItem.notifyDataSetChanged();
     }
 
-    private void SendLink(String url) {
+    private void SendLink(String url, String imageName) {
 
-
-        Photos photos = new Photos(projectIdFromIntent, url);
+        Photos photos = new Photos(projectIdFromIntent, url, imageName);
 
         photoDatabase.push().setValue(photos).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
-                tv_summary.setText("Image Uploaded Successfully");
                 arrImageList.clear();
                 adapterPhotoItem.notifyDataSetChanged();
             }

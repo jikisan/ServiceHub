@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.servicehub.Cart;
 import com.example.servicehub.Chat;
 import com.example.servicehub.Messages;
+import com.example.servicehub.Projects;
 import com.example.servicehub.R;
 import com.example.servicehub.cart_page;
 import com.example.servicehub.message_page;
@@ -59,14 +61,15 @@ public class AdapterChatUserListItem extends RecyclerView.Adapter<AdapterChatUse
         String receiverUid = chat.getReceiverUid();
         String receiverName = chat.getReceiverName();
         String chatId = senderUid + "_" + receiverUid + "_" + receiverName;
-
-        holder.tv_chatName.setText(chat.getReceiverName());
-
         String imageUriText = chat.getReceiverPhotoUrl();
 
+
+        holder.tv_chatName.setText(chat.getReceiverName());
         Picasso.get()
                 .load(imageUriText)
                 .into(holder.iv_chatProfilePhoto);
+
+        getProjID(receiverName, holder);
 
         holder.iv_deleteChat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,6 +146,39 @@ public class AdapterChatUserListItem extends RecyclerView.Adapter<AdapterChatUse
 
     }
 
+    private void getProjID(String receiverName, ItemViewHolder holder) {
+
+        DatabaseReference projDb = FirebaseDatabase.getInstance().getReference("Projects");
+
+        Query query = projDb.orderByChild("projName")
+                .equalTo(receiverName);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    for(DataSnapshot dataSnapshot : snapshot.getChildren())
+                    {
+                        Projects projects = dataSnapshot.getValue(Projects.class);
+
+                        String price = projects.getPrice();
+                        int count = projects.getRatingCount();
+                        double ratings = projects.getRatingAverage();
+
+                        holder.tv_price.setText(price);
+                        holder.tv_userRatingCount.setText("(" + count + ")");
+                        holder.rb_userRating.setRating((float) ratings);
+                    }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     @Override
     public int getItemCount() {
         return arr.size();
@@ -159,7 +195,8 @@ public class AdapterChatUserListItem extends RecyclerView.Adapter<AdapterChatUse
     public class ItemViewHolder extends RecyclerView.ViewHolder {
 
         ImageView iv_chatProfilePhoto, iv_deleteChat;
-        TextView tv_chatName;
+        TextView tv_chatName, tv_price, tv_userRatingCount;
+        RatingBar rb_userRating;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -167,6 +204,9 @@ public class AdapterChatUserListItem extends RecyclerView.Adapter<AdapterChatUse
             iv_chatProfilePhoto = itemView.findViewById(R.id.iv_chatProfilePhoto);
             iv_deleteChat = itemView.findViewById(R.id.iv_deleteChat);
             tv_chatName = itemView.findViewById(R.id.tv_chatName);
+            tv_price = itemView.findViewById(R.id.tv_price);
+            tv_userRatingCount = itemView.findViewById(R.id.tv_userRatingCount);
+            rb_userRating = itemView.findViewById(R.id.rb_userRating);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -40,7 +40,6 @@ public class message_page extends AppCompatActivity {
     private RecyclerView recyclerView_chatProfiles;
     private ProgressBar progressBar;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,8 +212,10 @@ public class message_page extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren())
                 {
                     Chat chat = dataSnapshot.getValue(Chat.class);
-
+                    if(chat.senderUid.equals(userID) || chat.receiverUid.equals(userID))
+                    {
                         arr.add(chat);
+                    }
                 }
 
                 progressBar.setVisibility(View.GONE);

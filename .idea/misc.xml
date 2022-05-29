@@ -28,7 +28,7 @@
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/booking_summary_page.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/cart_page.xml" value="0.31202046035805625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/change_password_page.xml" value="0.264" />
-        <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/chat_activity.xml" value="0.2" />
+        <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/chat_activity.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/chat_activity_order.xml" value="0.3625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/chat_users_list.xml" value="0.3625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/checkout_page.xml" value="0.264" />
@@ -69,6 +69,7 @@
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/item_notification.xml" value="0.4" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/item_order.xml" value="0.4" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/item_page.xml" value="0.3625" />
+        <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/item_photo_fullscreen.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/item_photos.xml" value="0.2" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/item_ratings.xml" value="0.3625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/list_property.xml" value="0.3625" />
@@ -83,6 +84,7 @@
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/nearby_tech_page.xml" value="0.3625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/notification_page.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/order_details_page.xml" value="0.264" />
+        <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/photo_fullscreen_view_page.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/photo_viewer.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/place_order_page.xml" value="0.3625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/privacy_and_policy_page.xml" value="0.3625" />
