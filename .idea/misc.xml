@@ -19,6 +19,7 @@
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/add_listing_page.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/add_photos.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/add_project_page.xml" value="0.23846153846153847" />
+        <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/add_videos.xml" value="0.3625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/address_page.xml" value="0.3625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/booking_application_page.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/booking_confirmation_page.xml" value="0.264" />
@@ -38,15 +39,17 @@
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/dialogmap.xml" value="0.3625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/edit_listing_page.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/edit_profile_page.xml" value="0.4" />
-        <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/edit_project_page.xml" value="0.25" />
+        <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/edit_project_page.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/favorite_page.xml" value="0.3625" />
-        <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/fragment1.xml" value="0.3625" />
+        <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/fragment1.xml" value="0.34271099744245526" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/fragment1_installer.xml" value="0.4" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/fragment1cancelled.xml" value="0.3625" />
+        <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/fragment1photos.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/fragment2.xml" value="0.35038363171355497" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/fragment2_map.xml" value="0.3625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/fragment2booking.xml" value="0.3625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/fragment2complete.xml" value="0.3625" />
+        <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/fragment2videos.xml" value="0.3625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/fragment4marketplace.xml" value="0.3625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/fragment_fragment2_order.xml" value="0.3484375" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/fragment_fragment2repair.xml" value="0.34271099744245526" />
@@ -100,6 +103,7 @@
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/tech_application_page.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/tech_booking_details.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/tech_dashboard.xml" value="0.4" />
+        <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/video_view_page.xml" value="0.3625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/view_in_map.xml" value="0.264" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/layout/view_tech.xml" value="0.3625" />
         <entry key="..\:/BSIT4y2s/Capstone/MVP/app/src/main/res/menu/search.xml" value="0.3625" />

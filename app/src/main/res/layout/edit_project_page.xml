@@ -96,36 +96,68 @@
 
             </androidx.cardview.widget.CardView>
 
-
-            <TextView
-                android:id="@+id/tv_uploadPhoto"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/layout49"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_blue"
-                android:drawableRight="@drawable/add"
-                android:drawableTint="@color/light_blue"
-                android:padding="8dp"
-                android:text="Change Banner"
-                android:textColor="@color/light_blue"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.81"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView" />
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@+id/cardView">
 
-            <TextView
-                android:id="@+id/tv_addPhotos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/rounded_blue"
-                android:backgroundTint="@color/light_blue"
-                android:padding="10dp"
-                android:text="Upload more photo"
-                android:textColor="@color/white"
-                app:layout_constraintEnd_toStartOf="@+id/tv_uploadPhoto"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView" />
+                <TextView
+                    android:id="@+id/tv_uploadPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_blue"
+                    android:backgroundTint="@color/light_blue"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="Change banner"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_uploadPhoto"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+                <TextView
+                    android:id="@+id/tv_addPhotos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_blue"
+                    android:backgroundTint="@color/light_blue"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="Upload photos"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_uploadPhoto"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+                <TextView
+                    android:id="@+id/tv_addVideos"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_blue"
+                    android:backgroundTint="@color/light_blue"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="Upload videos"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_uploadPhoto"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardView" />
+
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/textView53"
@@ -138,7 +170,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_uploadPhoto" />
+                app:layout_constraintTop_toBottomOf="@+id/layout49" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout"

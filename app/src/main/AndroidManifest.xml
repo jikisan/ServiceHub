@@ -19,6 +19,12 @@
         android:theme="@style/Theme.ServiceHub"
         tools:replace="android:icon">
         <activity
+            android:name=".video_view_page"
+            android:exported="false" />
+        <activity
+            android:name=".add_videos"
+            android:exported="false" />
+        <activity
             android:name=".photo_fullscreen_view_page"
             android:exported="false" />
         <activity

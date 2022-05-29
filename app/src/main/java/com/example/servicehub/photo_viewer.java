@@ -2,8 +2,10 @@ package com.example.servicehub;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,75 +26,69 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Adapter_and_fragments.AdapterPhotoItem;
+import Adapter_and_fragments.fragmentAdapter;
+import Adapter_and_fragments.fragmentAdapterPhotos;
 
 public class photo_viewer extends AppCompatActivity {
 
-    private RecyclerView rv_photos;
     private TextView tv_back;
-    private ProgressBar progressBar;
 
-    private ArrayList<Uri> arrImageList = new ArrayList<Uri>();
-    private List<Photos> arrUrl = new ArrayList<Photos>();
+    private TabLayout tabLayout;
+    private ViewPager2 vp_viewPager2;
+
     private AdapterPhotoItem adapterPhotoItem;
-    private int uploads = 0;
-    private String projectIdFromIntent;
-    private DatabaseReference photoDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_viewer);
 
-        projectIdFromIntent = getIntent().getStringExtra("project ID");
-        photoDatabase = FirebaseDatabase.getInstance().getReference("Photos");
+        String projectIdFromIntent = getIntent().getStringExtra("project ID");
+        DatabaseReference photoDatabase = FirebaseDatabase.getInstance().getReference("Photos");
 
         setRef();
-        generateRecyclerLayout();
+        generateTabLayout();
         clickListeners();
     }
 
     private void setRef() {
+
         tv_back = findViewById(R.id.tv_back);
-
-        rv_photos = findViewById(R.id.rv_photos);
-
-        progressBar = findViewById(R.id.progressBar);
+        tabLayout = findViewById(R.id.tab_layout);
+        vp_viewPager2 = findViewById(R.id.vp_viewPager2);
 
     }
 
-    private void generateRecyclerLayout() {
-        rv_photos.setHasFixedSize(true);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(photo_viewer.this, 3, GridLayoutManager.VERTICAL, false);
-        rv_photos.setLayoutManager(gridLayoutManager);
+    private void generateTabLayout() {
 
-        adapterPhotoItem = new AdapterPhotoItem(arrUrl);
-        rv_photos.setAdapter(adapterPhotoItem);
+        tabLayout.addTab(tabLayout.newTab().setText("Photos"));
+        tabLayout.addTab(tabLayout.newTab().setText("Videos"));
 
-        getViewHolderValues();
-    }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Adapter_and_fragments.fragmentAdapterPhotos fragmentAdapterPhotos = new fragmentAdapterPhotos(fragmentManager, getLifecycle());
+        vp_viewPager2.setAdapter(fragmentAdapterPhotos);
 
-    private void getViewHolderValues() {
-        Query query = photoDatabase
-                .orderByChild("projID")
-                .equalTo(projectIdFromIntent);
-
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                for(DataSnapshot dataSnapshot : snapshot.getChildren())
-                {
-                    Photos photos = dataSnapshot.getValue(Photos.class);
-                    arrUrl.add(photos);
-
-                }
-                progressBar.setVisibility(View.GONE);
-                adapterPhotoItem.notifyDataSetChanged();
+            public void onTabSelected(TabLayout.Tab tab) {
+                vp_viewPager2.setCurrentItem(tab.getPosition());
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            public void onTabUnselected(TabLayout.Tab tab) {
 
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        vp_viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                tabLayout.selectTab(tabLayout.getTabAt(position));
             }
         });
     }
@@ -102,20 +99,9 @@ public class photo_viewer extends AppCompatActivity {
             public void onClick(View view) {
                 onBackPressed();
 
-
             }
         });
 
-        adapterPhotoItem.setOnItemClickListener(new AdapterPhotoItem.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                Intent intent = new Intent(photo_viewer.this, photo_fullscreen_view_page.class);
-                intent.putExtra("Project ID", projectIdFromIntent);
-                intent.putExtra("current position", position);
-                intent.putExtra("category", "viewer");
-                startActivity(intent);
-            }
-        });
 
 
     }

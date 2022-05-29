@@ -1,6 +1,7 @@
 package Adapter_and_fragments;
 
-import android.net.Uri;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,45 +10,53 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.servicehub.Photos;
 import com.example.servicehub.R;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.example.servicehub.Videos;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class AdapterPhotoItem extends RecyclerView.Adapter<AdapterPhotoItem.ItemViewHolder> {
+public class AdapterVideoItem extends RecyclerView.Adapter<AdapterVideoItem.ItemViewHolder>{
 
-    List<Photos> arr;
+    private List<Videos> arr;
+    private Context context;
     private OnItemClickListener onItemClickListener;
 
-    public AdapterPhotoItem() {
+    public AdapterVideoItem() {
     }
 
-    public AdapterPhotoItem(List<Photos> arr) {
+    public AdapterVideoItem(List<Videos> arr, Context context) {
         this.arr = arr;
+        this.context = context;
     }
 
     @NonNull
     @Override
-    public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new AdapterPhotoItem.ItemViewHolder
+    public AdapterVideoItem.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new AdapterVideoItem.ItemViewHolder
                 (LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photos,parent, false));
     }
 
+    @SuppressLint("CheckResult")
     @Override
-    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AdapterVideoItem.ItemViewHolder holder, int position) {
 
-        Photos photos = arr.get(position);
 
-        String imageUrl = photos.getLink();
+        Videos videos = arr.get(position);
 
-        Picasso.get()
+        String imageUrl = videos.getLink();
+
+//        Picasso.get()
+//                .load(imageUrl)
+//                .into(holder.iv_photoItem);
+
+
+        Glide.with(context)
                 .load(imageUrl)
                 .into(holder.iv_photoItem);
-
-
     }
 
     @Override
@@ -82,7 +91,6 @@ public class AdapterPhotoItem extends RecyclerView.Adapter<AdapterPhotoItem.Item
                     }
                 }
             });
-
         }
     }
 }
