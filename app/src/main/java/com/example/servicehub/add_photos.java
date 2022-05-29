@@ -62,6 +62,7 @@ public class add_photos extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_photos);
+
         projectIdFromIntent = getIntent().getStringExtra("Project ID");
 
         listingPhotoStorage = FirebaseStorage.getInstance().getReference("Listings");
@@ -74,12 +75,14 @@ public class add_photos extends AppCompatActivity {
 
     }
 
-
     private void clickListeners() {
+
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent = new Intent(add_photos.this, edit_project_page.class);
+                intent.putExtra("Project ID", projectIdFromIntent);
+                startActivity(intent);
             }
         });
 
@@ -110,7 +113,9 @@ public class add_photos extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                startActivityForResult(intent, PICK_IMG);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,"Select Picture"), PICK_IMG);
+
             }
         });
 
@@ -125,72 +130,6 @@ public class add_photos extends AppCompatActivity {
             }
         });
 
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void uploadPhotos() {
-
-        for (uploads=0; uploads < arrImageList.size(); uploads++)
-        {
-            Uri Image  = arrImageList.get(uploads);
-
-            double imageTime = System.currentTimeMillis();
-
-            String imageName = imageTime + Image.getLastPathSegment().toString();
-            final StorageReference imagename = projectPhotoStorage.child(projectIdFromIntent+"/"+ imageName);
-
-            imagename.putFile(arrImageList.get(uploads)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    imagename.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-
-                            String url = String.valueOf(uri);
-                            SendLink(url, imageName);
-                        }
-                    });
-
-                }
-            });
-
-            if(uploads == arrImageList.size() - 1)
-            {
-                Timer timer = new Timer();
-
-
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-
-                        progressDialog.dismiss();
-                        Intent intent = new Intent(add_photos.this, add_photos.class);
-                        intent.putExtra("Project ID", projectIdFromIntent);
-                        startActivity(intent);
-
-
-                    }
-                }, 5000);
-
-            }
-
-        }
-
-        adapterPhotoItem.notifyDataSetChanged();
-    }
-
-    private void SendLink(String url, String imageName) {
-
-        Photos photos = new Photos(projectIdFromIntent, url, imageName);
-
-        photoDatabase.push().setValue(photos).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-
-                arrImageList.clear();
-                adapterPhotoItem.notifyDataSetChanged();
-            }
-        });
     }
 
     @SuppressLint("SetTextI18n")
@@ -210,15 +149,70 @@ public class add_photos extends AppCompatActivity {
                         arrImageList.add(imageuri);
                         CurrentImageSelect = CurrentImageSelect + 1;
                     }
+
                     tv_summary.setVisibility(View.VISIBLE);
                     tv_summary.setText("You Have Selected "+ arrImageList.size() +" Pictures" );
 
+                }
+                else {
+                    Uri imageuri = data.getData();
+                    if (imageuri != null) {
+
+                        arrImageList.add(imageuri);
+                        tv_summary.setVisibility(View.VISIBLE);
+                        tv_summary.setText("You Have Selected "+ arrImageList.size() +" Picture" );
+                    }
                 }
 
             }
 
         }
 
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void uploadPhotos() {
+
+        for (uploads=0; uploads < arrImageList.size(); uploads++)
+        {
+            Uri Image  = arrImageList.get(uploads);
+
+            long imageTime = System.currentTimeMillis();
+            String imageName = imageTime + Image.getLastPathSegment().toString();
+
+            StorageReference imagename = projectPhotoStorage.child(projectIdFromIntent+"/"+ imageName);
+
+            imagename.putFile(arrImageList.get(uploads)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    imagename.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+
+                            String url = String.valueOf(uri);
+                            SendLink(url, imageName);
+                        }
+                    });
+
+                }
+            });
+
+        }
+
+    }
+
+    private void SendLink(String url, String imageName) {
+
+        Photos photos = new Photos(projectIdFromIntent, url, imageName);
+
+        photoDatabase.push().setValue(photos).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                arrImageList.clear();
+                progressDialog.dismiss();
+            }
+        });
     }
 
     private void generateRecyclerLayout() {
@@ -233,6 +227,7 @@ public class add_photos extends AppCompatActivity {
     }
 
     private void getViewHolderValues() {
+
         Query query = photoDatabase
                 .orderByChild("projID")
                 .equalTo(projectIdFromIntent);
@@ -255,6 +250,7 @@ public class add_photos extends AppCompatActivity {
 
             }
         });
+
     }
 
     private void setRef() {

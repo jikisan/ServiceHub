@@ -84,7 +84,7 @@ public class edit_listing_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
-        listingStorage = FirebaseStorage.getInstance().getReference("Listings");
+        listingStorage = FirebaseStorage.getInstance().getReference("Listings").child("Banner");
         listingDatabase = FirebaseDatabase.getInstance().getReference("Listings");
 
 

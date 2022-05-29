@@ -3,15 +3,17 @@ package com.example.servicehub;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,30 +32,27 @@ import java.util.TimerTask;
 import Adapter_and_fragments.AdapterViewPagerPhotoFullscreen;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class photo_fullscreen_view_page extends AppCompatActivity {
+public class video_view_page extends AppCompatActivity {
 
-
-    private AdapterViewPagerPhotoFullscreen adapterViewPagerPhotoFullscreen;
-    private List<Photos> arrUrl = new ArrayList<Photos>();
-    private String projectIdFromIntent, category, imageName;
+    private List<Videos> arrUrl = new ArrayList<Videos>();
+    private String projectIdFromIntent, category, videoName;
     private int currentPosition;
-    private DatabaseReference photoDatabase;
 
     private ImageView iv_deletPhoto;
     private TextView tv_back;
-    private ViewPager vp_photoFullscreen;
+    private VideoView videoView;
     private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.photo_fullscreen_view_page);
+        setContentView(R.layout.video_view_page);
 
-        projectIdFromIntent = getIntent().getStringExtra("Project ID");
         currentPosition = getIntent().getIntExtra("current position", 0);
+        projectIdFromIntent = getIntent().getStringExtra("Project ID");
+       // videoName = getIntent().getStringExtra("video name");
         category = getIntent().getStringExtra("category");
 
-        photoDatabase = FirebaseDatabase.getInstance().getReference("Photos");
 
         setRef();
 
@@ -62,8 +61,7 @@ public class photo_fullscreen_view_page extends AppCompatActivity {
             iv_deletPhoto.setVisibility(View.GONE);
         }
 
-        getViewHolderValues();
-        generateImageData();
+        generateVideo();
         clickListeners();
     }
 
@@ -79,19 +77,18 @@ public class photo_fullscreen_view_page extends AppCompatActivity {
         iv_deletPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseReference photoDB = FirebaseDatabase.getInstance().getReference("Photos");
+                DatabaseReference videoDB = FirebaseDatabase.getInstance().getReference("Videos");
                 StorageReference photoStorage = FirebaseStorage.getInstance().getReference("Projects").child(projectIdFromIntent);
 
-
-                new SweetAlertDialog(photo_fullscreen_view_page.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Warning!.")
-                        .setContentText("Delete " + imageName + "?")
+                new SweetAlertDialog(video_view_page.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Delete")
+                        .setContentText(videoName + "?")
                         .setCancelText("Cancel")
                         .setConfirmButton("Delete", new SweetAlertDialog.OnSweetClickListener() {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
 
-                                deletePhotoInDb(photoDB, photoStorage, imageName, projectIdFromIntent);
+                                deleteVideoInDb(videoDB, photoStorage, videoName, projectIdFromIntent);
 
                             }
                         })
@@ -100,20 +97,20 @@ public class photo_fullscreen_view_page extends AppCompatActivity {
         });
     }
 
-    private void deletePhotoInDb(DatabaseReference photoDB, StorageReference photoStorage, String imageName, String projID) {
-        progressDialog = new ProgressDialog(photo_fullscreen_view_page.this);
-        progressDialog.setTitle("Deleting photo: " + imageName );
+    private void deleteVideoInDb(DatabaseReference videoDB, StorageReference photoStorage, String videoName, String projID) {
+        progressDialog = new ProgressDialog(video_view_page.this);
+        progressDialog.setTitle("Deleting video: " + videoName );
         progressDialog.show();
 
-        Query query = photoDB
-                .orderByChild("photoName")
-                .equalTo(imageName);
+        Query query = videoDB
+                .orderByChild("videoName")
+                .equalTo(videoName);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                StorageReference imageRef = photoStorage.child(imageName);
+                StorageReference imageRef = photoStorage.child(videoName);
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
 
@@ -132,17 +129,17 @@ public class photo_fullscreen_view_page extends AppCompatActivity {
 
                         if(category.equals("add"))
                         {
-                            Toast.makeText(photo_fullscreen_view_page.this, "Photo: " + imageName + " deleted successfully! ", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(photo_fullscreen_view_page.this, add_photos.class);
+                            Toast.makeText(video_view_page.this, "Video: " + videoName + " deleted successfully! ", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(video_view_page.this, add_videos.class);
                             intent.putExtra("Project ID", projID);
-                            photo_fullscreen_view_page.this.startActivity(intent);
+                            video_view_page.this.startActivity(intent);
                         }
                         else if(category.equals("viewer"))
                         {
-                            Toast.makeText(photo_fullscreen_view_page.this, "Photo: " + imageName + " deleted successfully! ", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(photo_fullscreen_view_page.this, photo_viewer.class);
+                            Toast.makeText(video_view_page.this, "Video: " + videoName + " deleted successfully! ", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(video_view_page.this, photo_viewer.class);
                             intent.putExtra("Project ID", projID);
-                            photo_fullscreen_view_page.this.startActivity(intent);
+                            video_view_page.this.startActivity(intent);
                         }
 
                     }
@@ -157,30 +154,11 @@ public class photo_fullscreen_view_page extends AppCompatActivity {
         });
     }
 
-    private void generateImageData() {
+    private void generateVideo() {
 
-        // Initializing the ViewPagerAdapter
-        adapterViewPagerPhotoFullscreen = new AdapterViewPagerPhotoFullscreen(photo_fullscreen_view_page.this, arrUrl, currentPosition, category);
+        DatabaseReference vidDB = FirebaseDatabase.getInstance().getReference("Videos");
 
-        // Adding the Adapter to the ViewPager
-        vp_photoFullscreen.setAdapter(adapterViewPagerPhotoFullscreen);
-
-        vp_photoFullscreen.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                adapterViewPagerPhotoFullscreen.notifyDataSetChanged();
-                vp_photoFullscreen.setCurrentItem(currentPosition);
-            }
-        }, 500);
-//        vp_photoFullscreen.setCurrentItem(currentPosition);
-
-        getViewHolderValues();
-
-    }
-
-    private void getViewHolderValues() {
-        Query query = photoDatabase
+        Query query = vidDB
                 .orderByChild("projID")
                 .equalTo(projectIdFromIntent);
 
@@ -190,10 +168,15 @@ public class photo_fullscreen_view_page extends AppCompatActivity {
 
                 for(DataSnapshot dataSnapshot : snapshot.getChildren())
                 {
-                    Photos photos = dataSnapshot.getValue(Photos.class);
-                    imageName = photos.getPhotoName().toString();
-                    arrUrl.add(photos);
+                    Videos videos = dataSnapshot.getValue(Videos.class);
+                    arrUrl.add(videos);
+
                 }
+
+                String vidUri = arrUrl.get(currentPosition).getLink();
+                videoName = arrUrl.get(currentPosition).getVideoName();
+                tv_back.setText(videoName);
+                loadVid(vidUri);
 
             }
 
@@ -202,11 +185,38 @@ public class photo_fullscreen_view_page extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void loadVid(String vidUri) {
+
+        Uri uri = Uri.parse(vidUri);
+
+        // sets the resource from the
+        // videoUrl to the videoView
+        videoView.setVideoURI(uri);
+
+        // creating object of
+        // media controller class
+        MediaController mediaController = new MediaController(this);
+
+        // sets the anchor view
+        // anchor view for the videoView
+        mediaController.setAnchorView(videoView);
+
+        // sets the media player to the videoView
+        mediaController.setMediaPlayer(videoView);
+
+        // sets the media controller to the videoView
+        videoView.setMediaController(mediaController);
+
+        // starts the video
+        // videoView.start();
     }
 
     private void setRef() {
 
-        vp_photoFullscreen = findViewById(R.id.vp_photoFullscreen);
+        videoView = findViewById(R.id.videoView);
         tv_back = findViewById(R.id.tv_back);
         iv_deletPhoto = findViewById(R.id.iv_deletPhoto);
 
