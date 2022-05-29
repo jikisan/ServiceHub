@@ -37,7 +37,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView20"
         android:layout_width="match_parent"
@@ -153,7 +152,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
-
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"

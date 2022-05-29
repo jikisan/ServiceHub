@@ -58,6 +58,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -72,6 +73,7 @@ import java.util.List;
 import java.util.Locale;
 
 import Adapter_and_fragments.AdapterAddressItem;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class add_project_page extends AppCompatActivity {
 
@@ -107,7 +109,7 @@ public class add_project_page extends AppCompatActivity {
     private DatabaseReference projectDatabase;
     private StorageReference projectStorage;
     private StorageTask addTask;
-    private String userID;
+    private String userID, projectIdFromIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +121,7 @@ public class add_project_page extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
-        projectStorage = FirebaseStorage.getInstance().getReference("Projects");
+        projectStorage = FirebaseStorage.getInstance().getReference("Projects").child("Banner");
         projectDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
         setRef();
@@ -475,9 +477,22 @@ public class add_project_page extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     progressDialog.dismiss();
-                                    Intent intent = new Intent(add_project_page.this, tech_dashboard.class);
-                                    startActivity(intent);
-                                    Toast.makeText(add_project_page.this, "Project Added", Toast.LENGTH_LONG).show();
+                                    SweetAlertDialog pdialog;
+                                    pdialog = new SweetAlertDialog(add_project_page.this, SweetAlertDialog.SUCCESS_TYPE);
+                                    pdialog.setTitleText("Service Successfully Added");
+                                    pdialog.setContentText("Your service has been successfully added");
+                                    pdialog.setConfirmButton("Proceed", new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                            Intent intent = new Intent(add_project_page.this, tech_dashboard.class);
+                                            startActivity(intent);
+
+                                        }
+                                    });
+                                    pdialog.show();
+
+
 
                                 } else {
                                     Toast.makeText(add_project_page.this, "Failed " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -495,6 +510,28 @@ public class add_project_page extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    private void getProjId(String projName) {
+
+        Query query = projectDatabase
+                .orderByChild("projName")
+                .equalTo(projName);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot dataSnapshot : snapshot.getChildren())
+                {
+                    projectIdFromIntent = dataSnapshot.getKey().toString();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override

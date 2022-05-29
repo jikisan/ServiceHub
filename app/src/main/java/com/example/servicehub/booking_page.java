@@ -169,6 +169,7 @@ public class booking_page extends AppCompatActivity {
             }
         });
 
+
     }
 
     private void addToFavorite() {
@@ -272,11 +273,9 @@ public class booking_page extends AppCompatActivity {
         iv_techPhoto = findViewById(R.id.iv_techPhoto);
         ImageView iv_cart = findViewById(R.id.iv_cart);
 
-        TextView tv_projRating = findViewById(R.id.tv_projRating);
         iv_favorite = findViewById(R.id.iv_favorite);
 
         tv_techName = findViewById(R.id.tv_techName);
-        tv_projRating = findViewById(R.id.tv_projRating);
         tv_projName = findViewById(R.id.tv_projName);
         tv_projPrice = findViewById(R.id.tv_projPrice);
         tv_projDesc = findViewById(R.id.tv_projDesc);

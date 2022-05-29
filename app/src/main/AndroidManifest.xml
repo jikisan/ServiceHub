@@ -19,6 +19,9 @@
         android:theme="@style/Theme.ServiceHub"
         tools:replace="android:icon">
         <activity
+            android:name=".photo_fullscreen_view_page"
+            android:exported="false" />
+        <activity
             android:name=".add_photos"
             android:exported="false" />
         <activity

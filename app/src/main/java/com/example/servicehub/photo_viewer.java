@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -26,6 +28,7 @@ public class photo_viewer extends AppCompatActivity {
 
     private RecyclerView rv_photos;
     private TextView tv_back;
+    private ProgressBar progressBar;
 
     private ArrayList<Uri> arrImageList = new ArrayList<Uri>();
     private List<Photos> arrUrl = new ArrayList<Photos>();
@@ -51,6 +54,8 @@ public class photo_viewer extends AppCompatActivity {
         tv_back = findViewById(R.id.tv_back);
 
         rv_photos = findViewById(R.id.rv_photos);
+
+        progressBar = findViewById(R.id.progressBar);
 
     }
 
@@ -78,8 +83,9 @@ public class photo_viewer extends AppCompatActivity {
                 {
                     Photos photos = dataSnapshot.getValue(Photos.class);
                     arrUrl.add(photos);
-                }
 
+                }
+                progressBar.setVisibility(View.GONE);
                 adapterPhotoItem.notifyDataSetChanged();
             }
 
@@ -99,6 +105,18 @@ public class photo_viewer extends AppCompatActivity {
 
             }
         });
+
+        adapterPhotoItem.setOnItemClickListener(new AdapterPhotoItem.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(photo_viewer.this, photo_fullscreen_view_page.class);
+                intent.putExtra("Project ID", projectIdFromIntent);
+                intent.putExtra("current position", position);
+                intent.putExtra("category", "viewer");
+                startActivity(intent);
+            }
+        });
+
 
     }
 }

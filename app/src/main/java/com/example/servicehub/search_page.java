@@ -67,6 +67,7 @@ import dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 
 public class search_page extends AppCompatActivity {
 
+    private View linearLayout10;
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
             iv_moreBtn;
     private TextView tv_back, tv_headerTitle, tv_headerTitle2;
@@ -74,7 +75,7 @@ public class search_page extends AppCompatActivity {
     private RecyclerView recyclerView_searches;
     private ProgressBar progressBar;
     private AutoCompleteTextView auto_complete_txt, auto_complete_txt_sort;
-    private String listOfCategory = "";
+    private String listOfCategory = "", userID;
     private CardView cardViewBottom;
     private final String[] categoryArrayFix = {"All services", "Installation","Repair","Cleaning","Heating","Ventilation","Others"};
     private final String[] sortArrayFix = {"Name (A-Z)", "Name (Z-A)", "Price (Highest - Lowest)", "Price (Lowest - Highest)" , "Ratings (Highest - Lowest)",
@@ -103,6 +104,7 @@ public class search_page extends AppCompatActivity {
         validatePermission();
 
         user = FirebaseAuth.getInstance().getCurrentUser();
+        userID = user.getUid();
         projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
 
@@ -265,6 +267,15 @@ public class search_page extends AppCompatActivity {
             }
         });
 
+        linearLayout10.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentProject = new Intent(search_page.this, view_in_map.class);
+                intentProject.putExtra("Category", "all");
+                startActivity(intentProject);
+            }
+        });
+
     }
 
     private void generateRecyclerLayout() {
@@ -369,6 +380,10 @@ public class search_page extends AppCompatActivity {
                     for(DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
                         Projects projects = dataSnapshot.getValue(Projects.class);
+                        if(projects.getUserID().equals(userID))
+                        {
+                            continue;
+                        }
                         arrProj.add(projects);
                     }
 
@@ -496,6 +511,8 @@ public class search_page extends AppCompatActivity {
 
         auto_complete_txt = findViewById(R.id.auto_complete_txt);
         auto_complete_txt_sort = findViewById(R.id.auto_complete_txt_sort);
+
+        linearLayout10 = findViewById(R.id.linearLayout10);
 
     }
 

@@ -271,7 +271,6 @@ public class fragment1Installer extends Fragment {
 
         });
 
-
     }
 
     private void getProjByCategory() {
@@ -288,6 +287,10 @@ public class fragment1Installer extends Fragment {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
                         Projects projects = dataSnapshot.getValue(Projects.class);
+                        if(projects.getUserID().equals(userID))
+                        {
+                            continue;
+                        }
                         arrProjects.add(projects);
                     }
 
