@@ -8,18 +8,20 @@ public class Chat {
     String receiverUid;
     String receiverPhotoUrl;
     String receiverName;
+    String productID;
 
     public Chat() {
     }
 
     public Chat(String chatType, String senderUid, String senderPhotoUrl, String receiverUid,
-                String receiverPhotoUrl, String receiverName) {
+                String receiverPhotoUrl, String receiverName, String productID) {
         this.chatType = chatType;
         this.senderUid = senderUid;
         this.senderPhotoUrl = senderPhotoUrl;
         this.receiverUid = receiverUid;
         this.receiverPhotoUrl = receiverPhotoUrl;
         this.receiverName = receiverName;
+        this.productID = productID;
     }
 
     public String getChatType() {
@@ -70,5 +72,11 @@ public class Chat {
         this.receiverName = receiverName;
     }
 
+    public String getProductID() {
+        return productID;
+    }
 
+    public void setProductID(String productID) {
+        this.productID = productID;
+    }
 }

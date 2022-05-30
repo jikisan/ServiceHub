@@ -56,7 +56,7 @@
         android:textColor="@color/black"
         android:textSize="20sp"
         android:layout_margin="16dp"
-        android:visibility="invisible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -93,6 +93,7 @@
             android:layout_weight="1"
             android:background="@drawable/rounded"
             android:text="Upload photos"
+            android:visibility="gone"
             app:backgroundTint="@android:color/holo_green_dark"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

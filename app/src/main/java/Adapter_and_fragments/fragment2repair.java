@@ -282,6 +282,10 @@ public class fragment2repair extends Fragment {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
                         Projects projects = dataSnapshot.getValue(Projects.class);
+                        if(projects.getUserID().equals(userID))
+                        {
+                            continue;
+                        }
                         arrProjects.add(projects);
                     }
 

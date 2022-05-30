@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.servicehub.CurrentLocation;
+import com.example.servicehub.DistanceDouble;
 import com.example.servicehub.Projects;
 import com.example.servicehub.R;
 import com.example.servicehub.booking_page;
@@ -55,6 +56,7 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
 
     List<Projects> arr;
     List<CurrentLocation> arrCurrentLocaction;
+    List<DistanceDouble> arrDistance;
     AdapterInstallerItem.OnItemClickListener onItemClickListener;
 
     private Context context;
@@ -81,6 +83,7 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
         Projects project = arr.get(position);
+
         CurrentLocation currentLocation = arrCurrentLocaction.get(0);
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -89,19 +92,26 @@ public class AdapterInstallerItem extends RecyclerView.Adapter<AdapterInstallerI
         double lat = Double.parseDouble(project.getLatitude());
         double lng =  Double.parseDouble(project.getLongitude());
 
+
+
+
        if(currentLatLng != null)
        {
            double distance = SphericalUtil.computeDistanceBetween(currentLatLng,
                    new LatLng(lat, lng));
 
-           DecimalFormat df = new DecimalFormat("#.00");
-           df.format(distance);
+           DistanceDouble distanceDouble = new DistanceDouble(distance);
 
-           if (distance > 1000) {
-               double kilometers = distance / 1000;
+           double finalDistance = distanceDouble.getDistance();
+
+           DecimalFormat df = new DecimalFormat("#.00");
+           df.format(finalDistance);
+
+           if (finalDistance > 1000) {
+               double kilometers = finalDistance / 1000;
                holder.txtLocationDistance.setText(df.format(kilometers) + " KM");
            } else {
-               holder.txtLocationDistance.setText(df.format(distance) + " m");
+               holder.txtLocationDistance.setText(df.format(finalDistance) + " m");
            }
        }
 

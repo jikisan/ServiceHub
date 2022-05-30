@@ -9,6 +9,7 @@
     tools:context=".chat_activity_order">
 
     <LinearLayout
+        android:id="@+id/layoutList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"

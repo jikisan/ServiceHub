@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.servicehub.Photos;
 import com.example.servicehub.R;
@@ -38,6 +40,7 @@ public class fragment1Photos extends Fragment {
     private AdapterPhotoItem adapterPhotoItem;
     private String projectIdFromIntent;
     private DatabaseReference photoDatabase;
+    private ProgressBar progressBar;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -89,9 +92,13 @@ public class fragment1Photos extends Fragment {
         photoDatabase = FirebaseDatabase.getInstance().getReference("Photos");
 
         RecyclerView rv_photos = view.findViewById(R.id.rv_photos);
+        progressBar = view.findViewById(R.id.progressBar);
+        TextView empty_view = view.findViewById(R.id.empty_view);
+
         rv_photos.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false);
         rv_photos.setLayoutManager(gridLayoutManager);
+
 
         adapterPhotoItem = new AdapterPhotoItem(arrUrl);
         rv_photos.setAdapter(adapterPhotoItem);
@@ -130,6 +137,7 @@ public class fragment1Photos extends Fragment {
                         arrUrl.add(photos);
                     }
 
+                    progressBar.setVisibility(View.GONE);
                     adapterPhotoItem.notifyDataSetChanged();
                 }
 

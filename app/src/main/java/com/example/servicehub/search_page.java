@@ -53,6 +53,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,6 +88,7 @@ public class search_page extends AppCompatActivity {
     private DatabaseReference projDatabase;
     private ArrayList<Projects> arrProj, arr;
     private ArrayList<String> arrCategory;
+    private ArrayList<DistanceDouble> arrDistance;
     private ArrayList<CurrentLocation> arrCurrentLocaction;
     private FirebaseUser user;
 
@@ -202,6 +204,15 @@ public class search_page extends AppCompatActivity {
                         Collections.sort(arrProj, ratingsLowestToHighest);
                         adapterInstallerItem.notifyDataSetChanged();
                         break;
+                    case 6:
+                        Collections.sort(arrDistance, distanceNearest);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        break;
+                    case 7:
+                        Collections.sort(arrDistance, distanceNearest);
+                        adapterInstallerItem.notifyDataSetChanged();
+                        Collections.reverse(arrDistance);
+                        break;
 
                     default:
                         Collections.sort(arrProj, nameAZ);
@@ -213,6 +224,12 @@ public class search_page extends AppCompatActivity {
             }
 
 
+            public Comparator<DistanceDouble> distanceNearest = new Comparator<DistanceDouble>() {
+                @Override
+                public int compare(DistanceDouble distanceDouble, DistanceDouble t1) {
+                    return String.valueOf(distanceDouble.getDistance()).compareToIgnoreCase(String.valueOf(t1.getDistance()));
+                }
+            };
 
 
             public Comparator<Projects> nameAZ = new Comparator<Projects>() {
@@ -331,6 +348,10 @@ public class search_page extends AppCompatActivity {
                     for(DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
                         Projects projects = dataSnapshot.getValue(Projects.class);
+                        if(projects.getUserID().equals(userID))
+                        {
+                            continue;
+                        }
                         arrProj.add(projects);
 
                     }
@@ -385,6 +406,9 @@ public class search_page extends AppCompatActivity {
                             continue;
                         }
                         arrProj.add(projects);
+                        double lat = Double.parseDouble(projects.getLatitude());
+                        double lng =  Double.parseDouble(projects.getLongitude());
+                        getDistance(arrCurrentLocaction, lat, lng);
                     }
 
                     progressBar.setVisibility(View.GONE);
@@ -397,6 +421,18 @@ public class search_page extends AppCompatActivity {
                 Toast.makeText(search_page.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void getDistance(ArrayList<CurrentLocation> arrCurrentLocaction, double lat, double lng) {
+        CurrentLocation currentLocation = arrCurrentLocaction.get(0);
+        LatLng currentLoc = currentLocation.getCurrentLocation();
+
+        double distance = SphericalUtil.computeDistanceBetween(currentLoc,
+                new LatLng(lat, lng));
+
+        DistanceDouble distanceDouble = new DistanceDouble(distance);
+        arrDistance.add(distanceDouble);
+
     }
 
     private void dropDownMenuTextView() {
@@ -490,6 +526,7 @@ public class search_page extends AppCompatActivity {
         arrProj = new ArrayList<>();
         arrCategory = new ArrayList<>();
         arrCurrentLocaction = new ArrayList<>();
+        arrDistance = new ArrayList<>();
 
         iv_messageBtn = findViewById(R.id.iv_messageBtn);
         iv_notificationBtn = findViewById(R.id.iv_notificationBtn);

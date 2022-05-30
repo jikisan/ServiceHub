@@ -267,6 +267,7 @@ public class booking_application_page extends AppCompatActivity {
 
                 TimePickerDialog timePickerDialog = new TimePickerDialog(booking_application_page.this, style, onTimeSetListener, hour, minute, false);
                 timePickerDialog.updateTime(8,00);
+
                 timePickerDialog.setTitle("Select Time");
                 timePickerDialog.show();
             }

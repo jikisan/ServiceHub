@@ -99,7 +99,7 @@ public class login_page extends AppCompatActivity {
                     et_username.setError("Email is Required");
                     return;
                 }
-                else if ( !Patterns.EMAIL_ADDRESS.matcher(email).matches())
+                else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches())
                 {
                     et_username.setError("Incorrect Email Format");
                 }
@@ -108,15 +108,6 @@ public class login_page extends AppCompatActivity {
 
                     et_password.setError("Password is Required");
                     return;
-                }
-                else if (password.length() < 8)
-                {
-                    et_password.setError("Password must be 8 or more characters");
-                    return;
-                }
-                else if (!isValidPassword(password))
-                {
-                    Toast.makeText(login_page.this, "Please choose a stronger password. Try a mix of letters, numbers, and symbols.", Toast.LENGTH_LONG).show();
                 }
                 else
                 {
@@ -162,7 +153,7 @@ public class login_page extends AppCompatActivity {
                                 }
 
                             } else {
-                                Toast.makeText(login_page.this, "" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(login_page.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

@@ -96,7 +96,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="8dp"
-                        android:text="Tap to view more photo"
+                        android:text="Tap to view more photos and videos"
                         android:textColor="@color/black"
                         android:textSize="18sp"
                         android:gravity="bottom|center_horizontal"

@@ -54,6 +54,13 @@ public class my_ratings_page extends AppCompatActivity {
         setRef();
         generateRecyclerLayout();
         bottomNavTaskbar();
+
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 
 

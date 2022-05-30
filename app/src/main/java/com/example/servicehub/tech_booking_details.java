@@ -253,12 +253,6 @@ public class tech_booking_details extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                Intent intent = new Intent(tech_booking_details.this, rating_and_review_page.class);
-                intent.putExtra("booking id", bookingIdFromIntent);
-                intent.putExtra("category", "booking");
-                intent.putExtra("client id", custID);
-                intent.putExtra("tech id", techID);
-                startActivity(intent);
             }
         });
 

@@ -323,6 +323,10 @@ public class fragment2Map extends Fragment implements GoogleMap.OnInfoWindowClic
                     for (DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
                         Listings listings = dataSnapshot.getValue(Listings.class);
+                        if(listings.getUserID().equals(userID))
+                        {
+                            continue;
+                        }
 
                         String imageUrl = listings.getImageUrl().toString();
                         String latString = listings.getLatitude();
@@ -384,7 +388,10 @@ public class fragment2Map extends Fragment implements GoogleMap.OnInfoWindowClic
                     for (DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
                         Projects projects = dataSnapshot.getValue(Projects.class);
-
+                        if(projects.getUserID().equals(userID))
+                        {
+                            continue;
+                        }
 
                         String projId = dataSnapshot.getKey();
                         String imageUrl = projects.getImageUrl().toString();

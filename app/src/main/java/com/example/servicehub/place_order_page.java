@@ -80,7 +80,7 @@ public class place_order_page extends AppCompatActivity {
                 String receiver = sellerID;
                 String chatName = tempListName;
 
-                String chatUid = sender + "_" + receiver + "_" + chatName;
+                String chatUid = sender + "_" + receiver + "_" + listingIdFromIntent;
 
                 Intent intent = new Intent(place_order_page.this, chat_activity_order.class);
                 intent.putExtra("listing id", listingIdFromIntent);

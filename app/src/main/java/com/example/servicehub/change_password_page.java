@@ -24,7 +24,10 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -160,18 +163,15 @@ public class change_password_page extends AppCompatActivity {
 
                 else if (isValidPassword(currentPassword))
                 {
-                    Toast.makeText(change_password_page.this, "Passwords should contain atleast one: uppercase letters: A-Z." +
-                            " One lowercase letters: a-z. One number: 0-9. ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(change_password_page.this, "Please choose a stronger password. Try a mix of letters, numbers, and symbols.", Toast.LENGTH_LONG).show();
                 }
                 else if (isValidPassword(newPassword))
                 {
-                    Toast.makeText(change_password_page.this, "New Passwords should contain atleast one: uppercase letters: A-Z." +
-                            " One lowercase letters: a-z. One number: 0-9. ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(change_password_page.this, "Please choose a stronger password. Try a mix of letters, numbers, and symbols.", Toast.LENGTH_LONG).show();
                 }
                 else if (isValidPassword(confirmNewPassword))
                 {
-                    Toast.makeText(change_password_page.this, "Confirmation Passwords should contain atleast one: uppercase letters: A-Z." +
-                            " One lowercase letters: a-z. One number: 0-9. ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(change_password_page.this, "Please choose a stronger password. Try a mix of letters, numbers, and symbols.", Toast.LENGTH_LONG).show();
                 }
                 else if (!newPassword.equals(confirmNewPassword))
                 {
@@ -189,21 +189,7 @@ public class change_password_page extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful())
                                     {
-                                        user.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful())
-                                                {
-                                                    Toast.makeText(change_password_page.this, "Password is changed, please sign in", Toast.LENGTH_SHORT).show();
-                                                    fAuth.signOut();
-                                                    Intent intent = new Intent(change_password_page.this, intro_logo.class);
-                                                    startActivity(intent);
-                                                }
-                                                else
-                                                {
-                                                }
-                                            }
-                                        });
+                                        updatePassword(newPassword);
                                     }
                                     else
                                     {
@@ -218,10 +204,44 @@ public class change_password_page extends AppCompatActivity {
 
     }
 
+    private void updatePassword(String newPassword) {
+
+        user.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful())
+                {
+                    updatePasswordInDb(newPassword);
+
+
+                }
+            }
+        });
+    }
+
+    private void updatePasswordInDb(String newPassword) {
+        DatabaseReference userDB = FirebaseDatabase.getInstance().getReference("Users");
+
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("password", newPassword);
+
+        userDB.child(user.getUid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(change_password_page.this, "Password is changed, please sign in", Toast.LENGTH_SHORT).show();
+                fAuth.signOut();
+                Intent intent = new Intent(change_password_page.this, intro_logo.class);
+                startActivity(intent);
+            }
+        });
+
+
+    }
+
     private boolean isValidPassword(String password) {
         String regex = "^(?=.*[0-9])"
                 + "(?=.*[a-z])(?=.*[A-Z])"
-                + "(?=.*[@#$%^&+=?!])"
+                + "(?=.*[@#$%^&+=?!#$%&()*+,./])"
                 + "(?=\\S+$).{8,15}$";
 
         Pattern p = Pattern.compile(regex);

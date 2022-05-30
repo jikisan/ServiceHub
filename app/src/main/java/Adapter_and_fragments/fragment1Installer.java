@@ -153,7 +153,6 @@ public class fragment1Installer extends Fragment {
         generateRecyclerLayout(view);
         getProjByCategory();
         dropDownMenuTextView();
-        onClickToGetKeyProj();
         clickListeners();
 
         // Inflate the layout for this fragment
@@ -308,10 +307,6 @@ public class fragment1Installer extends Fragment {
         });
     }
 
-    private void onClickToGetKeyProj() {
-
-
-    }
 
     private void validatePermission() {
 

@@ -118,7 +118,7 @@ public class booking_page extends AppCompatActivity {
         iv_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String chatUid = userID.toString() + "_" + techID.toString() + "_" + tempProjName;
+                String chatUid = userID.toString() + "_" + techID.toString() + "_" + projectIdFromIntent;
 
                 Intent intent = new Intent(booking_page.this, chat_activity.class);
                 intent.putExtra("project id", projectIdFromIntent);

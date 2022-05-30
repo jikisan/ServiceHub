@@ -3,6 +3,7 @@ package com.example.servicehub;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -33,7 +34,7 @@ import java.util.Locale;
 
 public class chat_activity extends AppCompatActivity {
 
-    private LinearLayout layout;
+    private LinearLayout layout, layoutProj;
     private ImageView sendButton, iv_projPhotoInChat;
     private EditText messageArea;
     private TextView tv_projNameInChat, tv_price, tv_userRatingCount;
@@ -81,7 +82,7 @@ public class chat_activity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Chat chat = new Chat(chatType, senderUid, senderPhotoUrl, receiverUid,
-                        receiverPhotoUrl, receiverName);
+                        receiverPhotoUrl, receiverName, projectID);
 
                 String tempSenderUid;
 
@@ -106,6 +107,15 @@ public class chat_activity extends AppCompatActivity {
                     });
 
                 }
+            }
+        });
+
+        layoutProj.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentProject = new Intent(chat_activity.this, booking_page.class);
+                intentProject.putExtra("Project ID", projectID);
+                startActivity(intentProject);
             }
         });
     }
@@ -207,6 +217,7 @@ public class chat_activity extends AppCompatActivity {
     }
 
     private void setRef() {
+        layoutProj = (LinearLayout)findViewById(R.id.layoutProj);
         layout = (LinearLayout)findViewById(R.id.layout1);
         sendButton = (ImageView)findViewById(R.id.sendButton);
         messageArea = (EditText)findViewById(R.id.messageArea);

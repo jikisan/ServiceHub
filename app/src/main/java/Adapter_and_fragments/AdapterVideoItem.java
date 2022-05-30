@@ -37,7 +37,7 @@ public class AdapterVideoItem extends RecyclerView.Adapter<AdapterVideoItem.Item
     @Override
     public AdapterVideoItem.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new AdapterVideoItem.ItemViewHolder
-                (LayoutInflater.from(parent.getContext()).inflate(R.layout.item_photos,parent, false));
+                (LayoutInflater.from(parent.getContext()).inflate(R.layout.item_videos,parent, false));
     }
 
     @SuppressLint("CheckResult")

@@ -360,7 +360,7 @@ public class checkout_page extends AppCompatActivity {
                 Picasso.get().load(imageUrl).into(iv_listPhoto);
                 tv_listName.setText(sp_listName);
                 tv_productSub.setText("₱ " + String.valueOf(price));
-                tv_totalPriceSub.setText("₱ " + prodSubTotal);
+                tv_totalPriceSub.setText("₱ " + totalPayment);
                 tv_shippinSub.setText("₱ " + shipFee);
                 tv_totalPrice.setText("₱ " + totalPayment);
 
