@@ -47,7 +47,7 @@ public class order_details_page extends AppCompatActivity {
             tv_customerAddress, tv_custContactNum, tv_back, tv_totalAmount, tv_paymentMethod;
 
     private String userID, imageUriText, orderIdFromIntent, custLatLng, custID,
-            orderName, latString, longString, listingIdFromIntent;
+            orderName, latString, longString, listingIdFromIntent, sellerID;
     private CardView cv_finishOrderBtn;
 
     private FirebaseUser user;
@@ -146,6 +146,31 @@ public class order_details_page extends AppCompatActivity {
                 startActivity(intentProject);
             }
         });
+
+        cv_finishOrderBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new SweetAlertDialog(order_details_page.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Finish order?")
+                        .setCancelText("Back")
+                        .setConfirmButton("FINISH ORDER", new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                Intent intent = new Intent(order_details_page.this, rating_and_review_client.class);
+                                intent.putExtra("category", "order");
+                                intent.putExtra("booking id", orderIdFromIntent);
+                                intent.putExtra("client id", custID);
+                                intent.putExtra("tech id", sellerID);
+                                startActivity(intent);
+                            }
+                        })
+                        .setContentText("Are you sure you want to \nfinish this order?")
+                        .show();
+
+
+            }
+        });
     }
 
     private void deleteOrder() {
@@ -238,6 +263,7 @@ public class order_details_page extends AppCompatActivity {
                 if (orders != null){
                     try {
 
+                        sellerID = orders.sellerID;
                         listingIdFromIntent = orders.listingID;
                         custID = orders.getCustID();
                         latString = orders.getLatitude();

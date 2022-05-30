@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.servicehub.Photos;
 import com.example.servicehub.R;
@@ -39,6 +41,7 @@ public class fragment2videos extends Fragment {
     private AdapterVideoItem adapterVideoItem;
     private String projectIdFromIntent;
     private DatabaseReference videoDatabase;
+    private ProgressBar progressBar;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -86,10 +89,15 @@ public class fragment2videos extends Fragment {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment2videos, container, false);
 
+
+
         projectIdFromIntent = getActivity().getIntent().getStringExtra("project ID");
         videoDatabase = FirebaseDatabase.getInstance().getReference("Videos");
 
         RecyclerView rv_videos = view.findViewById(R.id.rv_videos);
+        progressBar = view.findViewById(R.id.progressBar);
+        TextView empty_view = view.findViewById(R.id.empty_view);
+
         rv_videos.setHasFixedSize(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 3, GridLayoutManager.VERTICAL, false);
         rv_videos.setLayoutManager(gridLayoutManager);
@@ -125,10 +133,18 @@ public class fragment2videos extends Fragment {
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Videos videos = snapshot.getValue(Videos.class);
-                arrUrl.add(videos);
-                rv_videos.setAdapter(adapterVideoItem);
-                adapterVideoItem.notifyDataSetChanged();
+
+                if(snapshot.exists())
+                {
+                    Videos videos = snapshot.getValue(Videos.class);
+                    arrUrl.add(videos);
+                    rv_videos.setAdapter(adapterVideoItem);
+                    adapterVideoItem.notifyDataSetChanged();
+                    progressBar.setVisibility(View.GONE);
+
+                }
+
+
             }
 
             @Override

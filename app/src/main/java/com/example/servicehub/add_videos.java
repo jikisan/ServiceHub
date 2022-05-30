@@ -70,6 +70,9 @@ public class add_videos extends AppCompatActivity {
         videoDatabase = FirebaseDatabase.getInstance().getReference("Videos");
 
         setRef();
+
+
+
         generateRecyclerLayout();
         clickListeners();
     }
@@ -151,8 +154,10 @@ public class add_videos extends AppCompatActivity {
                         CurrentVideoSelect = CurrentVideoSelect + 1;
                     }
 
-                    tv_summary.setVisibility(View.VISIBLE);
-                    tv_summary.setText("You Have Selected "+ arrVideoList.size() +" Videos" );
+
+                    btn_choose.setVisibility(View.GONE);
+                    btn_addVideo.setVisibility(View.VISIBLE);
+                    btn_addVideo.setText("Upload "+ arrVideoList.size() +" Videos" );
 
                 }
                 else {
@@ -160,8 +165,10 @@ public class add_videos extends AppCompatActivity {
                     if (data.getData() != null) {
 
                         arrVideoList.add(uri);
-                        tv_summary.setVisibility(View.VISIBLE);
-                        tv_summary.setText("You Have Selected "+ arrVideoList.size() +" Video" );
+
+                        btn_choose.setVisibility(View.GONE);
+                        btn_addVideo.setVisibility(View.VISIBLE);
+                        btn_addVideo.setText("Upload "+ arrVideoList.size() +" Video" );
                     }
                 }
 
@@ -209,6 +216,13 @@ public class add_videos extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
 
                 arrVideoList.clear();
+                if(arrVideoList.isEmpty() || arrVideoList == null)
+                {
+                    btn_addVideo.setVisibility(View.GONE);
+                    btn_choose.setVisibility(View.VISIBLE);
+                }
+
+                Toast.makeText(add_videos.this, "Upload complete", Toast.LENGTH_SHORT).show();
                 progressDialog.dismiss();
             }
         });

@@ -20,6 +20,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -27,6 +28,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import dev.shreyaspatil.MaterialDialog.AbstractDialog;
 import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import dev.shreyaspatil.MaterialDialog.MaterialDialog;
@@ -40,26 +42,67 @@ public class rating_and_review_client extends AppCompatActivity {
     private EditText et_ratingMessage;
     private Button btn_ratingSubmit;
 
-    private DatabaseReference userDatabase, projectDatabase, listDatabase, ratingDatabase, bookingDatabase;
+    private DatabaseReference userDatabase, projectDatabase, listDatabase, ratingDatabase, bookingDatabase, orderDatabase;
     private String reviewCategory, serviceId, clientId, techId;
-    private String clientFirstName, clientLastName, techFirstName, techLastName, bookingName, bookingImageUrl;
+    private String clientFirstName, clientLastName, techFirstName, techLastName, bookingName,
+            bookingImageUrl, orderImageUrl, itemName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rating_and_review_client);
 
+        reviewCategory = getIntent().getStringExtra("category");
+        serviceId = getIntent().getStringExtra("booking id");
+        clientId = getIntent().getStringExtra("client id");
+        techId = getIntent().getStringExtra("tech id");
+
         setRef();
         generateData();
         clickListeners();
     }
 
-    private void generateData() {
+    private void clickListeners() {
+        tv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
-        reviewCategory = getIntent().getStringExtra("category");
-        serviceId = getIntent().getStringExtra("booking id");
-        clientId = getIntent().getStringExtra("client id");
-        techId = getIntent().getStringExtra("tech id");
+        btn_ratingSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                int noOfStars = ratingBar.getNumStars();
+                float getRating = ratingBar.getRating();
+
+                new SweetAlertDialog(rating_and_review_client.this, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("SUBMIT RATING")
+                        .setCancelText("Back")
+                        .setConfirmButton("Finish and submit Rating?", new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                final ProgressDialog progressDialog = new ProgressDialog(rating_and_review_client.this);
+                                progressDialog.setTitle("Submit Rating...");
+                                progressDialog.setCancelable(false);
+                                progressDialog.show();
+
+                                submitRating(getRating);
+
+                            }
+                        })
+                        .setContentText("Rate " + getRating + "/" + noOfStars + " \nfor " + clientFirstName + " " + clientLastName + "?")
+                        .show();
+
+            }
+
+
+        });
+    }
+
+    private void generateData() {
 
         userDatabase.child(clientId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -80,6 +123,7 @@ public class rating_and_review_client extends AppCompatActivity {
 
                     tv_clientName.setText(clientFirstName + " " + clientLastName);
 
+                    getTechSellerInfo();
                 }
             }
 
@@ -89,6 +133,11 @@ public class rating_and_review_client extends AppCompatActivity {
             }
         });
 
+
+
+    }
+
+    private void getTechSellerInfo() {
         userDatabase.child(techId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -100,24 +149,7 @@ public class rating_and_review_client extends AppCompatActivity {
 
                     techLastName = users.lastName.substring(0, 1).toUpperCase();
 
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-        bookingDatabase.child(serviceId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists())
-                {
-                    Booking booking = snapshot.getValue(Booking.class);
-                    bookingName = booking.projName;
-                    bookingImageUrl = booking.imageUrl;
-
+                    getBookingOrderInfo();
                 }
             }
 
@@ -129,54 +161,53 @@ public class rating_and_review_client extends AppCompatActivity {
 
     }
 
-    private void clickListeners() {
-        tv_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
+    private void getBookingOrderInfo() {
+        if(reviewCategory.equals("booking"))
+        {
+            bookingDatabase.child(serviceId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists())
+                    {
+                        Booking booking = snapshot.getValue(Booking.class);
+                        bookingName = booking.projName;
+                        bookingImageUrl = booking.imageUrl;
 
-        btn_ratingSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                    }
+                }
 
-                int noOfStars = ratingBar.getNumStars();
-                float getRating = ratingBar.getRating();
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-                BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(rating_and_review_client.this)
-                        .setTitle("Submit Rating?")
-                        .setMessage("Rate " + getRating + "/" + noOfStars + " \nfor " + clientFirstName + " " + clientLastName + "?")
-                        .setCancelable(true)
-                        .setPositiveButton("Submit Rating", new MaterialDialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int which) {
+                }
+            });
 
-                                final ProgressDialog progressDialog = new ProgressDialog(rating_and_review_client.this);
-                                progressDialog.setTitle("Submit Rating...");
-                                progressDialog.setCancelable(false);
-                                progressDialog.show();
+        }
+        else if(reviewCategory.equals("order"))
+        {
+            orderDatabase.child(serviceId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists())
+                    {
+                        Orders orders = snapshot.getValue(Orders.class);
+                        itemName = orders.itemName;
+                        orderImageUrl = orders.imageUrl;
 
-                                submitRating(getRating);
+                    }
+                }
 
-                            }
-                        })
-                        .setNegativeButton("Back", new MaterialDialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int which) {
-                                dialogInterface.dismiss();
-                            }
-                        })
-                        .build();
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-                // Show Dialog
-                mBottomSheetDialog.show();
-
-            }
+                }
+            });
+        }
 
 
-        });
     }
+
+
 
     private void submitRating(float getRating) {
 
@@ -201,27 +232,66 @@ public class rating_and_review_client extends AppCompatActivity {
     }
 
     private void updataBookingStatus() {
-        String bookingStatus = "complete";
-        HashMap<String, Object> hashMap = new HashMap<String, Object>();
-        hashMap.put("status", bookingStatus);
+        if(reviewCategory.equals("booking"))
+        {
+            String bookingStatus = "complete";
+            HashMap<String, Object> hashMap = new HashMap<String, Object>();
+            hashMap.put("status", bookingStatus);
 
-        bookingDatabase.child(serviceId).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            bookingDatabase.child(serviceId).updateChildren(hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
 
-                generateNotification();
+                    generateNotification();
 
-            }
-        });
+                }
+            });
+
+        }
+        else if(reviewCategory.equals("order"))
+        {
+            orderDatabase.child(serviceId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Orders orders = snapshot.getValue(Orders.class);
+
+                    for(DataSnapshot dataSnapshot : snapshot.getChildren())
+                    {
+                        dataSnapshot.getRef().removeValue();
+                        generateNotification();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
+
     }
 
     private void generateNotification() {
 
-        DatabaseReference notificationDB = FirebaseDatabase.getInstance().getReference("Notifications");
 
-        String sp_bookingName = bookingName;
-        String sp_notifTitle = "Booking Completed";
-        String sp_notifMessage = "Booking: " + sp_bookingName + " has change to completed by the technician.";
+        DatabaseReference notificationDB = FirebaseDatabase.getInstance().getReference("Notifications");
+        String sp_bookingName;
+        String sp_notifTitle = null;
+        String sp_notifMessage = null;
+
+        if(reviewCategory.equals("booking"))
+        {
+            sp_bookingName = bookingName;
+            sp_notifTitle = "Booking Completed";
+            sp_notifMessage = "Booking status for BOOKING:" + sp_bookingName + " has change to COMPLETED by the technician.";
+        }
+        else if(reviewCategory.equals("order"))
+        {
+            sp_bookingName = itemName;
+            sp_notifTitle = "Order Completed";
+            sp_notifMessage = "Order status for ORDER:" + sp_bookingName + " has change to COMPLETED by the Seller.";
+        }
 
         Date currentTime = Calendar.getInstance().getTime();
         String cartCreated = currentTime.toString();
@@ -250,6 +320,7 @@ public class rating_and_review_client extends AppCompatActivity {
         listDatabase = FirebaseDatabase.getInstance().getReference("Listings");
         ratingDatabase = FirebaseDatabase.getInstance().getReference("Ratings");
         bookingDatabase = FirebaseDatabase.getInstance().getReference("Bookings");
+        orderDatabase = FirebaseDatabase.getInstance().getReference("Orders");
 
         iv_clientPhoto = findViewById(R.id.iv_clientPhoto);
         tv_back = findViewById(R.id.tv_back);

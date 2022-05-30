@@ -153,6 +153,10 @@ public class fragment4marketplace extends Fragment {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren())
                     {
                         Listings listingsData = dataSnapshot.getValue(Listings.class);
+                        if(listingsData.getUserID().equals(userID))
+                        {
+                            continue;
+                        }
                         arrListings.add(listingsData);
                     }
 

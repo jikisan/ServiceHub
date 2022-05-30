@@ -3,8 +3,10 @@ package com.example.servicehub;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -33,6 +35,7 @@ public class chat_activity_order extends AppCompatActivity {
     private ImageView sendButton, iv_listPhotoInChat;
     private EditText messageArea;
     private TextView tv_listNameInChat;
+    private LinearLayout layoutList;
 
     private ScrollView scrollView;
     private Firebase reference1, reference2;
@@ -147,7 +150,7 @@ public class chat_activity_order extends AppCompatActivity {
             public void onClick(View v) {
 
                 Chat chat = new Chat(chatType, senderUid, senderPhotoUrl, receiverUid,
-                        receiverPhotoUrl, receiverName);
+                        receiverPhotoUrl, receiverName, listingID);
 
                 String tempSenderUid;
 
@@ -174,6 +177,17 @@ public class chat_activity_order extends AppCompatActivity {
                 }
             }
         });
+
+        layoutList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentProject = new Intent(chat_activity_order.this, place_order_page.class);
+                intentProject.putExtra("Listing ID", listingID);
+                startActivity(intentProject);
+            }
+        });
+
+
     }
 
     private void addDataToMessageDB(String senderUid, String receiverUid) {
@@ -196,6 +210,8 @@ public class chat_activity_order extends AppCompatActivity {
         messageArea = (EditText)findViewById(R.id.messageArea);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
 
+        layoutList = (LinearLayout)findViewById(R.id.layoutList);
+
         tv_listNameInChat = findViewById(R.id.tv_listNameInChat);
         iv_listPhotoInChat = findViewById(R.id.iv_listPhotoInChat);
     }
@@ -208,20 +224,27 @@ public class chat_activity_order extends AppCompatActivity {
         lp.setMargins(16, 16, 16, 16);
         textView.setLayoutParams(lp);
 
-        if(type == 1) {
-            textView.setBackgroundResource(R.drawable.rounded_corner1);
-            textView.setTextColor(Color.WHITE);
+        TextView textView2 = new TextView(chat_activity_order.this);
+        textView2.setText(message);
+        textView2.setTextSize(16);
+        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp2.weight = 1.0f;
+        lp2.gravity = Gravity.RIGHT;
+        lp2.setMargins(16, 16, 16, 16);
+        textView2.setLayoutParams(lp2);
 
+        if(type == 1) {
+            textView2.setBackgroundResource(R.drawable.rounded_corner1);
+            textView2.setTextColor(Color.WHITE);
+            layout.addView(textView2);
 
         }
         else{
             textView.setBackgroundResource(R.drawable.rounded_corner2);
             textView.setTextColor(Color.BLACK);
-
+            layout.addView(textView);
 
         }
-
-        layout.addView(textView);
         scrollView.fullScroll(View.FOCUS_DOWN);
     }
 }

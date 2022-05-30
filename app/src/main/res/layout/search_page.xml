@@ -37,7 +37,7 @@
                 android:layout_width="0dp"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_margin="5dp"
-                android:queryHint="Search by name"
+                android:queryHint="Search"
                 android:background="@drawable/rounder_searchbar"
                 android:iconifiedByDefault="false"
                 android:focusable="false"
@@ -80,7 +80,6 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
             </LinearLayout>
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

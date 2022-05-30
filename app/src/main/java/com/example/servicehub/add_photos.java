@@ -150,8 +150,9 @@ public class add_photos extends AppCompatActivity {
                         CurrentImageSelect = CurrentImageSelect + 1;
                     }
 
-                    tv_summary.setVisibility(View.VISIBLE);
-                    tv_summary.setText("You Have Selected "+ arrImageList.size() +" Pictures" );
+                    btn_choose.setVisibility(View.GONE);
+                    btn_addPhoto.setVisibility(View.VISIBLE);
+                    btn_addPhoto.setText("Upload "+ arrImageList.size() +" Photos" );
 
                 }
                 else {
@@ -159,8 +160,9 @@ public class add_photos extends AppCompatActivity {
                     if (imageuri != null) {
 
                         arrImageList.add(imageuri);
-                        tv_summary.setVisibility(View.VISIBLE);
-                        tv_summary.setText("You Have Selected "+ arrImageList.size() +" Picture" );
+                        btn_choose.setVisibility(View.GONE);
+                        btn_addPhoto.setVisibility(View.VISIBLE);
+                        btn_addPhoto.setText("Upload "+ arrImageList.size() +" Photo" );
                     }
                 }
 
@@ -210,7 +212,12 @@ public class add_photos extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
 
                 arrImageList.clear();
+                Toast.makeText(add_photos.this, "Upload complete", Toast.LENGTH_SHORT);
                 progressDialog.dismiss();
+                Intent intent = new Intent(add_photos.this, add_photos.class);
+                intent.putExtra("Project ID", projectIdFromIntent);
+                startActivity(intent);
+
             }
         });
     }
