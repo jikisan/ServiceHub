@@ -101,16 +101,16 @@ public class view_tech extends AppCompatActivity {
     }
 
     private void generateTechData(String techId) {
-        DatabaseReference techDatabase = FirebaseDatabase.getInstance().getReference("Technician Applicants");
+        DatabaseReference techDatabase = FirebaseDatabase.getInstance().getReference("Users");
 
         techDatabase.child(techId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists())
                 {
-                    Tech_application tech = snapshot.getValue(Tech_application.class);
+                    Users tech = snapshot.getValue(Users.class);
 
-                    String sp_imageUrl = tech.selfieUrl;
+                    String sp_imageUrl = tech.imageUrl;
                     String sp_fname = tech.firstName;
                     String sp_lname = tech.lastName;
                     String techName = sp_fname + " " + sp_lname;
@@ -174,7 +174,6 @@ public class view_tech extends AppCompatActivity {
             }
         });
     }
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)

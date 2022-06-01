@@ -116,13 +116,10 @@ public class add_project_page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_project_page);
 
-
-
-
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
         projectStorage = FirebaseStorage.getInstance().getReference("Projects").child("Banner");
-        projectDatabase = FirebaseDatabase.getInstance().getReference("Projects");
+        projectDatabase = FirebaseDatabase.getInstance().getReference("Projects Request");
 
         setRef();
         //adjustSlot();
@@ -272,7 +269,11 @@ public class add_project_page extends AppCompatActivity {
 
                 DatabaseReference myAddressDatabase = FirebaseDatabase.getInstance().getReference("Address");
 
-                myAddressDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                Query query = myAddressDatabase
+                        .orderByChild("custID")
+                        .equalTo(userID);
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -480,7 +481,7 @@ public class add_project_page extends AppCompatActivity {
                                     SweetAlertDialog pdialog;
                                     pdialog = new SweetAlertDialog(add_project_page.this, SweetAlertDialog.SUCCESS_TYPE);
                                     pdialog.setTitleText("Service Successfully Added");
-                                    pdialog.setContentText("Your service has been successfully added");
+                                    pdialog.setContentText("The service has been \nsuccessfully added for review");
                                     pdialog.setConfirmButton("Proceed", new SweetAlertDialog.OnSweetClickListener() {
                                         @Override
                                         public void onClick(SweetAlertDialog sweetAlertDialog) {

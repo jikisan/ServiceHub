@@ -110,7 +110,7 @@ public class order_details_page extends AppCompatActivity {
                 String receiver = custID;
                 String chatName = orderName;
 
-                String chatUid = sender + "_" + receiver + "_" + chatName;
+                String chatUid = sender + "_" + receiver + "_" + listingIdFromIntent;
 
                 Intent intent = new Intent(order_details_page.this, chat_activity_order.class);
                 intent.putExtra("listing id", listingIdFromIntent);
@@ -125,7 +125,8 @@ public class order_details_page extends AppCompatActivity {
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent = new Intent(order_details_page.this, seller_dashboard.class);
+                startActivity(intent);
             }
         });
 

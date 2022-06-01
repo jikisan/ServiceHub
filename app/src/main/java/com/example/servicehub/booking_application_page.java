@@ -33,10 +33,13 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
@@ -68,15 +71,19 @@ public class booking_application_page extends AppCompatActivity {
             "York","Other","I don't know"};
     private String[] airconType = {"Window","Split","Tower","Cassette","Suspended","Concealed","U-shaped Window"};
     private String[] unitType = {"Inverter","Non-Inverter","I don't know"};
-    private String latLng, latString, longString, propertyType, acBrand, acType, acUnitType, projectIdFromIntent;
+    private String latLng, latString, longString, propertyType, acBrand, acType, acUnitType, projectIdFromIntent, userID;
     private int hour, minute, year, month, day;
     private final SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+    private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.booking_application_page);
         projectIdFromIntent = getIntent().getStringExtra("projectIdFromIntent");
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userID = user.getUid();
 
         setRef();
         initPlaces();
@@ -141,7 +148,11 @@ public class booking_application_page extends AppCompatActivity {
 
                 DatabaseReference myAddressDatabase = FirebaseDatabase.getInstance().getReference("Address");
 
-                myAddressDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                Query query = myAddressDatabase
+                        .orderByChild("custID")
+                        .equalTo(userID);
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 

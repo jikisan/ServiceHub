@@ -71,8 +71,15 @@ public class AdapterRatingsItem extends RecyclerView.Adapter<AdapterRatingsItem.
                     Users users = snapshot.getValue(Users.class);
                     imageUrl = users.getImageUrl();
 
-                    Picasso.get().load(imageUrl)
-                            .into(holder.iv_raterPhoto);
+
+                    if(!imageUrl.isEmpty())
+                    {
+                        Picasso.get().load(imageUrl)
+                                .into(holder.iv_raterPhoto);
+                    }
+
+
+
 
                 }
             }

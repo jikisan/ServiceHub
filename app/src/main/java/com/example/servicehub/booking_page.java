@@ -448,6 +448,7 @@ public class booking_page extends AppCompatActivity {
                         String sp_userId = projectData.userID;
                         generateTechData(sp_userId);
                         progressBar.setVisibility(View.GONE);
+
                     }catch (Exception e){
                         e.printStackTrace();
 
@@ -469,23 +470,27 @@ public class booking_page extends AppCompatActivity {
     }
 
     private void generateTechData(String sp_userId) {
-        DatabaseReference techDatabase = FirebaseDatabase.getInstance().getReference("Technician Applicants");
+        DatabaseReference techDatabase = FirebaseDatabase.getInstance().getReference("Users");
 
         techDatabase.child(sp_userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists())
                 {
-                    Tech_application tech = snapshot.getValue(Tech_application.class);
+                    Users tech = snapshot.getValue(Users.class);
 
-                    String sp_imageUrl = tech.selfieUrl;
+                    String sp_imageUrl = tech.imageUrl;
                     String sp_fname = tech.firstName;
                     String sp_lname = tech.lastName;
                     String techName = sp_fname + " " + sp_lname;
 
-                    Picasso.get()
-                            .load(sp_imageUrl)
-                            .into(iv_techPhoto);
+
+                    if(!sp_imageUrl.isEmpty())
+                    {
+                        Picasso.get()
+                                .load(sp_imageUrl)
+                                .into(iv_techPhoto);
+                    }
 
                     tv_techName.setText(techName);
 

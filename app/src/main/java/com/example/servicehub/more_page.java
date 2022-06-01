@@ -124,7 +124,8 @@ public class more_page extends AppCompatActivity {
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent = new Intent(more_page.this, homepage.class);
+                startActivity(intent);
             }
         });
 

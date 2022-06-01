@@ -106,7 +106,10 @@ public class search_page extends AppCompatActivity {
         validatePermission();
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        userID = user.getUid();
+        if(user != null)
+        {
+            userID = user.getUid();
+        }
         projDatabase = FirebaseDatabase.getInstance().getReference("Projects");
 
 

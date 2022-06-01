@@ -36,6 +36,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -167,17 +168,29 @@ public class checkout_page extends AppCompatActivity {
                 }
                 else
                 {
-                    new SweetAlertDialog(checkout_page.this, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("Warning!.")
-                            .setCancelText("Cancel")
-                            .setConfirmButton("Submit", new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    placeOrder();
-                                }
-                            })
-                            .setContentText("Please make sure\n all information are correct.\n")
-                            .show();
+                    if (radioGroup.getCheckedRadioButtonId() == -1)
+                    {
+                        new SweetAlertDialog(
+                                checkout_page.this, SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText("Error!")
+                                .setContentText("Please choose payment!")
+                                .show();
+                    }
+                    else
+                    {
+                        new SweetAlertDialog(checkout_page.this, SweetAlertDialog.WARNING_TYPE)
+                                .setTitleText("Warning!.")
+                                .setCancelText("Cancel")
+                                .setConfirmButton("Submit", new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                        placeOrder();
+                                    }
+                                })
+                                .setContentText("Please make sure\n all information are correct.\n")
+                                .show();
+                    }
+
 
                 }
             }
@@ -195,7 +208,11 @@ public class checkout_page extends AppCompatActivity {
 
                 DatabaseReference myAddressDatabase = FirebaseDatabase.getInstance().getReference("Address");
 
-                myAddressDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                Query query = myAddressDatabase
+                        .orderByChild("custID")
+                        .equalTo(userID);
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 

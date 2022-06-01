@@ -2,8 +2,6 @@ package com.example.servicehub;
 
 public class Listings {
 
-
-
     String userID;
     String imageUrl;
     String imageName;

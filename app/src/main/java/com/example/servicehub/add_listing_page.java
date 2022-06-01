@@ -46,6 +46,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -89,7 +90,7 @@ public class add_listing_page extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
         listingStorage = FirebaseStorage.getInstance().getReference("Listings").child("Banner");
-        listingDatabase = FirebaseDatabase.getInstance().getReference("Listings");
+        listingDatabase = FirebaseDatabase.getInstance().getReference("Listings Request");
 
         setRef();
         initPlaces();
@@ -180,7 +181,11 @@ public class add_listing_page extends AppCompatActivity {
 
                 DatabaseReference myAddressDatabase = FirebaseDatabase.getInstance().getReference("Address");
 
-                myAddressDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                Query query = myAddressDatabase
+                        .orderByChild("custID")
+                        .equalTo(userID);
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 

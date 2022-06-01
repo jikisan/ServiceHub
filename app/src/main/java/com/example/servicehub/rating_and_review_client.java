@@ -117,9 +117,12 @@ public class rating_and_review_client extends AppCompatActivity {
                     clientLastName = users.lastName.substring(0, 1).toUpperCase() +
                             users.lastName.substring(1).toLowerCase();
 
-                    Picasso.get()
-                            .load(imageUrl)
-                            .into(iv_clientPhoto);
+                    if(!imageUrl.isEmpty())
+                    {
+                        Picasso.get()
+                                .load(imageUrl)
+                                .into(iv_clientPhoto);
+                    }
 
                     tv_clientName.setText(clientFirstName + " " + clientLastName);
 

@@ -65,7 +65,7 @@ public class AdapterInfoWindow  implements GoogleMap.InfoWindowAdapter {
             double kilometers = distance / 1000;
             binding.txtLocationDistance.setText(df.format(kilometers) + " KM");
         } else {
-            binding.txtLocationDistance.setText(distance + " Meters");
+            binding.txtLocationDistance.setText(df.format(distance) + " Meters");
 
         }
 

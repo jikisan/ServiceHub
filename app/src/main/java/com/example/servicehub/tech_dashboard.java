@@ -145,15 +145,15 @@ public class tech_dashboard extends AppCompatActivity {
 
     private void getTechInfo() {
 
-        techDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+        userDatabase.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Tech_application userProfile = snapshot.getValue(Tech_application.class);
+                Users userProfile = snapshot.getValue(Users.class);
 
                 if(userProfile != null){
                     String sp_fName = userProfile.firstName;
                     String sp_lName = userProfile.lastName;
-                    String sp_imageUrl = userProfile.selfieUrl;
+                    String sp_imageUrl = userProfile.imageUrl;
 
                     String firstName = sp_fName.substring(0, 1).toUpperCase()+ sp_fName.substring(1).toLowerCase();
                     String lastName = sp_lName.substring(0, 1).toUpperCase()+ sp_lName.substring(1).toLowerCase();
