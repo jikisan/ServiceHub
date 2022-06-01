@@ -174,7 +174,7 @@ public class tech_booking_details extends AppCompatActivity {
                 String receiver = custID;
                 String chatName = tempProjName;
 
-                String chatUid = sender + "_" + receiver + "_" + chatName;
+                String chatUid = sender + "_" + receiver + "_" + projectIdFromIntent;
 
                 Intent intent = new Intent(tech_booking_details.this, chat_activity.class);
                 intent.putExtra("project id", projectIdFromIntent);
@@ -252,7 +252,14 @@ public class tech_booking_details extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                bookingIdFromIntent = getIntent().getStringExtra("Booking ID");
 
+                Intent intent = new Intent(tech_booking_details.this, rating_and_review_page.class);
+                intent.putExtra("category", "booking");
+                intent.putExtra("booking id", bookingIdFromIntent);
+                intent.putExtra("client id", custID);
+                intent.putExtra("tech id", techID);
+                startActivity(intent);
             }
         });
 

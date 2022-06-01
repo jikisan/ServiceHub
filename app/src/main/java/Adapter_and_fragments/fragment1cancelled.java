@@ -99,7 +99,7 @@ public class fragment1cancelled extends Fragment {
         recyclerViewBookings.setAdapter(adapterBookingItem);
 
         Query query = bookingDatabase
-                .orderByChild("techID")
+                .orderByChild("custID")
                 .equalTo(userID);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {

@@ -280,7 +280,6 @@ public class rating_and_review_page extends AppCompatActivity {
         });
     }
 
-
     private void setRef() {
 
         bookingDatabase = FirebaseDatabase.getInstance().getReference("Bookings");

@@ -42,6 +42,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -253,7 +254,11 @@ public class edit_listing_page extends AppCompatActivity {
 
                 DatabaseReference myAddressDatabase = FirebaseDatabase.getInstance().getReference("Address");
 
-                myAddressDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
+                Query query = myAddressDatabase
+                        .orderByChild("custID")
+                        .equalTo(userID);
+
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
 

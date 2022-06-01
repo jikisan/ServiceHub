@@ -127,7 +127,7 @@
         android:layout_height="90dp"
         android:indeterminate="true"
         android:indeterminateTint="@color/light_blue"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

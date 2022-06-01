@@ -1,6 +1,7 @@
 package com.example.servicehub;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -77,18 +79,28 @@ public class notification_page extends AppCompatActivity {
                 .orderByChild("userID")
                 .equalTo(userID);
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
-
-                    Notification notification = dataSnapshot.getValue(Notification.class);
-                    arr.add(notification);
-                }
-
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Notification notification = snapshot.getValue(Notification.class);
+                arr.add(notification);
                 progressBar.setVisibility(View.GONE);
                 adapterNotificationItem.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
             }
 
             @Override
@@ -96,6 +108,26 @@ public class notification_page extends AppCompatActivity {
 
             }
         });
+
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+//
+//                    Notification notification = dataSnapshot.getValue(Notification.class);
+//                    arr.add(notification);
+//                }
+//
+//                progressBar.setVisibility(View.GONE);
+//                adapterNotificationItem.notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
     }
 
     private void bottomNavTaskbar() {

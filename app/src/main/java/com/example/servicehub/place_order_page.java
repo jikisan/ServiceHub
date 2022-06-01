@@ -242,7 +242,6 @@ public class place_order_page extends AppCompatActivity {
 
                         Picasso.get()
                                 .load(tempUri)
-                                .resize(800, 600)
                                 .into(iv_projectImage);
                         DecimalFormat twoPlaces = new DecimalFormat("0.00");
                         listPrice = twoPlaces.format(price);

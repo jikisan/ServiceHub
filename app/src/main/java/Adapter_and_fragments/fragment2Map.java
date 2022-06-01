@@ -98,8 +98,10 @@ public class fragment2Map extends Fragment implements GoogleMap.OnInfoWindowClic
                              Bundle savedInstanceState)
     {
         user = FirebaseAuth.getInstance().getCurrentUser();
-        userID = user.getUid();
-
+        if(user != null)
+        {
+            userID = user.getUid();
+        }
         client = LocationServices.getFusedLocationProviderClient(getActivity());
 
         validatePermission();

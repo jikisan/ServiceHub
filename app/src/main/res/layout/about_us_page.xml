@@ -58,7 +58,7 @@
         android:layout_width="230dp"
         android:layout_height="70dp"
         android:layout_marginBottom="24dp"
-        android:src="@drawable/sh_logo"
+        android:src="@drawable/sevicehub_logo_pxl"
         app:layout_constraintBottom_toTopOf="@+id/cardViewBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
