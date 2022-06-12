@@ -30,15 +30,15 @@ import Adapter_and_fragments.fragmentAdapter;
 public class tech_dashboard extends AppCompatActivity {
 
     private FirebaseUser user;
-    private DatabaseReference userDatabase, techDatabase;
+    private DatabaseReference userDatabase, techDatabase, walletDb;
     private String userID;
     private TabLayout tabLayout;
     private ViewPager2 vp_viewPager2;
     private fragmentAdapter adapter;
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, iv_editProject, iv_back, iv_userPic;
-    private TextView tv_bannerName, tv_back;
+            iv_moreBtn, iv_editProject, iv_back, iv_userPic, iv_addFund;
+    private TextView tv_bannerName, tv_back, tv_fundBalance;
     private Button btn_addProject;
     private String imageUriText;
     private Uri imageUri;
@@ -53,6 +53,7 @@ public class tech_dashboard extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         userDatabase = FirebaseDatabase.getInstance().getReference("Users");
         techDatabase = FirebaseDatabase.getInstance().getReference("Technician Applicants");
+        walletDb = FirebaseDatabase.getInstance().getReference("Wallets");
         userID = user.getUid();
 
 
@@ -61,8 +62,31 @@ public class tech_dashboard extends AppCompatActivity {
         generateTabLayout();
         clickListener();
         getTechInfo();
+        getWalletInfo();
         bottomNavTaskbar();
 
+    }
+
+    private void getWalletInfo() {
+
+        walletDb.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Wallets wallets = snapshot.getValue(Wallets.class);
+
+                if(wallets != null)
+                {
+                    Double fundAmount = wallets.fundAmount;
+                    tv_fundBalance.setText(fundAmount + "");
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void clickListener() {
@@ -78,7 +102,17 @@ public class tech_dashboard extends AppCompatActivity {
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent = new Intent(tech_dashboard.this, switch_account_page.class);
+                startActivity(intent);
+            }
+        });
+
+        iv_addFund.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(tech_dashboard.this, add_funds_page.class);
+                intent.putExtra("category", "tech");
+                startActivity(intent);
             }
         });
 
@@ -93,10 +127,11 @@ public class tech_dashboard extends AppCompatActivity {
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
         iv_userPic = findViewById(R.id.iv_userPic);
-
+        iv_addFund = findViewById(R.id.iv_addFund);
 
         tv_bannerName = findViewById(R.id.tv_bannerName);
         tv_back = findViewById(R.id.tv_back);
+        tv_fundBalance = findViewById(R.id.tv_fundBalance);
 
         btn_addProject = findViewById(R.id.btn_addProject);
 

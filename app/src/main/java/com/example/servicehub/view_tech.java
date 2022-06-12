@@ -115,9 +115,12 @@ public class view_tech extends AppCompatActivity {
                     String sp_lname = tech.lastName;
                     String techName = sp_fname + " " + sp_lname;
 
-                    Picasso.get()
-                            .load(sp_imageUrl)
-                            .into(iv_techPhoto);
+                    if(!sp_imageUrl.isEmpty())
+                    {
+                        Picasso.get()
+                                .load(sp_imageUrl)
+                                .into(iv_techPhoto);
+                    }
 
                     tv_techName.setText(techName);
 
@@ -174,7 +177,6 @@ public class view_tech extends AppCompatActivity {
             }
         });
     }
-
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void validatePermission() {

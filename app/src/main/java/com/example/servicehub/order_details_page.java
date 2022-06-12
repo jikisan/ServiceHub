@@ -44,15 +44,16 @@ public class order_details_page extends AppCompatActivity {
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn, iv_moreBtn,
              iv_orderPhoto, iv_custLocation, iv_messageCust ;
     private TextView tv_orderName, tv_customerName, tv_orderPrice, tv_orderQuantity, iv_deleteOrderBtn,
-            tv_customerAddress, tv_custContactNum, tv_back, tv_totalAmount, tv_paymentMethod;
+            tv_customerAddress, tv_custContactNum, tv_back, tv_totalAmount, tv_paymentMethod, tv_fundBalance;
 
     private String userID, imageUriText, orderIdFromIntent, custLatLng, custID,
             orderName, latString, longString, listingIdFromIntent, sellerID;
+    private Double fundAmount, totalAmount;
     private CardView cv_finishOrderBtn;
 
     private FirebaseUser user;
     private DatabaseReference userDatabase;
-    private DatabaseReference orderDatabase;
+    private DatabaseReference orderDatabase, walletDb;
     private StorageReference listingStorage;
     private StorageTask addTask;
     private ProgressDialog progressDialog;
@@ -67,6 +68,7 @@ public class order_details_page extends AppCompatActivity {
         listingStorage = FirebaseStorage.getInstance().getReference("Listings");
         orderDatabase = FirebaseDatabase.getInstance().getReference("Orders");
         userDatabase = FirebaseDatabase.getInstance().getReference("Users");
+        walletDb = FirebaseDatabase.getInstance().getReference("Wallets");
 
         setRef();
         clickListeners();
@@ -96,6 +98,7 @@ public class order_details_page extends AppCompatActivity {
         tv_totalAmount = findViewById(R.id.tv_totalAmount);
         tv_back = findViewById(R.id.tv_back);
         tv_paymentMethod = findViewById(R.id.tv_paymentMethod);
+        tv_fundBalance = findViewById(R.id.tv_fundBalance);
 
         cv_finishOrderBtn = findViewById(R.id.cv_finishOrderBtn);
     }
@@ -158,12 +161,34 @@ public class order_details_page extends AppCompatActivity {
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
 
-                                Intent intent = new Intent(order_details_page.this, rating_and_review_client.class);
-                                intent.putExtra("category", "order");
-                                intent.putExtra("booking id", orderIdFromIntent);
-                                intent.putExtra("client id", custID);
-                                intent.putExtra("tech id", sellerID);
-                                startActivity(intent);
+                                if(totalAmount < fundAmount)
+                                {
+                                    Intent intent = new Intent(order_details_page.this, rating_and_review_client.class);
+                                    intent.putExtra("category", "order");
+                                    intent.putExtra("booking id", orderIdFromIntent);
+                                    intent.putExtra("client id", custID);
+                                    intent.putExtra("tech id", sellerID);
+                                    startActivity(intent);
+                                }
+                                else
+                                {
+                                    new SweetAlertDialog(order_details_page.this, SweetAlertDialog.ERROR_TYPE)
+                                            .setTitleText("Failed!.")
+                                            .setContentText("Insufficient funds.")
+                                            .setCancelText("Back")
+                                            .setConfirmButton("Add Funds", new SweetAlertDialog.OnSweetClickListener() {
+                                                @Override
+                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                                    Intent intent = new Intent(order_details_page.this, seller_dashboard.class);
+                                                    startActivity(intent);
+
+                                                }
+                                            })
+                                            .show();
+                                }
+
+
                             }
                         })
                         .setContentText("Are you sure you want to \nfinish this order?")
@@ -293,7 +318,7 @@ public class order_details_page extends AppCompatActivity {
                         tv_orderPrice.setText("₱ " + sp_ordersPrice);
                         tv_paymentMethod.setText( sp_paymentMethod);
 
-                        double totalAmount = Double.parseDouble(sp_ordersPrice) * Double.parseDouble(sp_orderQuantity);
+                        totalAmount = Double.parseDouble(sp_ordersPrice) * Double.parseDouble(sp_orderQuantity);
                         tv_totalAmount.setText("₱ " + totalAmount);
 
                     } catch (Exception e) {
@@ -314,6 +339,30 @@ public class order_details_page extends AppCompatActivity {
 
             }
         });
+
+        walletDb.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Wallets wallets = snapshot.getValue(Wallets.class);
+
+                if(wallets != null)
+                {
+                    fundAmount = wallets.fundAmount;
+                    tv_fundBalance.setText(fundAmount + "");
+
+                }
+                else
+
+                    fundAmount = 0.00;
+                    tv_fundBalance.setText(fundAmount + "");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void generateProfile() {

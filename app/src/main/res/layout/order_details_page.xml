@@ -99,6 +99,139 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="Customer Details"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_orderPhoto" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="16dp">
+
+                    <TextView
+                        android:id="@+id/tv_customerName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="Name"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_custLocation"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_custContactNum"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="Contact Number"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_custLocation"
+                        app:layout_constraintStart_toStartOf="@+id/tv_customerName"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_customerName" />
+
+                    <ImageView
+                        android:id="@+id/iv_custLocation"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/map"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_messageCust"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_messageCust"
+                        app:layout_constraintTop_toTopOf="@+id/iv_messageCust"
+                      />
+
+                    <ImageView
+                        android:id="@+id/iv_messageCust"
+                        android:layout_width="27dp"
+                        android:layout_height="27dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginRight="16dp"
+                        android:src="@drawable/message"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_customerAddress"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/tv_customerName"
+                        app:tint="@color/quantum_googgreen" />
+
+                    <TextView
+                        android:id="@+id/tv_customerAddress"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="Address"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/iv_custLocation"
+                        app:layout_constraintStart_toStartOf="@+id/tv_custContactNum"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_custContactNum" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:elevation="10dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView4">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Wallet Balance"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_fundBalance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="0.00"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+            <TextView
                 android:id="@+id/textView45"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -107,7 +240,7 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView4" />
+                app:layout_constraintTop_toBottomOf="@+id/cardView6" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardView5"
@@ -192,98 +325,6 @@
                         app:layout_constraintEnd_toEndOf="@+id/tv_orderQuantity"
                         app:layout_constraintTop_toBottomOf="@+id/tv_orderQuantity" />
 
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="Customer Details"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_orderPhoto" />
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:cardCornerRadius="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/rounded_blue"
-                    android:paddingBottom="16dp">
-
-                    <TextView
-                        android:id="@+id/tv_customerName"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="24dp"
-                        android:layout_marginEnd="8dp"
-                        android:text="Name"
-                        android:textColor="@color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toStartOf="@+id/iv_custLocation"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/tv_custContactNum"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:text="Contact Number"
-                        android:textSize="12sp"
-                        app:layout_constraintEnd_toStartOf="@+id/iv_custLocation"
-                        app:layout_constraintStart_toStartOf="@+id/tv_customerName"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_customerName" />
-
-                    <ImageView
-                        android:id="@+id/iv_custLocation"
-                        android:layout_width="27dp"
-                        android:layout_height="27dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/map"
-                        app:layout_constraintBottom_toBottomOf="@+id/iv_messageCust"
-                        app:layout_constraintEnd_toStartOf="@+id/iv_messageCust"
-                        app:layout_constraintTop_toTopOf="@+id/iv_messageCust"
-                      />
-
-                    <ImageView
-                        android:id="@+id/iv_messageCust"
-                        android:layout_width="27dp"
-                        android:layout_height="27dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_marginRight="16dp"
-                        android:src="@drawable/message"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_customerAddress"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/tv_customerName"
-                        app:tint="@color/quantum_googgreen" />
-
-                    <TextView
-                        android:id="@+id/tv_customerAddress"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:text="Address"
-                        android:textSize="12sp"
-                        app:layout_constraintEnd_toStartOf="@+id/iv_custLocation"
-                        app:layout_constraintStart_toStartOf="@+id/tv_custContactNum"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_custContactNum" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>

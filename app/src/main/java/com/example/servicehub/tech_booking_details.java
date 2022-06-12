@@ -40,6 +40,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import dev.shreyaspatil.MaterialDialog.MaterialDialog;
 
@@ -47,7 +48,7 @@ public class tech_booking_details extends AppCompatActivity {
 
     private ImageView iv_bookingPhoto, iv_messageCustomer, btn_viewInMap, iv_custPhoto, iv_viewInMapBtn;
     private TextView tv_addressSummary,tv_propertyTypeSummary,tv_brandSummary,tv_acTypeSummary,tv_unitTypeSummary,tv_prefDateSummary,
-            tv_prefTimeSummary,tv_contactNumSummary, tv_back, tv_customerName, tv_bookingName,
+            tv_prefTimeSummary,tv_contactNumSummary, tv_back, tv_customerName, tv_bookingName, tv_fundBalance,
             tv_time, tv_specialInstruction, tv_month, tv_date, tv_day, iv_deleteBtn, tv_status;
     private ProgressBar progressBar;
     private Button btn_completeBooking, btn_rate;
@@ -55,11 +56,12 @@ public class tech_booking_details extends AppCompatActivity {
 
     private String imageUrl, custID, bookingIdFromIntent, latString, longString,
             tempProjName, projectIdFromIntent, techID;
+    private Double fundAmount, price;
 
     private FirebaseUser user;
     private FirebaseStorage mStorage;
     private StorageReference projectStorage;
-    private DatabaseReference userDatabase, ratingDatabase, bookingDatabase;
+    private DatabaseReference userDatabase, ratingDatabase, bookingDatabase, walletDb;
     private StorageTask addTask;
     private String userID;
     private ProgressDialog progressDialog;
@@ -75,11 +77,11 @@ public class tech_booking_details extends AppCompatActivity {
         userDatabase = FirebaseDatabase.getInstance().getReference("Users");
         bookingDatabase = FirebaseDatabase.getInstance().getReference("Bookings");
         ratingDatabase = FirebaseDatabase.getInstance().getReference("Ratings");
+        walletDb = FirebaseDatabase.getInstance().getReference("Wallets");
 
         setRef();
         clickListener();
         validateStatus();
-
 
     }
 
@@ -224,15 +226,34 @@ public class tech_booking_details extends AppCompatActivity {
                             @Override
                             public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
 
-                                bookingIdFromIntent = getIntent().getStringExtra("Booking ID");
+                                if(price < fundAmount)
+                                {
+                                    bookingIdFromIntent = getIntent().getStringExtra("Booking ID");
 
-                                Intent intent = new Intent(tech_booking_details.this, rating_and_review_client.class);
-                                intent.putExtra("category", "booking");
-                                intent.putExtra("booking id", bookingIdFromIntent);
-                                intent.putExtra("client id", custID);
-                                intent.putExtra("tech id", techID);
-                                startActivity(intent);
+                                    Intent intent = new Intent(tech_booking_details.this, rating_and_review_client.class);
+                                    intent.putExtra("category", "booking");
+                                    intent.putExtra("booking id", bookingIdFromIntent);
+                                    intent.putExtra("client id", custID);
+                                    intent.putExtra("tech id", techID);
+                                    startActivity(intent);
+                                }
+                                else
+                                {
+                                    new SweetAlertDialog(tech_booking_details.this, SweetAlertDialog.ERROR_TYPE)
+                                            .setTitleText("Failed!.")
+                                            .setContentText("Insufficient funds.")
+                                            .setCancelText("Back")
+                                            .setConfirmButton("Add Funds", new SweetAlertDialog.OnSweetClickListener() {
+                                                @Override
+                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
 
+                                                    Intent intent = new Intent(tech_booking_details.this, tech_dashboard.class);
+                                                    startActivity(intent);
+
+                                                }
+                                            })
+                                            .show();
+                                }
                             }
                         })
                         .setNegativeButton("Back", new MaterialDialog.OnClickListener() {
@@ -398,7 +419,7 @@ public class tech_booking_details extends AppCompatActivity {
 
                         String[] parts = sp_bookingDate.split("/");
 
-                        double price = Double.parseDouble(sp_price);
+                        price = Double.parseDouble(sp_price);
                         DecimalFormat twoPlaces = new DecimalFormat("0.00");
 
                         Picasso.get().load(imageUrl).into(iv_bookingPhoto);
@@ -467,6 +488,30 @@ public class tech_booking_details extends AppCompatActivity {
                 Toast.makeText(tech_booking_details.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+        walletDb.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Wallets wallets = snapshot.getValue(Wallets.class);
+
+                if(wallets != null)
+                {
+                    fundAmount = wallets.fundAmount;
+                    tv_fundBalance.setText(fundAmount + "");
+
+                }
+                else
+
+                    fundAmount = 0.00;
+                    tv_fundBalance.setText(fundAmount + "");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void setRef() {
@@ -494,6 +539,7 @@ public class tech_booking_details extends AppCompatActivity {
         tv_unitTypeSummary = findViewById(R.id.tv_unitTypeSummary);
         tv_prefDateSummary = findViewById(R.id.tv_prefDateSummary);
         tv_prefTimeSummary = findViewById(R.id.tv_prefTimeSummary);
+        tv_fundBalance = findViewById(R.id.tv_fundBalance);
 
         progressBar = findViewById(R.id.progressBar);
 

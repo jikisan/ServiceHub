@@ -119,7 +119,6 @@ public class rating_and_review_page extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful())
                 {
-
                     processUpdateProjectRating();
 
                 }
