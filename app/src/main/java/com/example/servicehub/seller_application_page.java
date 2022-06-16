@@ -380,7 +380,7 @@ public class seller_application_page extends AppCompatActivity {
         });
     }
 
-    private boolean hasImage(ImageView iv)    {
+    private boolean hasImage(ImageView iv){
 
         Drawable drawable = iv.getDrawable();
         BitmapDrawable bitmapDrawable = drawable instanceof BitmapDrawable ? (BitmapDrawable)drawable : null;

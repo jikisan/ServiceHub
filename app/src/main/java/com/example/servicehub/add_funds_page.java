@@ -1,12 +1,22 @@
 package com.example.servicehub;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,7 +36,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
@@ -33,26 +49,34 @@ import dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface;
 
 public class add_funds_page extends AppCompatActivity {
 
-    private TextView tv_back, tv_bannerName, tv_fundBalance;
-    private ImageView iv_userPic;
+    private TextView tv_back, tv_bannerName, tv_fundBalance, tv_uploadProofOfPayment;
+    private ImageView iv_userPic, iv_proofOfPayment;
     private EditText et_inputFund;
     private Button btn_addFund;
     private ProgressBar progressBar;
 
-    private DatabaseReference walletDb, userDatabase;
+    private DatabaseReference walletDb, userDatabase, fundRequestDb;
+    private StorageReference fundReqStorage;
     private FirebaseUser user;
     private String userID, category;
     private Double fundAmount;
+    private Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_funds_page);
 
-        walletDb = FirebaseDatabase.getInstance().getReference("Wallets");
-        userDatabase = FirebaseDatabase.getInstance().getReference("Users");
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
+
+        walletDb = FirebaseDatabase.getInstance().getReference("Wallets");
+        fundRequestDb = FirebaseDatabase.getInstance().getReference("Fund Requests");
+        userDatabase = FirebaseDatabase.getInstance().getReference("Users");
+
+        fundReqStorage = FirebaseStorage.getInstance().getReference("Fund Requests").child(userID);
+
         category = getIntent().getStringExtra("category");
 
         setRef();
@@ -131,56 +155,112 @@ public class add_funds_page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                String addFund = et_inputFund.getText().toString();
 
-                double enteredFundAmount = Double.parseDouble(et_inputFund.getText().toString());
-                double totalFundAmount = fundAmount + enteredFundAmount;
+                if(TextUtils.isEmpty(addFund))
+                    Toast.makeText(add_funds_page.this, "Please enter amount", Toast.LENGTH_SHORT).show();
+                else if(hasImage(iv_proofOfPayment)){
+                    Toast.makeText(add_funds_page.this, "Proof of payment is required", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    double enteredFundAmount = Double.parseDouble(et_inputFund.getText().toString());
+                    double totalFundAmount = fundAmount + enteredFundAmount;
 
-                BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(add_funds_page.this)
-                        .setTitle("ADDING FUNDS")
-                        .setMessage("Add " + enteredFundAmount + " to your wallet?")
-                        .setCancelable(true)
-                        .setPositiveButton("Add Funds", new MaterialDialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int which) {
+                    BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(add_funds_page.this)
+                            .setTitle("ADDING FUNDS")
+                            .setMessage("Add " + enteredFundAmount + " to your wallet?")
+                            .setCancelable(true)
+                            .setPositiveButton("Add Funds", new MaterialDialog.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int which) {
 
-                                final ProgressDialog progressDialog = new ProgressDialog(add_funds_page.this);
-                                progressDialog.setTitle("Processing...");
-                                progressDialog.setCancelable(false);
-                                progressDialog.show();
+                                    final ProgressDialog progressDialog = new ProgressDialog(add_funds_page.this);
+                                    progressDialog.setTitle("Processing...");
+                                    progressDialog.setCancelable(false);
+                                    progressDialog.show();
 
-                                addFund(totalFundAmount);
-                            }
-                        })
-                        .setNegativeButton("Back", new MaterialDialog.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int which) {
-                                dialogInterface.dismiss();
-                            }
-                        })
-                        .build();
+                                    addFund(totalFundAmount);
+                                }
+                            })
+                            .setNegativeButton("Back", new MaterialDialog.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int which) {
+                                    dialogInterface.dismiss();
+                                }
+                            })
+                            .build();
 
-                mBottomSheetDialog.show();
+                    mBottomSheetDialog.show();
+                }
+
+
+
             }
         });
 
+        tv_uploadProofOfPayment.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+
+                boolean pick = true;
+                if (pick == true){
+                    if(!checkCameraPermission()){
+                        requestCameraPermission();
+                    }else
+                        PickImage();
+
+                }else{
+                    if(!checkStoragePermission()){
+                        requestStoragePermission();
+                    }else
+                        PickImage();
+                }
+            }
+        });
 
     }
 
     private void addFund(double totalFundAmount) {
 
-        Wallets wallets = new Wallets(userID, totalFundAmount);
+        StorageReference fileReference = fundReqStorage.child(imageUri.getLastPathSegment());
+        String imageName = imageUri.getLastPathSegment();
 
-        walletDb.child(userID).setValue(wallets).addOnCompleteListener(new OnCompleteListener<Void>() {
+        fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        final String imageURL = uri.toString();
+
+                        addFundToDb(imageName, imageURL, totalFundAmount);
+                    }
+                });
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(add_funds_page.this, "Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void addFundToDb(String imageName, String imageURL, double totalFundAmount) {
+
+        Fund_Request fund_request = new Fund_Request(userID, totalFundAmount, imageName, imageURL);
+
+        fundRequestDb.child(userID).setValue(fund_request).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
                 if(task.isSuccessful())
                 {
-
-
                     new SweetAlertDialog(add_funds_page.this, SweetAlertDialog.SUCCESS_TYPE)
                             .setTitleText("SUCCESS!.")
-                            .setContentText("Funds successfully added \n to your wallet")
+                            .setContentText("Fund request has been processed \n for approval.")
                             .setConfirmButton("Proceed", new SweetAlertDialog.OnSweetClickListener() {
                                 @Override
                                 public void onClick(SweetAlertDialog sweetAlertDialog) {
@@ -226,13 +306,74 @@ public class add_funds_page extends AppCompatActivity {
 
     }
 
+    private boolean hasImage(ImageView iv){
+
+        Drawable drawable = iv.getDrawable();
+        BitmapDrawable bitmapDrawable = drawable instanceof BitmapDrawable ? (BitmapDrawable)drawable : null;
+
+        return bitmapDrawable == null || bitmapDrawable.getBitmap() == null;
+    }
+
     private void setRef() {
         tv_back = findViewById(R.id.tv_back);
         iv_userPic = findViewById(R.id.iv_userPic);
+        iv_proofOfPayment = findViewById(R.id.iv_proofOfPayment);
+        tv_uploadProofOfPayment = findViewById(R.id.tv_uploadProofOfPayment);
         tv_bannerName = findViewById(R.id.tv_bannerName);
         tv_fundBalance = findViewById(R.id.tv_fundBalance);
         et_inputFund = findViewById(R.id.et_inputFund);
         btn_addFund = findViewById(R.id.btn_addFund);
         progressBar = findViewById(R.id.progressBar);
+    }
+
+    private void PickImage() {
+        CropImage.activity().start(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                imageUri = result.getUri();
+
+                try{
+                    Picasso.get().load(imageUri)
+                            .into(iv_proofOfPayment);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
+    }
+
+
+    // validate permissions
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestStoragePermission() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestCameraPermission() {
+        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+    }
+
+    private boolean checkStoragePermission() {
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+        return res2;
+    }
+
+    private boolean checkCameraPermission() {
+        boolean res1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+        return res1 && res2;
     }
 }
