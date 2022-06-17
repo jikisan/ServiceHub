@@ -17,16 +17,35 @@ public class Orders {
     String prodSubTotal;
     String shipFeeSubTotal;
     String totalPayment;
-
-
     String paymentMethod;
+    String proofOfPaymentUrl;
 
     public Orders() {
     }
 
-    public Orders(String custID, String listingID, String sellerID, String custName, String custContactNum, String custDeliveryAddress,
-                  String latitude, String longitude, String imageUrl, String itemName, String itemQuantity, String message, String prodSubTotal,
-                  String shipFeeSubTotal, String totalPayment, String paymentMethod)
+    public Orders(String custID, String listingID, String sellerID, String custName, String custContactNum,
+                  String custDeliveryAddress, String latitude, String longitude, String imageUrl,
+                  String itemName, String itemQuantity, String message, String prodSubTotal,
+                  String shipFeeSubTotal, String totalPayment, String paymentMethod,
+                  String proofOfPaymentUrl) {
+        this.custID = custID;
+        this.listingID = listingID;
+        this.sellerID = sellerID;
+        this.custName = custName;
+        this.custContactNum = custContactNum;
+        this.custDeliveryAddress = custDeliveryAddress;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.imageUrl = imageUrl;
+        this.itemName = itemName;
+        this.itemQuantity = itemQuantity;
+        this.message = message;
+        this.prodSubTotal = prodSubTotal;
+        this.shipFeeSubTotal = shipFeeSubTotal;
+        this.totalPayment = totalPayment;
+        this.paymentMethod = paymentMethod;
+        this.proofOfPaymentUrl = proofOfPaymentUrl;
+    }
     {
         this.custID = custID;
         this.listingID = listingID;
@@ -171,5 +190,13 @@ public class Orders {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public String getProofOfPaymentUrl() {
+        return proofOfPaymentUrl;
+    }
+
+    public void setProofOfPaymentUrl(String proofOfPaymentUrl) {
+        this.proofOfPaymentUrl = proofOfPaymentUrl;
     }
 }

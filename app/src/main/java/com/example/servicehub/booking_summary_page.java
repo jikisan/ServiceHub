@@ -237,10 +237,11 @@ public class booking_summary_page extends AppCompatActivity {
         Date currentTime = new Date();
         bookingCreated = currentTime.toString();
         String bookingStatus = "ongoing";
+        String proofOfPaymentUrl = "";
 
         Booking booking = new Booking(bookingStatus, imageUrl, custID, projName, addressFromIntent, latString, longString, propertyTypeFromIntent, airconBrandFromIntent,
                 airconTypeFromIntent, unitTypeFromIntent, bookingDateFromIntent, bookingTimeFromIntent,
-                contactNumberFromIntent, addInfoFromIntent, totalPrice, paymentMethod, sp_techId, bookingCreated, projectIdFromIntent);
+                contactNumberFromIntent, addInfoFromIntent, totalPrice, paymentMethod, sp_techId, bookingCreated, projectIdFromIntent, proofOfPaymentUrl);
 
         bookingDatabase.push().setValue(booking).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

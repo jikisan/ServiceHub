@@ -1,20 +1,29 @@
 package com.example.servicehub;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Address;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,10 +36,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import dev.shreyaspatil.MaterialDialog.MaterialDialog;
@@ -38,20 +50,22 @@ import dev.shreyaspatil.MaterialDialog.MaterialDialog;
 public class client_order_details extends AppCompatActivity {
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn, iv_moreBtn,
-            iv_orderPhoto, iv_custLocation, iv_messageCust,iv_custPhoto ;
+            iv_orderPhoto, iv_custLocation, iv_messageCust,iv_custPhoto,iv_proofOfPayment ;
     private TextView tv_orderName, tv_customerName, tv_orderPrice, tv_orderQuantity, iv_deleteOrderBtn,
-            tv_customerAddress, tv_custContactNum, tv_back, tv_totalAmount, tv_paymentMethod;
+            tv_customerAddress, tv_custContactNum, tv_back, tv_totalAmount, tv_paymentMethod, tv_uploadProofOfPayment;
 
     private String userID, imageUriText, orderIdFromIntent, custLatLng, custID,
             orderName, latString, longString, sellerID, listingIdFromIntent;
     private CardView cv_finishOrderBtn;
+    private Button btn_completeBooking;
 
     private FirebaseUser user;
     private DatabaseReference orderDatabase, listDatabase, userDatabase;
-    private StorageReference listingStorage;
+    private StorageReference listingStorage, orderStorage;
     private StorageTask addTask;
     private ProgressDialog progressDialog;
     private ProgressBar progressBar;
+    private Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +75,8 @@ public class client_order_details extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
         listingStorage = FirebaseStorage.getInstance().getReference("Listings");
+        orderStorage = FirebaseStorage.getInstance().getReference("Orders");
+
         orderDatabase = FirebaseDatabase.getInstance().getReference("Orders");
         userDatabase = FirebaseDatabase.getInstance().getReference("Users");
         listDatabase = FirebaseDatabase.getInstance().getReference("Listings");
@@ -120,6 +136,65 @@ public class client_order_details extends AppCompatActivity {
             }
         });
 
+        tv_uploadProofOfPayment.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                boolean pick = true;
+                if (pick == true){
+                    if(!checkCameraPermission()){
+                        requestCameraPermission();
+                    }else
+                        PickImage();
+
+                }else{
+                    if(!checkStoragePermission()){
+                        requestStoragePermission();
+                    }else
+                        PickImage();
+                }
+            }
+        });
+
+        btn_completeBooking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                StorageReference fileReference = orderStorage.child(orderIdFromIntent);
+
+                fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                final String proofOfPaymentUrl = uri.toString();
+
+                                addProofOfPaymentUrlToDb(proofOfPaymentUrl);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+
+    }
+
+    private void addProofOfPaymentUrlToDb(String proofOfPaymentUrl) {
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("proofOfPaymentUrl", proofOfPaymentUrl);
+
+        orderDatabase.child(orderIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(client_order_details.this, "Proof of paymnet sent", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(client_order_details.this, client_order_details.class);
+                intent.putExtra("Order ID", orderIdFromIntent);
+                startActivity(intent);
+
+            }
+        });
     }
 
     private void cancelOrder() {
@@ -211,6 +286,7 @@ public class client_order_details extends AppCompatActivity {
         iv_custLocation = findViewById(R.id.iv_custLocation);
         iv_messageCust = findViewById(R.id.iv_messageCust);
         iv_custPhoto = findViewById(R.id.iv_custPhoto);
+        iv_proofOfPayment = findViewById(R.id.iv_proofOfPayment);
 
         tv_orderName = findViewById(R.id.tv_orderName);
         tv_orderPrice = findViewById(R.id.tv_orderPrice);
@@ -221,10 +297,13 @@ public class client_order_details extends AppCompatActivity {
         tv_totalAmount = findViewById(R.id.tv_totalAmount);
         tv_back = findViewById(R.id.tv_back);
         tv_paymentMethod = findViewById(R.id.tv_paymentMethod);
+        tv_uploadProofOfPayment = findViewById(R.id.tv_uploadProofOfPayment);
 
         cv_finishOrderBtn = findViewById(R.id.cv_finishOrderBtn);
 
         progressBar = findViewById(R.id.progressBar);
+
+        btn_completeBooking = findViewById(R.id.btn_completeBooking);
     }
 
     private void generateDataValue() {
@@ -393,5 +472,56 @@ public class client_order_details extends AppCompatActivity {
                 startActivity(intentMoreBtn);
             }
         }); // end of more button
+    }
+
+    private void PickImage() {
+        CropImage.activity().start(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                imageUri = result.getUri();
+
+                try{
+                    Picasso.get().load(imageUri)
+                            .into(iv_proofOfPayment);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
+    }
+
+
+    // validate permissions
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestStoragePermission() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestCameraPermission() {
+        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+    }
+
+    private boolean checkStoragePermission() {
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+        return res2;
+    }
+
+    private boolean checkCameraPermission() {
+        boolean res1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+        return res1 && res2;
     }
 }

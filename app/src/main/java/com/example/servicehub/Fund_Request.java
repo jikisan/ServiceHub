@@ -7,14 +7,19 @@ public class Fund_Request {
     String proofOfPaymentName;
     String proofOfPaymentUrl;
 
+
+
+    String requestStatus;
+
     public Fund_Request() {
     }
 
-    public Fund_Request(String userID, Double fundAmount, String proofOfPaymentName, String proofOfPaymentUrl) {
+    public Fund_Request(String userID, Double fundAmount, String proofOfPaymentName, String proofOfPaymentUrl, String requestStatus) {
         this.userID = userID;
         this.fundAmount = fundAmount;
         this.proofOfPaymentName = proofOfPaymentName;
         this.proofOfPaymentUrl = proofOfPaymentUrl;
+        this.requestStatus = requestStatus;
     }
 
     public String getUserID() {
@@ -47,5 +52,13 @@ public class Fund_Request {
 
     public void setProofOfPaymentUrl(String proofOfPaymentUrl) {
         this.proofOfPaymentUrl = proofOfPaymentUrl;
+    }
+
+    public String getRequestStatus() {
+        return requestStatus;
+    }
+
+    public void setRequestStatus(String requestStatus) {
+        this.requestStatus = requestStatus;
     }
 }

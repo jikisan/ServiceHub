@@ -8,6 +8,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -42,9 +44,10 @@ import dev.shreyaspatil.MaterialDialog.MaterialDialog;
 public class order_details_page extends AppCompatActivity {
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn, iv_moreBtn,
-             iv_orderPhoto, iv_custLocation, iv_messageCust ;
+             iv_orderPhoto, iv_custLocation, iv_messageCust, iv_proofOfPaymentPic ;
     private TextView tv_orderName, tv_customerName, tv_orderPrice, tv_orderQuantity, iv_deleteOrderBtn,
-            tv_customerAddress, tv_custContactNum, tv_back, tv_totalAmount, tv_paymentMethod, tv_fundBalance;
+            tv_customerAddress, tv_custContactNum, tv_back, tv_totalAmount,
+            tv_paymentMethod, tv_fundBalance, tv_btnText, tv_proofOfPaymentBanner;
 
     private String userID, imageUriText, orderIdFromIntent, custLatLng, custID,
             orderName, latString, longString, listingIdFromIntent, sellerID;
@@ -88,6 +91,7 @@ public class order_details_page extends AppCompatActivity {
         iv_orderPhoto = findViewById(R.id.iv_orderPhoto);
         iv_custLocation = findViewById(R.id.iv_custLocation);
         iv_messageCust = findViewById(R.id.iv_messageCust);
+        iv_proofOfPaymentPic = findViewById(R.id.iv_proofOfPaymentPic);
 
         tv_orderName = findViewById(R.id.tv_orderName);
         tv_orderPrice = findViewById(R.id.tv_orderPrice);
@@ -99,6 +103,8 @@ public class order_details_page extends AppCompatActivity {
         tv_back = findViewById(R.id.tv_back);
         tv_paymentMethod = findViewById(R.id.tv_paymentMethod);
         tv_fundBalance = findViewById(R.id.tv_fundBalance);
+        tv_btnText = findViewById(R.id.tv_btnText);
+        tv_proofOfPaymentBanner = findViewById(R.id.tv_proofOfPaymentBanner);
 
         cv_finishOrderBtn = findViewById(R.id.cv_finishOrderBtn);
     }
@@ -154,45 +160,54 @@ public class order_details_page extends AppCompatActivity {
         cv_finishOrderBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new SweetAlertDialog(order_details_page.this, SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText("Finish order?")
-                        .setCancelText("Back")
-                        .setConfirmButton("FINISH ORDER", new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sweetAlertDialog) {
 
-                                if(totalAmount < fundAmount)
-                                {
-                                    Intent intent = new Intent(order_details_page.this, rating_and_review_client.class);
-                                    intent.putExtra("category", "order");
-                                    intent.putExtra("booking id", orderIdFromIntent);
-                                    intent.putExtra("client id", custID);
-                                    intent.putExtra("tech id", sellerID);
-                                    startActivity(intent);
+                if(hasImage(iv_proofOfPaymentPic)){
+                    Toast.makeText(order_details_page.this, "Proof of payment is required", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    new SweetAlertDialog(order_details_page.this, SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Finish order?")
+                            .setCancelText("Back")
+                            .setConfirmButton("FINISH ORDER", new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                    if(totalAmount < fundAmount)
+                                    {
+                                        Intent intent = new Intent(order_details_page.this, rating_and_review_client.class);
+                                        intent.putExtra("category", "order");
+                                        intent.putExtra("booking id", orderIdFromIntent);
+                                        intent.putExtra("client id", custID);
+                                        intent.putExtra("tech id", sellerID);
+                                        startActivity(intent);
+                                    }
+                                    else
+                                    {
+                                        new SweetAlertDialog(order_details_page.this, SweetAlertDialog.ERROR_TYPE)
+                                                .setTitleText("Failed!.")
+                                                .setContentText("Insufficient funds.")
+                                                .setCancelText("Back")
+                                                .setConfirmButton("Add Funds", new SweetAlertDialog.OnSweetClickListener() {
+                                                    @Override
+                                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
+
+                                                        Intent intent = new Intent(order_details_page.this, seller_dashboard.class);
+                                                        startActivity(intent);
+
+                                                    }
+                                                })
+                                                .show();
+                                    }
+
+
                                 }
-                                else
-                                {
-                                    new SweetAlertDialog(order_details_page.this, SweetAlertDialog.ERROR_TYPE)
-                                            .setTitleText("Failed!.")
-                                            .setContentText("Insufficient funds.")
-                                            .setCancelText("Back")
-                                            .setConfirmButton("Add Funds", new SweetAlertDialog.OnSweetClickListener() {
-                                                @Override
-                                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-
-                                                    Intent intent = new Intent(order_details_page.this, seller_dashboard.class);
-                                                    startActivity(intent);
-
-                                                }
-                                            })
-                                            .show();
-                                }
+                            })
+                            .setContentText("Are you sure you want to \nfinish this order?")
+                            .show();
+                }
 
 
-                            }
-                        })
-                        .setContentText("Are you sure you want to \nfinish this order?")
-                        .show();
 
 
             }
@@ -299,6 +314,7 @@ public class order_details_page extends AppCompatActivity {
                         String sp_ordersPrice = orders.getProdSubTotal();
                         String sp_orderQuantity = orders.getItemQuantity();
                         String sp_paymentMethod = orders.getPaymentMethod();
+                        String sp_popUrl = orders.getProofOfPaymentUrl();
 
                         String sp_custName = orders.getCustName();
                         String sp_custContactNum = orders.getCustContactNum();
@@ -320,6 +336,16 @@ public class order_details_page extends AppCompatActivity {
 
                         totalAmount = Double.parseDouble(sp_ordersPrice) * Double.parseDouble(sp_orderQuantity);
                         tv_totalAmount.setText("₱ " + totalAmount);
+
+                        if (!sp_popUrl.isEmpty())
+                        {
+                            Picasso.get().load(sp_popUrl).into(iv_proofOfPaymentPic);
+                            tv_proofOfPaymentBanner.setVisibility(View.GONE);
+                        }
+
+                        Double percentageFee = totalAmount * .05;
+
+                        tv_btnText.setText("5% fee: ₱ " + percentageFee + " · " + "Complete Booking");
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -430,6 +456,14 @@ public class order_details_page extends AppCompatActivity {
                 startActivity(intentMoreBtn);
             }
         }); // end of more button
+    }
+
+    private boolean hasImage(ImageView iv){
+
+        Drawable drawable = iv.getDrawable();
+        BitmapDrawable bitmapDrawable = drawable instanceof BitmapDrawable ? (BitmapDrawable)drawable : null;
+
+        return bitmapDrawable == null || bitmapDrawable.getBitmap() == null;
     }
 
 }

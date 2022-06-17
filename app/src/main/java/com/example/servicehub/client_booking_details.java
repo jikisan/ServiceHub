@@ -1,10 +1,17 @@
 package com.example.servicehub;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,11 +34,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import dev.shreyaspatil.MaterialDialog.MaterialDialog;
@@ -39,18 +50,20 @@ public class client_booking_details extends AppCompatActivity {
 
 
 
-    private ImageView iv_messageCustomer, iv_custPhoto, iv_viewInMapBtn;
+    private ImageView iv_messageCustomer, iv_custPhoto, iv_viewInMapBtn, iv_proofOfPayment;
     private TextView tv_addressSummary,tv_propertyTypeSummary,tv_brandSummary,tv_acTypeSummary,tv_unitTypeSummary,tv_prefDateSummary,
             tv_prefTimeSummary,tv_contactNumSummary, tv_back, tv_customerName, tv_bookingName, tv_deleteBtn, tv_paymentMethod,
-            tv_time, tv_bookingDesc, tv_month, tv_date, tv_day, tv_techContactNumSummary, tv_custAddressSummary, tv_bookPriceSummary;
+            tv_time, tv_bookingDesc, tv_month, tv_date, tv_day, tv_techContactNumSummary, tv_custAddressSummary,
+            tv_bookPriceSummary, tv_uploadProofOfPayment;
     private ProgressBar progressBar;
     private Button btn_completeBooking;
+    private Uri imageUri;
 
     String imageUrl, custID, bookingIdFromIntent, latString, longString, bookingName;
 
     private FirebaseUser user;
     private FirebaseStorage mStorage;
-    private StorageReference projectStorage;
+    private StorageReference projectStorage, bookingStorage;
     private DatabaseReference userDatabase, projectDatabase, bookingDatabase;
     private StorageTask addTask;
     private String userID, techID, projName, projectIdFromIntent;
@@ -64,6 +77,8 @@ public class client_booking_details extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         userID = user.getUid();
         projectStorage = FirebaseStorage.getInstance().getReference("Projects");
+        bookingStorage = FirebaseStorage.getInstance().getReference("Bookings");
+
         userDatabase = FirebaseDatabase.getInstance().getReference("Users");
         bookingDatabase = FirebaseDatabase.getInstance().getReference("Bookings");
         projectDatabase = FirebaseDatabase.getInstance().getReference("Projects");
@@ -119,6 +134,64 @@ public class client_booking_details extends AppCompatActivity {
                 intentProject.putExtra("longString", longString);
                 intentProject.putExtra("Marker Title", markerTitle);
                 startActivity(intentProject);
+            }
+        });
+
+        tv_uploadProofOfPayment.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                boolean pick = true;
+                if (pick == true){
+                    if(!checkCameraPermission()){
+                        requestCameraPermission();
+                    }else
+                        PickImage();
+
+                }else{
+                    if(!checkStoragePermission()){
+                        requestStoragePermission();
+                    }else
+                        PickImage();
+                }
+            }
+        });
+
+        btn_completeBooking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                StorageReference fileReference = bookingStorage.child(bookingIdFromIntent);
+
+                fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                final String proofOfPaymentUrl = uri.toString();
+
+                                addProofOfPaymentUrlToDb(proofOfPaymentUrl);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    private void addProofOfPaymentUrlToDb(String proofOfPaymentUrl) {
+        HashMap<String, Object> hashMap = new HashMap<String, Object>();
+        hashMap.put("proofOfPaymentUrl", proofOfPaymentUrl);
+
+        bookingDatabase.child(bookingIdFromIntent).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(client_booking_details.this, "Proof of paymnet sent", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(client_booking_details.this, client_booking_details.class);
+                intent.putExtra("Booking ID", bookingIdFromIntent);
+                startActivity(intent);
+
             }
         });
     }
@@ -214,7 +287,6 @@ public class client_booking_details extends AppCompatActivity {
                 if(bookingData != null) {
                     try {
                         projectIdFromIntent = bookingData.getProjId();
-
                         projName = bookingData.getProjName();
                         techID = bookingData.getTechID();
                         custID  = bookingData.custID;
@@ -345,6 +417,7 @@ public class client_booking_details extends AppCompatActivity {
         iv_viewInMapBtn = findViewById(R.id.iv_viewInMapBtn);
         tv_paymentMethod = findViewById(R.id.tv_paymentMethod);
         tv_bookPriceSummary = findViewById(R.id.tv_bookPriceSummary);
+        iv_proofOfPayment = findViewById(R.id.iv_proofOfPayment);
 
         tv_deleteBtn = findViewById(R.id.tv_deleteBtn);
         tv_month = findViewById(R.id.tv_month);
@@ -365,11 +438,63 @@ public class client_booking_details extends AppCompatActivity {
         tv_prefTimeSummary = findViewById(R.id.tv_prefTimeSummary);
         tv_techContactNumSummary = findViewById(R.id.tv_techContactNumSummary);
         tv_custAddressSummary = findViewById(R.id.tv_custAddressSummary);
+        tv_uploadProofOfPayment = findViewById(R.id.tv_uploadProofOfPayment);
 
         progressBar = findViewById(R.id.progressBar);
 
         btn_completeBooking = findViewById(R.id.btn_completeBooking);
 
 
+    }
+
+    private void PickImage() {
+        CropImage.activity().start(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                imageUri = result.getUri();
+
+                try{
+                    Picasso.get().load(imageUri)
+                            .into(iv_proofOfPayment);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
+    }
+
+
+    // validate permissions
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestStoragePermission() {
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private void requestCameraPermission() {
+        requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+    }
+
+    private boolean checkStoragePermission() {
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+        return res2;
+    }
+
+    private boolean checkCameraPermission() {
+        boolean res1 = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED;
+        boolean res2 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED;
+        return res1 && res2;
     }
 }

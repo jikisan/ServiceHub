@@ -165,7 +165,7 @@ public class add_funds_page extends AppCompatActivity {
                 else
                 {
                     double enteredFundAmount = Double.parseDouble(et_inputFund.getText().toString());
-                    double totalFundAmount = fundAmount + enteredFundAmount;
+
 
                     BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(add_funds_page.this)
                             .setTitle("ADDING FUNDS")
@@ -180,7 +180,7 @@ public class add_funds_page extends AppCompatActivity {
                                     progressDialog.setCancelable(false);
                                     progressDialog.show();
 
-                                    addFund(totalFundAmount);
+                                    addFund(enteredFundAmount);
                                 }
                             })
                             .setNegativeButton("Back", new MaterialDialog.OnClickListener() {
@@ -250,9 +250,11 @@ public class add_funds_page extends AppCompatActivity {
 
     private void addFundToDb(String imageName, String imageURL, double totalFundAmount) {
 
-        Fund_Request fund_request = new Fund_Request(userID, totalFundAmount, imageName, imageURL);
+        String status = "pending";
 
-        fundRequestDb.child(userID).setValue(fund_request).addOnCompleteListener(new OnCompleteListener<Void>() {
+        Fund_Request fund_request = new Fund_Request(userID, totalFundAmount, imageName, imageURL, status);
+
+        fundRequestDb.push().setValue(fund_request).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 

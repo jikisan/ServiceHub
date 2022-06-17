@@ -22,6 +22,7 @@ public class Booking {
     String techID;
     String bookingCreated;
     String projId;
+    String proofOfPaymentUrl;
 
     public Booking(){
 
@@ -29,7 +30,7 @@ public class Booking {
 
     public Booking(String status, String imageUrl, String custID, String projName, String custAddress, String latitude, String longitude, String propertyType, String airconBrand, String airconType, String unitType,
                    String bookingDate, String bookingTime, String custContactNum, String addInfo, String totalPrice, String paymentMethod,
-                   String techID, String bookingCreated, String projId)
+                   String techID, String bookingCreated, String projId, String proofOfPaymentUrl)
     {
         this.status = status;
         this.imageUrl = imageUrl;
@@ -51,6 +52,7 @@ public class Booking {
         this.techID = techID;
         this.bookingCreated = bookingCreated;
         this.projId = projId;
+        this.proofOfPaymentUrl = proofOfPaymentUrl;
     }
 
     public String getStatus() {
@@ -211,6 +213,14 @@ public class Booking {
 
     public void setProjId(String projId) {
         this.projId = projId;
+    }
+
+    public String getProofOfPaymentUrl() {
+        return proofOfPaymentUrl;
+    }
+
+    public void setProofOfPaymentUrl(String proofOfPaymentUrl) {
+        this.proofOfPaymentUrl = proofOfPaymentUrl;
     }
 }
 

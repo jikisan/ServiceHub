@@ -348,9 +348,20 @@ public class rating_and_review_client extends AppCompatActivity {
     }
 
     private void updateWallet() {
+        Double percentRate = null;
+        
+        if(reviewCategory.equals("booking"))
+        {
+            percentRate = .15;
+        }
+        else if(reviewCategory.equals("order"))
+        {
+            percentRate = .05;
+        }
 
+        Double percentageFee = price * percentRate;
 
-        Double totalFundAmount = fundAmount - price;
+        Double totalFundAmount = fundAmount - percentageFee;
 
         Wallets wallets = new Wallets(userID, totalFundAmount);
 
@@ -360,10 +371,19 @@ public class rating_and_review_client extends AppCompatActivity {
 
                 if(task.isSuccessful())
                 {
+                    if(reviewCategory.equals("booking"))
+                    {
+                        Intent intent = new Intent(rating_and_review_client.this, tech_dashboard.class);
+                        startActivity(intent);
+                        Toast.makeText(rating_and_review_client.this, "Rating Submitted", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(reviewCategory.equals("order"))
+                    {
+                        Intent intent = new Intent(rating_and_review_client.this, seller_dashboard.class);
+                        startActivity(intent);
+                        Toast.makeText(rating_and_review_client.this, "Rating Submitted", Toast.LENGTH_SHORT).show();
+                    }
 
-                    Intent intent = new Intent(rating_and_review_client.this, tech_dashboard.class);
-                    startActivity(intent);
-                    Toast.makeText(rating_and_review_client.this, "Rating Submitted", Toast.LENGTH_SHORT).show();
                 }
             }
 

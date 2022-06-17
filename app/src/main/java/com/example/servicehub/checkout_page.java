@@ -409,9 +409,11 @@ public class checkout_page extends AppCompatActivity {
         String sp_itemName = tv_listName.getText().toString();
         String sp_orderQuantity = tv_quantity.getText().toString();
         String sp_message = et_message.getText().toString();
+        String sp_paymentProofUrl = "";
 
         Orders orders = new Orders(userID, listingIdFromIntent, sellerID, sp_custName, sp_custContactNum, sp_custDeliveryAddress,
-                latString, longString, imageUrl, sp_itemName, sp_orderQuantity, sp_message, prodSubTotal, shipFee, totalPayment, paymentMethod);
+                latString, longString, imageUrl, sp_itemName, sp_orderQuantity, sp_message,
+                prodSubTotal, shipFee, totalPayment, paymentMethod, sp_paymentProofUrl);
 
         ordersDatabase.push().setValue(orders).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
