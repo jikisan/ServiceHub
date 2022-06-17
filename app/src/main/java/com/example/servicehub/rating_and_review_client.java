@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,10 +44,13 @@ public class rating_and_review_client extends AppCompatActivity {
     private EditText et_ratingMessage;
     private Button btn_ratingSubmit;
 
-    private DatabaseReference userDatabase, projectDatabase, listDatabase, ratingDatabase, bookingDatabase, orderDatabase;
+    private DatabaseReference userDatabase, projectDatabase, walletDb, listDatabase, ratingDatabase, bookingDatabase, orderDatabase;
     private String reviewCategory, serviceId, clientId, techId;
     private String clientFirstName, clientLastName, techFirstName, techLastName, bookingName,
             bookingImageUrl, orderImageUrl, itemName;
+    private Double fundAmount, price;
+    private FirebaseUser user;
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +61,9 @@ public class rating_and_review_client extends AppCompatActivity {
         serviceId = getIntent().getStringExtra("booking id");
         clientId = getIntent().getStringExtra("client id");
         techId = getIntent().getStringExtra("tech id");
+        walletDb = FirebaseDatabase.getInstance().getReference("Wallets");
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        userID = user.getUid();
 
         setRef();
         generateData();
@@ -136,6 +144,27 @@ public class rating_and_review_client extends AppCompatActivity {
             }
         });
 
+        walletDb.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Wallets wallets = snapshot.getValue(Wallets.class);
+
+                if(wallets != null)
+                {
+                    fundAmount = wallets.fundAmount;
+
+                }
+                else
+
+                    fundAmount = 0.00;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
 
     }
@@ -175,6 +204,8 @@ public class rating_and_review_client extends AppCompatActivity {
                         Booking booking = snapshot.getValue(Booking.class);
                         bookingName = booking.projName;
                         bookingImageUrl = booking.imageUrl;
+                        String sp_price = booking.totalPrice;
+                        price = Double.parseDouble(sp_price);
 
                     }
                 }
@@ -196,6 +227,9 @@ public class rating_and_review_client extends AppCompatActivity {
                         Orders orders = snapshot.getValue(Orders.class);
                         itemName = orders.itemName;
                         orderImageUrl = orders.imageUrl;
+                        String sp_ordersPrice = orders.getProdSubTotal();
+                        String sp_orderQuantity = orders.getItemQuantity();
+                        price = Double.parseDouble(sp_ordersPrice) * Double.parseDouble(sp_orderQuantity);
 
                     }
                 }
@@ -209,8 +243,6 @@ public class rating_and_review_client extends AppCompatActivity {
 
 
     }
-
-
 
     private void submitRating(float getRating) {
 
@@ -306,14 +338,57 @@ public class rating_and_review_client extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
 
-                    Intent intent = new Intent(rating_and_review_client.this, tech_dashboard.class);
-                    startActivity(intent);
-                    Toast.makeText(rating_and_review_client.this, "Rating Submitted", Toast.LENGTH_SHORT).show();
+                    updateWallet();
+
 
                 }
 
             }
         });
+    }
+
+    private void updateWallet() {
+        Double percentRate = null;
+        
+        if(reviewCategory.equals("booking"))
+        {
+            percentRate = .15;
+        }
+        else if(reviewCategory.equals("order"))
+        {
+            percentRate = .05;
+        }
+
+        Double percentageFee = price * percentRate;
+
+        Double totalFundAmount = fundAmount - percentageFee;
+
+        Wallets wallets = new Wallets(userID, totalFundAmount);
+
+        walletDb.child(userID).setValue(wallets).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+
+                if(task.isSuccessful())
+                {
+                    if(reviewCategory.equals("booking"))
+                    {
+                        Intent intent = new Intent(rating_and_review_client.this, tech_dashboard.class);
+                        startActivity(intent);
+                        Toast.makeText(rating_and_review_client.this, "Rating Submitted", Toast.LENGTH_SHORT).show();
+                    }
+                    else if(reviewCategory.equals("order"))
+                    {
+                        Intent intent = new Intent(rating_and_review_client.this, seller_dashboard.class);
+                        startActivity(intent);
+                        Toast.makeText(rating_and_review_client.this, "Rating Submitted", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            }
+
+        });
+
     }
 
     private void setRef() {

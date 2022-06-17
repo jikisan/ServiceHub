@@ -69,7 +69,7 @@ public class edit_listing_page extends AppCompatActivity {
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn, iv_pickAddress,
             iv_moreBtn, iv_listingImage, iv_decreaseBtn, iv_increaseBtn, btn_delete;
-    private TextView tv_uploadPhoto, tv_address, tv_quantity, tv_back;
+    private TextView tv_uploadPhoto, tv_address, tv_quantity, tv_back, tv_percentageFee, tv_totalPrice;
     private EditText et_listingName, et_price, et_listDesc;
     private Button btn_save;
     private Uri imageUri;
@@ -114,7 +114,7 @@ public class edit_listing_page extends AppCompatActivity {
 
                 new AlertDialog.Builder(edit_listing_page.this)
                         .setIcon(R.drawable.logo)
-                        .setTitle("Delete Application")
+                        .setTitle("Delete Listing")
                         .setMessage("Are you sure that you want to permanently delete this listing?")
                         .setCancelable(true)
                         .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
@@ -232,9 +232,12 @@ public class edit_listing_page extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String editTextInput = inputEditTextField.getText().toString();
                         double servicePrice = Double.parseDouble(editTextInput);
-                        double percentageFee = servicePrice * .15;
+                        double percentageFee = servicePrice * .05;
+                        double totalPrice = percentageFee + servicePrice;
 
                         et_price.setText(String.valueOf(servicePrice));
+                        tv_percentageFee.setText( String.valueOf(percentageFee));
+                        tv_totalPrice.setText(String.valueOf(totalPrice));
                     }
                 });
 
@@ -319,6 +322,8 @@ public class edit_listing_page extends AppCompatActivity {
         tv_quantity = findViewById(R.id.tv_quantity);
         tv_address = findViewById(R.id.et_address);
         tv_back = findViewById(R.id.tv_back);
+        tv_percentageFee = findViewById(R.id.tv_percentageFee);
+        tv_totalPrice = findViewById(R.id.tv_totalPrice);
 
         et_listingName = findViewById(R.id.et_listingName);
         et_price = findViewById(R.id.et_price);
@@ -477,7 +482,7 @@ public class edit_listing_page extends AppCompatActivity {
 
         String listName = et_listingName.getText().toString();
         String listAddress = tv_address.getText().toString();
-        String listPrice = et_price.getText().toString();
+        String listPrice = tv_totalPrice.getText().toString();
         String listQuantity = tv_quantity.getText().toString();
         String listDesc = et_listDesc.getText().toString();
         String imageName = imageUri.getLastPathSegment();
@@ -542,7 +547,7 @@ public class edit_listing_page extends AppCompatActivity {
 
         String listName = et_listingName.getText().toString();
         String listAddress = tv_address.getText().toString();
-        String listPrice = et_price.getText().toString();
+        String listPrice = tv_totalPrice.getText().toString();
         String listQuantity = tv_quantity.getText().toString();
         String listDesc = et_listDesc.getText().toString();
 
@@ -596,7 +601,8 @@ public class edit_listing_page extends AppCompatActivity {
 
                         et_listingName.setText(sp_listName);
                         tv_address.setText(sp_listAddress);
-                        et_price.setText(sp_listPrice);
+                        et_price.setText("");
+                        tv_totalPrice.setText(sp_listPrice);
                         tv_quantity.setText(sp_listQuantity);
                         et_listDesc.setText(sp_listDesc);
 

@@ -53,6 +53,7 @@ public class booking_page_for_guest extends AppCompatActivity {
     private TextView tv_projDesc;
     private TextView tv_timeAvailable;
     private TextView tv_userRating;
+    private TextView tv_viewMorePhoto;
     private Button btn_bookNow;
     private RecyclerView recyclerViewRatings;
 
@@ -125,6 +126,16 @@ public class booking_page_for_guest extends AppCompatActivity {
             }
         });
 
+        tv_viewMorePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(booking_page_for_guest.this, photo_viewer.class);
+                intent.putExtra("project ID", projectIdFromIntent);
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     private void loginValidation(){
@@ -171,6 +182,8 @@ public class booking_page_for_guest extends AppCompatActivity {
         TextView tv_availabilityText = findViewById(R.id.tv_availabilityText);
         tv_timeAvailable = findViewById(R.id.tv_timeAvailable);
         TextView tv_quantity = findViewById(R.id.tv_quantity);
+
+        tv_viewMorePhoto = findViewById(R.id.tv_viewMorePhoto);
 
         btn_bookNow = findViewById(R.id.btn_bookNow);
         Button btn_orderNow = findViewById(R.id.btn_orderNow);

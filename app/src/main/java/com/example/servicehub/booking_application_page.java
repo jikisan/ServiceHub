@@ -68,9 +68,9 @@ public class booking_application_page extends AppCompatActivity {
     private String[] propertyItems = {"Condo | Apartment", "House | Townhouse", "Small business | Store", "Office building", "Warehouse | Storage"};
     private String[] brand = {"Home","Camel","Carrier","Coldfront","Condura","Daikin","Everest","Fujidenzo","GE","Gree","Haier","Hanabishi","Hisense",
             "Hitachi","Kelvinator","Koppel","LG","Mabe","Midea","Mitsubishi","National","Panasonic","Samsung","Sanyo","Sharp","TCL","Union","Xtreme",
-            "York","Other","I don't know"};
+            "York","Others"};
     private String[] airconType = {"Window","Split","Tower","Cassette","Suspended","Concealed","U-shaped Window"};
-    private String[] unitType = {"Inverter","Non-Inverter","I don't know"};
+    private String[] unitType = {"Inverter","Non-Inverter","Others"};
     private String latLng, latString, longString, propertyType, acBrand, acType, acUnitType, projectIdFromIntent, userID;
     private int hour, minute, year, month, day;
     private final SimpleDateFormat formatter = new SimpleDateFormat("hh:mm a", Locale.getDefault());

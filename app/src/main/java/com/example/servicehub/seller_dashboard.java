@@ -29,15 +29,15 @@ import Adapter_and_fragments.fragmentAdapterListings;
 public class seller_dashboard extends AppCompatActivity {
 
     private FirebaseUser user;
-    private DatabaseReference userDatabase, sellerDatabase;
+    private DatabaseReference userDatabase, sellerDatabase, walletDb;
     private String userID;
     private TabLayout tabLayout;
     private ViewPager2 vp_viewPager2;
     private fragmentAdapterListings adapter;
 
     private ImageView iv_messageBtn, iv_notificationBtn, iv_homeBtn, iv_accountBtn,
-            iv_moreBtn, iv_back, iv_userPic;
-    private TextView tv_bannerName, tv_back;
+            iv_moreBtn, iv_back, iv_userPic, iv_addFund;
+    private TextView tv_bannerName, tv_back, tv_fundBalance;
     private Button btn_addListing;
     private ProgressBar progressBar;
     private int currentTab;
@@ -50,13 +50,37 @@ public class seller_dashboard extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         userDatabase = FirebaseDatabase.getInstance().getReference("Users");
         sellerDatabase = FirebaseDatabase.getInstance().getReference("Seller Applicants");
+        walletDb = FirebaseDatabase.getInstance().getReference("Wallets");
         userID = user.getUid();
 
         setRef();
         generateTabLayout();
         clickListener();
         getSellerInfo();
+        getWalletInfo();
         bottomNavTaskbar();
+    }
+
+    private void getWalletInfo() {
+
+        walletDb.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Wallets wallets = snapshot.getValue(Wallets.class);
+
+                if(wallets != null)
+                {
+                    Double fundAmount = wallets.fundAmount;
+                    tv_fundBalance.setText(fundAmount + "");
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void setRef() {
@@ -67,11 +91,13 @@ public class seller_dashboard extends AppCompatActivity {
         iv_accountBtn = findViewById(R.id.iv_accountBtn);
         iv_moreBtn = findViewById(R.id.iv_moreBtn);
         iv_userPic = findViewById(R.id.iv_userPic);
+        iv_addFund = findViewById(R.id.iv_addFund);
 
         btn_addListing = findViewById(R.id.btn_addListing);
 
         tv_bannerName = findViewById(R.id.tv_bannerName);
         tv_back = findViewById(R.id.tv_back);
+        tv_fundBalance = findViewById(R.id.tv_fundBalance);
 
         tabLayout = findViewById(R.id.tab_layout);
 
@@ -169,7 +195,17 @@ public class seller_dashboard extends AppCompatActivity {
         tv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                Intent intent = new Intent(seller_dashboard.this, switch_account_page.class);
+                startActivity(intent);
+            }
+        });
+
+        iv_addFund.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(seller_dashboard.this, add_funds_page.class);
+                intent.putExtra("category", "seller");
+                startActivity(intent);
             }
         });
 

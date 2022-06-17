@@ -11,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -40,26 +41,30 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import dev.shreyaspatil.MaterialDialog.BottomSheetMaterialDialog;
 import dev.shreyaspatil.MaterialDialog.MaterialDialog;
 
 public class tech_booking_details extends AppCompatActivity {
 
-    private ImageView iv_bookingPhoto, iv_messageCustomer, btn_viewInMap, iv_custPhoto, iv_viewInMapBtn;
+    private ImageView iv_bookingPhoto, iv_messageCustomer, btn_viewInMap, iv_custPhoto,
+            iv_viewInMapBtn, iv_proofOfPaymentPic;
     private TextView tv_addressSummary,tv_propertyTypeSummary,tv_brandSummary,tv_acTypeSummary,tv_unitTypeSummary,tv_prefDateSummary,
-            tv_prefTimeSummary,tv_contactNumSummary, tv_back, tv_customerName, tv_bookingName,
-            tv_time, tv_specialInstruction, tv_month, tv_date, tv_day, iv_deleteBtn, tv_status;
+            tv_prefTimeSummary,tv_contactNumSummary, tv_back, tv_customerName, tv_bookingName, tv_fundBalance,
+            tv_time, tv_specialInstruction, tv_month, tv_date, tv_day, iv_deleteBtn, tv_status, tv_totalAmount,
+            tv_proofOfPaymentBanner;
     private ProgressBar progressBar;
     private Button btn_completeBooking, btn_rate;
     private CardView cardView17;
 
     private String imageUrl, custID, bookingIdFromIntent, latString, longString,
             tempProjName, projectIdFromIntent, techID;
+    private Double fundAmount, price;
 
     private FirebaseUser user;
     private FirebaseStorage mStorage;
     private StorageReference projectStorage;
-    private DatabaseReference userDatabase, ratingDatabase, bookingDatabase;
+    private DatabaseReference userDatabase, ratingDatabase, bookingDatabase, walletDb;
     private StorageTask addTask;
     private String userID;
     private ProgressDialog progressDialog;
@@ -75,11 +80,11 @@ public class tech_booking_details extends AppCompatActivity {
         userDatabase = FirebaseDatabase.getInstance().getReference("Users");
         bookingDatabase = FirebaseDatabase.getInstance().getReference("Bookings");
         ratingDatabase = FirebaseDatabase.getInstance().getReference("Ratings");
+        walletDb = FirebaseDatabase.getInstance().getReference("Wallets");
 
         setRef();
         clickListener();
         validateStatus();
-
 
     }
 
@@ -216,35 +221,62 @@ public class tech_booking_details extends AppCompatActivity {
         btn_completeBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(tech_booking_details.this)
-                        .setTitle("Complete Booking?")
-                        .setMessage("Are you sure you want to complete this booking?")
-                        .setCancelable(true)
-                        .setPositiveButton("Complete Booking", new MaterialDialog.OnClickListener() {
-                            @Override
-                            public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
 
-                                bookingIdFromIntent = getIntent().getStringExtra("Booking ID");
+                if(hasImage(iv_proofOfPaymentPic)){
+                    Toast.makeText(tech_booking_details.this, "Proof of payment is required", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    BottomSheetMaterialDialog mBottomSheetDialog = new BottomSheetMaterialDialog.Builder(tech_booking_details.this)
+                            .setTitle("Complete Booking?")
+                            .setMessage("Are you sure you want to complete this booking?")
+                            .setCancelable(true)
+                            .setPositiveButton("Complete Booking", new MaterialDialog.OnClickListener() {
+                                @Override
+                                public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
 
-                                Intent intent = new Intent(tech_booking_details.this, rating_and_review_client.class);
-                                intent.putExtra("category", "booking");
-                                intent.putExtra("booking id", bookingIdFromIntent);
-                                intent.putExtra("client id", custID);
-                                intent.putExtra("tech id", techID);
-                                startActivity(intent);
+                                    if(price < fundAmount)
+                                    {
+                                        bookingIdFromIntent = getIntent().getStringExtra("Booking ID");
 
-                            }
-                        })
-                        .setNegativeButton("Back", new MaterialDialog.OnClickListener() {
-                            @Override
-                            public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
-                                dialogInterface.dismiss();
-                            }
-                        })
-                        .build();
+                                        Intent intent = new Intent(tech_booking_details.this, rating_and_review_client.class);
+                                        intent.putExtra("category", "booking");
+                                        intent.putExtra("booking id", bookingIdFromIntent);
+                                        intent.putExtra("client id", custID);
+                                        intent.putExtra("tech id", techID);
+                                        startActivity(intent);
+                                    }
+                                    else
+                                    {
+                                        new SweetAlertDialog(tech_booking_details.this, SweetAlertDialog.ERROR_TYPE)
+                                                .setTitleText("Failed!.")
+                                                .setContentText("Insufficient funds.")
+                                                .setCancelText("Back")
+                                                .setConfirmButton("Add Funds", new SweetAlertDialog.OnSweetClickListener() {
+                                                    @Override
+                                                    public void onClick(SweetAlertDialog sweetAlertDialog) {
 
-                // Show Dialog
-                mBottomSheetDialog.show();
+                                                        Intent intent = new Intent(tech_booking_details.this, tech_dashboard.class);
+                                                        startActivity(intent);
+
+                                                    }
+                                                })
+                                                .show();
+                                    }
+                                }
+                            })
+                            .setNegativeButton("Back", new MaterialDialog.OnClickListener() {
+                                @Override
+                                public void onClick(dev.shreyaspatil.MaterialDialog.interfaces.DialogInterface dialogInterface, int which) {
+                                    dialogInterface.dismiss();
+                                }
+                            })
+                            .build();
+
+                    // Show Dialog
+                    mBottomSheetDialog.show();
+                }
+
             }
         });
 
@@ -395,10 +427,11 @@ public class tech_booking_details extends AppCompatActivity {
                         String sp_airconType = bookingData.airconType;
                         String sp_unitType = bookingData.unitType;
                         String sp_price = bookingData.totalPrice;
+                        String sp_popUrl = bookingData.proofOfPaymentUrl;
 
                         String[] parts = sp_bookingDate.split("/");
 
-                        double price = Double.parseDouble(sp_price);
+                        price = Double.parseDouble(sp_price);
                         DecimalFormat twoPlaces = new DecimalFormat("0.00");
 
                         Picasso.get().load(imageUrl).into(iv_bookingPhoto);
@@ -415,7 +448,16 @@ public class tech_booking_details extends AppCompatActivity {
                         tv_brandSummary.setText(sp_airconBrand);
                         tv_acTypeSummary.setText(sp_airconType);
                         tv_unitTypeSummary.setText(sp_unitType);
-                        btn_completeBooking.setText("Total Price: ₱ " + twoPlaces.format(price) + " · " + "Complete Booking");
+
+                        if (!sp_popUrl.isEmpty())
+                        {
+                            Picasso.get().load(sp_popUrl).into(iv_proofOfPaymentPic);
+                            tv_proofOfPaymentBanner.setVisibility(View.GONE);
+                        }
+
+                        tv_totalAmount.setText("₱ " + twoPlaces.format(price));
+                        Double percentageFee = price * .15;
+                        btn_completeBooking.setText("15% fee: ₱ " + twoPlaces.format(percentageFee) + " · " + "Complete Booking");
 
                         generateProfile();
 
@@ -467,6 +509,30 @@ public class tech_booking_details extends AppCompatActivity {
                 Toast.makeText(tech_booking_details.this, error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+        walletDb.child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Wallets wallets = snapshot.getValue(Wallets.class);
+
+                if(wallets != null)
+                {
+                    fundAmount = wallets.fundAmount;
+                    tv_fundBalance.setText(fundAmount + "");
+
+                }
+                else
+
+                    fundAmount = 0.00;
+                    tv_fundBalance.setText(fundAmount + "");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
     private void setRef() {
@@ -476,6 +542,7 @@ public class tech_booking_details extends AppCompatActivity {
         iv_custPhoto = findViewById(R.id.iv_custPhoto);
         iv_deleteBtn = findViewById(R.id.iv_deleteBtn);
         iv_viewInMapBtn = findViewById(R.id.iv_viewInMapBtn);
+        iv_proofOfPaymentPic = findViewById(R.id.iv_proofOfPaymentPic);
 
         tv_status = findViewById(R.id.tv_status);
         tv_month = findViewById(R.id.tv_month);
@@ -494,6 +561,9 @@ public class tech_booking_details extends AppCompatActivity {
         tv_unitTypeSummary = findViewById(R.id.tv_unitTypeSummary);
         tv_prefDateSummary = findViewById(R.id.tv_prefDateSummary);
         tv_prefTimeSummary = findViewById(R.id.tv_prefTimeSummary);
+        tv_fundBalance = findViewById(R.id.tv_fundBalance);
+        tv_totalAmount = findViewById(R.id.tv_totalAmount);
+        tv_proofOfPaymentBanner = findViewById(R.id.tv_proofOfPaymentBanner);
 
         progressBar = findViewById(R.id.progressBar);
 
@@ -502,6 +572,14 @@ public class tech_booking_details extends AppCompatActivity {
 
         cardView17 = findViewById(R.id.cardView17);
 
+    }
+
+    private boolean hasImage(ImageView iv){
+
+        Drawable drawable = iv.getDrawable();
+        BitmapDrawable bitmapDrawable = drawable instanceof BitmapDrawable ? (BitmapDrawable)drawable : null;
+
+        return bitmapDrawable == null || bitmapDrawable.getBitmap() == null;
     }
 
 }

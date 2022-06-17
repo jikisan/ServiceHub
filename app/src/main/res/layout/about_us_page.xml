@@ -43,7 +43,7 @@
         android:layout_height="288dp"
         android:layout_marginTop="96dp"
         android:gravity="center_horizontal"
-        android:text="We are a group of Bachelor of Science in Information Technology students from the University of Banilad Campus that goal is to be a successful developer and create practical applications such as ServiceHub.  "
+        android:text="We are a group of Bachelor of Science in Information Technology students from the University of Banilad Campus that goal is to be a successful developer and create practical applications.  "
         android:textColor="#094E6B"
         android:textSize="22sp"
         android:textStyle="bold"
